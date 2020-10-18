@@ -7,23 +7,24 @@ class Application(tk.Frame):
         self.master = master
         self.pack()
         self.create_widgets()
+       
 
     def create_widgets(self):
         ## Header
         self.header = tk.Frame(self,borderwidth=2, relief="ridge")
-        load = Image.open("assets/vocoder_icon.png")
+        load = Image.open("assets/vocoder_icon_title.png")
         render = ImageTk.PhotoImage(load)
         img = tk.Label(self.header,image=render)
         img.image = render
         img.pack()
         self.header.grid(row=0)
         ## App_Layout
-        self.app_layout = tk.Frame(self)
+        self.app_layout = tk.Frame(self, borderwidth=2, relief="ridge")
         ## Voice recoder Frame
-        self.voice_recog = tk.LabelFrame(self.app_layout, text = "Voice Recorder",borderwidth=2, relief="ridge")
-        self.start_button = tk.Button(self.voice_recog,text="START")
-        self.end_button = tk.Button(self.voice_recog,text="END")
-        self.noti_label = tk.Label(self.voice_recog, text="Place holder status")
+        self.voice_recog = tk.LabelFrame(self.app_layout, text = "Voice Recorder", borderwidth=2, relief="ridge")
+        self.noti_label = tk.Label(self.voice_recog, text="Not currently recording")
+        self.start_button = tk.Button(self.voice_recog,text="START",command=lambda: self.rec_buttons("start"))
+        self.end_button = tk.Button(self.voice_recog,text="END",command=lambda: self.rec_buttons("end"))
         self.cmd_receiver = tk.LabelFrame(self.voice_recog, text="command(s) received")
         self.cmd_receiver_txt = tk.Listbox(self.cmd_receiver)
         self.add_scrollbar(self.cmd_receiver_txt)
@@ -71,7 +72,6 @@ class Application(tk.Frame):
         self.help_field_txt.pack()
         self.help_field.grid(row=3,column=0,columnspan=2)
 
-
     ## Adding scrollbar to Listbox widgets
     def add_scrollbar(self, widget_name):
         widget_name.yScroll = tk.Scrollbar(widget_name, orient=tk.VERTICAL)
@@ -80,10 +80,20 @@ class Application(tk.Frame):
             yscrollcommand=widget_name.yScroll.set)
         widget_name.listbox.grid(row=0, column=0, sticky=tk.N+tk.S+tk.E+tk.W)
         widget_name.yScroll['command'] = widget_name.listbox.yview
+
+    ## Handling start and end buttons
+    def rec_buttons(self, string):
+        if string == "start":
+            self.noti_label.configure(text="Currently recording")
+        else:
+            self.noti_label.configure(text="Currently not recording")
+            
+
 def main():
     root = tk.Tk()
     app = Application(master=root)
     app.master.title("VOCODER")
+    app.master.geometry("1600x900")
     app.mainloop()
 
 if __name__ == "__main__":
