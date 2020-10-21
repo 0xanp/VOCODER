@@ -2,6 +2,28 @@ import tkinter as tk
 import speech_recognition as sr
 import threading
 import re as re
+from fuzzywuzzy import fuzz
+
+commandWords = [ "create new variable", 
+                 "assign old variable",
+                 "return statement",
+                 "create for loop",
+                 "create while loop",
+                 "create if statement",
+                 "create else if statement",
+                 "create else statement",
+                 "create array",
+                 "move cursor",
+                 "move to word",
+                 "undo command",
+                 "redo command",
+                 "select word",
+                 "select line",
+                 "select block",
+                 "copy text",
+                 "paste text" ]
+                 
+variableNames = []
 
 # function to get voice input and returns as a string
 def getVoiceInput():
@@ -12,10 +34,29 @@ def getVoiceInput():
     return audioToText
     
 def phraseMatch(audioToText):
+    print("input: " + audioToText + "\n")
+
+    i = 0
+    highest = 0
+    closestString = ""
+    for i in range(0,len(commandWords)):
+        string = commandWords[i]
+        ratio = fuzz.token_set_ratio(audioToText, string)
+        print(string + ": " + str(ratio))
+        
+        if ratio > highest:
+            highest = ratio
+            closestString = string
+    
+        
+    print("\nClosest string to match input was\n")
+    print(closestString + ": " + str(highest))
+
     if audioToText == "apple":
         string = "found matching phrase: apple\n"
-    elif audioToText == "testing":
+    elif audioToText == "create new variable":
         string = createNewVariable()       
+        #string = "found matching phrase: createNewVariable\n"
     else:
         string = "no matching phrase found: " + audioToText + "\n"
     return string
