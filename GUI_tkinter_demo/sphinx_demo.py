@@ -4,6 +4,7 @@ import threading
 import re as re
 from fuzzywuzzy import fuzz
 
+# list of commands, has some extra strings for testing
 commandWords = [ "create new variable", 
                  "assign old variable",
                  "return statement",
@@ -21,9 +22,12 @@ commandWords = [ "create new variable",
                  "select line",
                  "select block",
                  "copy text",
-                 "paste text" ]
-                 
-variableNames = []
+                 "paste text",
+                 "show set",
+                 "apple" ]
+
+# this set will contain variable names created by createNewVariable()                 
+setOfVariableNames = []
 
 # function to get voice input and returns as a string
 def getVoiceInput():
@@ -36,30 +40,42 @@ def getVoiceInput():
 def phraseMatch(audioToText):
     print("input: " + audioToText + "\n")
 
+    closestString = getClosestString(audioToText, commandWords)            
+
+    if closestString == "apple":
+        string = "found matching phrase: apple\n"
+    elif closestString == "create new variable":
+        string = createNewVariable()       
+        #string = "found matching phrase: createNewVariable\n"
+    elif closestString == "show set":
+        showSet()
+        string = "used showSet()\n"
+    else:
+        string = "no matching phrase found: " + audioToText + "\n"
+    return string
+
+def getClosestString(inputString, listToMatch):
     i = 0
     highest = 0
     closestString = ""
-    for i in range(0,len(commandWords)):
-        string = commandWords[i]
-        ratio = fuzz.token_set_ratio(audioToText, string)
+    
+    # if there is nothing in the listToMatch, return original string
+    if not listToMatch:
+        return inputString
+        
+    for i in range(0,len(listToMatch)):
+        string = listToMatch[i]
+        ratio = fuzz.token_set_ratio(inputString, string)
         print(string + ": " + str(ratio))
         
         if ratio > highest:
             highest = ratio
             closestString = string
     
-        
     print("\nClosest string to match input was\n")
-    print(closestString + ": " + str(highest))
-
-    if audioToText == "apple":
-        string = "found matching phrase: apple\n"
-    elif audioToText == "create new variable":
-        string = createNewVariable()       
-        #string = "found matching phrase: createNewVariable\n"
-    else:
-        string = "no matching phrase found: " + audioToText + "\n"
-    return string
+    print(closestString + ": " + str(highest))    
+            
+    return closestString
     
 # Operations dictionary for string to symbol
 op_dict = { "plus":"+", 
@@ -100,6 +116,14 @@ def text2int(textnum, numwords={}):
 
     return result + current
 
+# Test function just to see if the set works    
+def showSet():
+    print("Currently in showSet() function.\n" +
+          "Set of variable names:")
+    for i in setOfVariableNames:
+        print("          " + i + ",")
+
+
 # Very basic version of create new variable command. The terminal will prompt the user for voice input. The program will be able to take any string of characters and uses snake case for variable name. The program will be able to convert word versions of +, -, *, /, and numbers into their symbol versions.
 
 # Example
@@ -110,46 +134,96 @@ def text2int(textnum, numwords={}):
 
 def createNewVariable():
     # Get and format variable name, will use snake case
-    print("Say name of new variable.\n")
-    vInput = getVoiceInput()
-    vInput = vInput.replace(" ","_")
-    variableName = vInput
-    
-    # used for checking correctness in terminal
-    # print("variableName = " + variableName);
-    
-    # Get and format expression
-    print("Say full expression.\n")
-    vInput = getVoiceInput()
-    
-    # replace operation words with symbols
-    for word, symbol in op_dict.items():
-        vInput = vInput.replace(word, symbol)   
-    
-    # split input by operators    
-    vInputSplit = re.split("([+]|[-]|[*]|[/])", vInput)
-    
-    # find indexes of the operations
-    opLocations = []
-    for i in range(0, len(vInputSplit)):
-        if vInputSplit[i] in op_dict.values():
-            opLocations.append(i)
-    
-    # go through the split string and replace with symbols/literals            
-    for i in range(0, len(vInputSplit)):
-        if i not in opLocations:   
-            vInputSplit[i] = str(text2int(vInputSplit[i]))
-    
-    # reformat expression
-    expression = ""
-    for i in range(0, len(vInputSplit)): 
-        if i in opLocations:   
-            expression = expression + " " + vInputSplit[i] + " "
+    correctName = False
+    nameTaken = True
+    while not correctName or nameTaken:
+        correctName = False
+        nameTaken = True
+        
+        print("Say name of new variable.\n")
+        vInput = getVoiceInput()
+        vInput = vInput.replace(" ","_")
+        variableName = vInput
+        
+        print("Variable name: " + variableName + "\n" +
+              "Is this correct? (Yes/No)")
+        vInput = getVoiceInput()
+        yesRatio = fuzz.ratio(vInput, "yes")
+        noRatio = fuzz.ratio(vInput, "no")
+        print("yes: " + str(yesRatio) + "\n" +
+              "no:  " + str(noRatio)  + "\n")
+        if yesRatio > noRatio: correctName = True
+        else: continue
+        
+        if variableName in setOfVariableNames:
+            print("Variable name: " + variableName + ", is already used in the program.\n" +
+                  "Do you still want to use it? (Yes/No)")
+            vInput = getVoiceInput()
+            yesRatio = fuzz.ratio(vInput, "yes")
+            noRatio = fuzz.ratio(vInput, "no")
+            print("yes: " + str(yesRatio) + "\n" +
+                  "no:  " + str(noRatio)  + "\n")
+            if yesRatio > noRatio: nameTaken = False
         else:
-            expression = expression + vInputSplit[i]
+            nameTaken = False
+             
+    
+    # Get expression
+    correctExpression = False
+    while not correctExpression:    
+        print("Say full expression.\n")
+        vInput = getVoiceInput()
+        
+        # replace operation words with symbols
+        for word, symbol in op_dict.items():
+            vInput = vInput.replace(word, symbol)   
+        
+        # split input by operators    
+        vInputSplit = re.split("([+]|[-]|[*]|[/])", vInput)
+        
+        # find indexes of the operations
+        opLocations = []
+        for i in range(0, len(vInputSplit)):
+            if vInputSplit[i] in op_dict.values():
+                opLocations.append(i)
+        
+        # go through the split string and replace with symbols/literals            
+        for i in range(0, len(vInputSplit)):
+            if i not in opLocations:   
+                vInputSplit[i] = str(text2int(vInputSplit[i]))
+                
+                # check if the term starts with a letter
+                # if so, it must be a preexisting variable name and 
+                # match it with one from the setOfVariableNames
+                if vInputSplit[i][0].isalpha():
+                    closestVariable = getClosestString(vInputSplit[i], setOfVariableNames)
+                    
+                    print("Got input of: " + str(vInputSplit) + "\n")
+                    print("Closest match was: " + str(closestVariable) + "\n")
+                    vInputSplit[i] = closestVariable
+        
+        # reformat expression
+        expression = ""
+        for i in range(0, len(vInputSplit)): 
+            if i in opLocations:   
+                expression = expression + vInputSplit[i]
+            else:
+                expression = expression + vInputSplit[i]
+                
+        print("Expression: " + expression + "\n" +
+              "Is this correct? (Yes/No)")
+        vInput = getVoiceInput()
+        yesRatio = fuzz.ratio(vInput, "yes")
+        noRatio = fuzz.ratio(vInput, "no")
+        print("yes: " + str(yesRatio) + "\n" +
+              "no:  " + str(noRatio)  + "\n")
+        if yesRatio > noRatio: correctExpression = True
     
     # used for checking correctness in terminal    
     # print("expression = " + expression)
+    
+    if variableName not in setOfVariableNames:
+        setOfVariableNames.append(variableName)  
     
     string = variableName + " = " + expression + "\n"
     return string
