@@ -23,7 +23,7 @@ commandWords = [ "create new variable",
                  "select block",
                  "copy text",
                  "paste text",
-                 "show set",
+                 "show set of variables",
                  "apple" ]
 
 # this set will contain variable names created by createNewVariable()                 
@@ -47,11 +47,13 @@ def phraseMatch(audioToText):
     elif closestString == "create new variable":
         string = createNewVariable()       
         #string = "found matching phrase: createNewVariable\n"
-    elif closestString == "show set":
+    elif closestString == "show set of variables":
         showSet()
         string = "used showSet()\n"
     elif closestString == "assign old variable":
         string = assignOldVariable()
+    elif closestString == "return statement":
+        string = returnStatement()
     else:
         string = "no matching phrase found: " + audioToText + "\n"
     return string
@@ -297,6 +299,59 @@ def assignOldVariable():
         
     string = variableName + " = " + expression + "\n"
     return string
+    
+def returnStatement():
+    # get voice input
+    correctExpression = False
+    while not correctExpression:    
+        print("Say what you want to return.\n")
+        vInput = getVoiceInput()
+        
+        # replace operation words with symbols
+        for word, symbol in op_dict.items():
+            vInput = vInput.replace(word, symbol)   
+            
+        # remove any periods
+        vInput = vInput.replace(".", "")
+        
+        # split input by operators    
+        vInputSplit = re.split("([+]|[-]|[*]|[/])", vInput)
+        
+        # find indexes of the operations
+        opLocations = []
+        for i in range(0, len(vInputSplit)):
+            if vInputSplit[i] in op_dict.values():
+                opLocations.append(i)
+        
+        # go through the split string and replace with symbols/literals            
+        for i in range(0, len(vInputSplit)):
+            if i not in opLocations:   
+                vInputSplit[i] = str(text2int(vInputSplit[i]))
+                
+                # check if the term starts with a letter
+                # if so, it must be a preexisting variable name and 
+                # match it with one from the setOfVariableNames
+                if vInputSplit[i][0].isalpha():
+                    closestVariable = getClosestString(vInputSplit[i], setOfVariableNames)
+                    
+                    print("Got input of: " + str(vInputSplit) + "\n")
+                    print("Closest match was: " + str(closestVariable) + "\n")
+                    vInputSplit[i] = closestVariable
+        
+        # reformat expression
+        expression = ""
+        for i in range(0, len(vInputSplit)): 
+            if i in opLocations:   
+                expression = expression + vInputSplit[i]
+            else:
+                expression = expression + vInputSplit[i]
+                
+        print("Expression: " + expression + "\n" +
+              "Is this correct? (Yes/No)")
+        if confirm(): correctExpression = True
+    
+    expression = "return " + expression
+    return expression
 
 def cbc(txt):
 
