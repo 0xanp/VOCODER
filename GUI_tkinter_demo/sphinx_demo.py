@@ -50,6 +50,8 @@ def phraseMatch(audioToText):
     elif closestString == "show set":
         showSet()
         string = "used showSet()\n"
+    elif closestString == "assign old variable":
+        string = assignOldVariable()
     else:
         string = "no matching phrase found: " + audioToText + "\n"
     return string
@@ -122,6 +124,16 @@ def showSet():
           "Set of variable names:")
     for i in setOfVariableNames:
         print("          " + i + ",")
+        
+# receives input from user saying yes or no and returns true if yes, false if no
+def confirm():
+    vInput = getVoiceInput()
+    yesRatio = fuzz.ratio(vInput, "yes")
+    noRatio = fuzz.ratio(vInput, "no")
+    print("yes: " + str(yesRatio) + "\n" +
+          "no:  " + str(noRatio)  + "\n")
+    if yesRatio > noRatio: return True 
+    else: return False
 
 
 # Very basic version of create new variable command. The terminal will prompt the user for voice input. The program will be able to take any string of characters and uses snake case for variable name. The program will be able to convert word versions of +, -, *, /, and numbers into their symbol versions.
@@ -147,23 +159,13 @@ def createNewVariable():
         
         print("Variable name: " + variableName + "\n" +
               "Is this correct? (Yes/No)")
-        vInput = getVoiceInput()
-        yesRatio = fuzz.ratio(vInput, "yes")
-        noRatio = fuzz.ratio(vInput, "no")
-        print("yes: " + str(yesRatio) + "\n" +
-              "no:  " + str(noRatio)  + "\n")
-        if yesRatio > noRatio: correctName = True
+        if confirm(): correctName = True
         else: continue
         
         if variableName in setOfVariableNames:
             print("Variable name: " + variableName + ", is already used in the program.\n" +
                   "Do you still want to use it? (Yes/No)")
-            vInput = getVoiceInput()
-            yesRatio = fuzz.ratio(vInput, "yes")
-            noRatio = fuzz.ratio(vInput, "no")
-            print("yes: " + str(yesRatio) + "\n" +
-                  "no:  " + str(noRatio)  + "\n")
-            if yesRatio > noRatio: nameTaken = False
+            if confirm(): nameTaken = False
         else:
             nameTaken = False
              
@@ -177,6 +179,9 @@ def createNewVariable():
         # replace operation words with symbols
         for word, symbol in op_dict.items():
             vInput = vInput.replace(word, symbol)   
+            
+        # remove any periods
+        vInput = vInput.replace(".", "")
         
         # split input by operators    
         vInputSplit = re.split("([+]|[-]|[*]|[/])", vInput)
@@ -212,12 +217,8 @@ def createNewVariable():
                 
         print("Expression: " + expression + "\n" +
               "Is this correct? (Yes/No)")
-        vInput = getVoiceInput()
-        yesRatio = fuzz.ratio(vInput, "yes")
-        noRatio = fuzz.ratio(vInput, "no")
-        print("yes: " + str(yesRatio) + "\n" +
-              "no:  " + str(noRatio)  + "\n")
-        if yesRatio > noRatio: correctExpression = True
+        if confirm(): correctExpression = True
+        
     
     # used for checking correctness in terminal    
     # print("expression = " + expression)
@@ -228,6 +229,74 @@ def createNewVariable():
     string = variableName + " = " + expression + "\n"
     return string
 
+def assignOldVariable():
+    # check if there are any old variables
+    if not setOfVariableNames:
+        print("No variable names already initialized.\n")
+        return ""
+        
+    # get input for the variable name to be modified
+    correctName = False
+    while not correctName:
+        print("Say the name of the variable you want to modify.\n")
+        vInput = getVoiceInput()
+        variableName = getClosestString(vInput, setOfVariableNames)
+        print("Variable name: " + variableName + "\n" +
+              "Is this correct? (Yes/No)")
+        if confirm(): correctName = True
+        else: continue
+        
+    # get expression
+    correctExpression = False
+    while not correctExpression:    
+        print("Say full expression.\n")
+        vInput = getVoiceInput()
+        
+        # replace operation words with symbols
+        for word, symbol in op_dict.items():
+            vInput = vInput.replace(word, symbol)   
+            
+        # remove any periods
+        vInput = vInput.replace(".", "")
+        
+        # split input by operators    
+        vInputSplit = re.split("([+]|[-]|[*]|[/])", vInput)
+        
+        # find indexes of the operations
+        opLocations = []
+        for i in range(0, len(vInputSplit)):
+            if vInputSplit[i] in op_dict.values():
+                opLocations.append(i)
+        
+        # go through the split string and replace with symbols/literals            
+        for i in range(0, len(vInputSplit)):
+            if i not in opLocations:   
+                vInputSplit[i] = str(text2int(vInputSplit[i]))
+                
+                # check if the term starts with a letter
+                # if so, it must be a preexisting variable name and 
+                # match it with one from the setOfVariableNames
+                if vInputSplit[i][0].isalpha():
+                    closestVariable = getClosestString(vInputSplit[i], setOfVariableNames)
+                    
+                    print("Got input of: " + str(vInputSplit) + "\n")
+                    print("Closest match was: " + str(closestVariable) + "\n")
+                    vInputSplit[i] = closestVariable
+        
+        # reformat expression
+        expression = ""
+        for i in range(0, len(vInputSplit)): 
+            if i in opLocations:   
+                expression = expression + vInputSplit[i]
+            else:
+                expression = expression + vInputSplit[i]
+                
+        print("Expression: " + expression + "\n" +
+              "Is this correct? (Yes/No)")
+        if confirm(): correctExpression = True
+        
+    string = variableName + " = " + expression + "\n"
+    return string
 
 def cbc(txt):
 
