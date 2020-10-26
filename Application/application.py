@@ -1,5 +1,6 @@
 import tkinter as tk
 from PIL import Image, ImageTk
+import voice_recognition as vr
 
 class Application(tk.Frame):
     def __init__(self, master=None):
@@ -109,6 +110,7 @@ class Application(tk.Frame):
     def rec_buttons(self, string):
         if string == "start":
             self.noti_label.configure(text="Currently recording       ")
+            vr.listen(self.txt_editor_field)
         else:
             self.noti_label.configure(text="Currently not recording")
             
