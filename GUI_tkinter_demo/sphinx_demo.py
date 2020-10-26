@@ -23,8 +23,7 @@ commandWords = [ "create new variable",
                  "select block",
                  "copy text",
                  "paste text",
-                 "show set of variables",
-                 "apple" ]
+                 "show set of variables"]
 
 # this set will contain variable names created by createNewVariable()                 
 setOfVariableNames = []
@@ -42,11 +41,8 @@ def phraseMatch(audioToText):
 
     closestString = getClosestString(audioToText, commandWords)            
 
-    if closestString == "apple":
-        string = "found matching phrase: apple\n"
-    elif closestString == "create new variable":
-        string = createNewVariable()       
-        #string = "found matching phrase: createNewVariable\n"
+    if closestString == "create new variable":
+        string = createNewVariable()
     elif closestString == "show set of variables":
         showSet()
         string = "used showSet()\n"
@@ -54,6 +50,8 @@ def phraseMatch(audioToText):
         string = assignOldVariable()
     elif closestString == "return statement":
         string = returnStatement()
+    elif closestString == "create for loop":
+        string = createForLoop()
     else:
         string = "no matching phrase found: " + audioToText + "\n"
     return string
@@ -352,6 +350,37 @@ def returnStatement():
     
     expression = "return " + expression
     return expression
+
+# for now, can only create a for loop with range function
+def createForLoop():
+    correctVariable = False
+    while not correctVariable:
+        print("Say the name of looping variable.\n")
+        vInput = getVoiceInput()
+        
+        vInput = vInput.replace(".","")
+        vInput = vInput.replace(" ","_")
+        print("Looping variable: " + vInput + "\n" +
+              "Is this correct? (Yes/No)")
+        if confirm(): correctVariable = True
+        
+    loopingVariable = vInput
+        
+    correctRange = False
+    while not correctRange:
+        print("How many times do you want to repeat this loop?\n")
+        vInput = getVoiceInput()
+        
+        vInput = str(text2int(vInput))
+        
+        print("Amount of loops: " + vInput + "\n" + 
+              "Is this correct? (Yes/No)")
+        if confirm(): correctRange = True
+        
+    rangeInt = vInput
+    
+    string = "for " + loopingVariable + " in range(" + rangeInt + "):\n"
+    return string
 
 def cbc(txt):
 
