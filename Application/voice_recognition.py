@@ -33,7 +33,8 @@ def getVoiceInput():
     r = sr.Recognizer()
     with sr.Microphone() as source:
         audio = r.listen(source)
-        audioToText = r.recognize_sphinx(audio)
+        #audioToText = r.recognize_sphinx(audio)
+        audioToText = r.recognize_google(audio)
     return audioToText
     
 def phraseMatch(audioToText):
@@ -463,7 +464,8 @@ def listen(tex):
         r = sr.Recognizer()
         with sr.Microphone() as source:
             audio = r.listen(source)
-            audioToText = r.recognize_sphinx(audio)
+            #audioToText = r.recognize_sphinx(audio)
+            audioToText = r.recognize_google(audio)
             audio_txt = phraseMatch(audioToText)
 
         tex.insert(tk.END, audio_txt)
