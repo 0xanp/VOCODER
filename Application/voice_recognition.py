@@ -3,6 +3,12 @@ import speech_recognition as sr
 import threading
 import re as re
 from fuzzywuzzy import fuzz
+from vosk import Model, KaldiRecognizer
+from vosk import SetLogLevel
+SetLogLevel(-1)
+import os
+import json
+import pyaudio
 
 # list of commands, has some extra strings for testing
 commandWords = [ "create new variable", 
@@ -30,13 +36,26 @@ setOfVariableNames = []
 
 # function to get voice input and returns as a string
 def getVoiceInput():
+    '''
     r = sr.Recognizer()
     with sr.Microphone() as source:
         audio = r.listen(source)
         #audioToText = r.recognize_sphinx(audio)
         audioToText = r.recognize_google(audio)
     return audioToText
-    
+    '''
+    model = Model("model")
+    rec = KaldiRecognizer(model, 44100)
+    p = pyaudio.PyAudio()
+    stream = p.open(format=pyaudio.paInt16, channels=1, rate=44100, input=True, frames_per_buffer=8000)
+    stream.start_stream()
+    while True:
+        data = stream.read(4000)
+        if rec.AcceptWaveform(data) and len(data) != 0:
+            audioToText = json.loads(rec.Result())["text"]
+            break
+    return audioToText
+
 def phraseMatch(audioToText):
     print("input: " + audioToText + "\n")
 
@@ -461,6 +480,7 @@ def callback(tex):
 
 def listen(tex):
     def callback(tex):
+        '''
         r = sr.Recognizer()
         with sr.Microphone() as source:
             audio = r.listen(source)
@@ -470,7 +490,22 @@ def listen(tex):
 
         tex.insert(tk.END, audio_txt)
         tex.see(tk.END)
-
+        '''
+        model = Model("model")
+        rec = KaldiRecognizer(model, 16000)
+        p = pyaudio.PyAudio()
+        stream = p.open(format=pyaudio.paInt16, channels=1, rate=16000, input=True, frames_per_buffer=8000)
+        stream.start_stream()
+        data = stream.read(4000)
+        while True:
+            data = stream.read(4000)
+            if rec.AcceptWaveform(data) and len(data) != 0:
+                audioToText = json.loads(rec.Result())["text"]
+                break
+        audio_txt = phraseMatch(audioToText)
+        tex.insert(tk.END, audio_txt)
+        tex.see(tk.END)
+    
     a_thread = threading.Thread(target = callback(tex))
     a_thread.start()
 '''

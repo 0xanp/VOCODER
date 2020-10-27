@@ -5,5 +5,6 @@ python -m pipwin install pocketsphinx
 python -m pipwin install pil
 python -m pip install fuzzywuzzy
 python -m pip install google-api-python-client
+python -m pip install vosk
 echo Done!
 pause
