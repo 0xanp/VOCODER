@@ -31,7 +31,7 @@ class Application(tk.Frame):
         self.app_layout = tk.Frame(self,width = 1727, height=700, borderwidth=2, relief="ridge")
         self.app_layout.grid_propagate(False)
         
-        ## Voice recoder Frame
+        ## Voice recorder Frame
         self.voice_recog = tk.LabelFrame(self.app_layout, text = "Voice Recorder",width=600, height=200, borderwidth=2, relief="ridge")
         self.voice_recog.grid_propagate(False)
         self.noti_label = tk.Label(self.voice_recog, text="Not currently recording")
@@ -64,13 +64,11 @@ class Application(tk.Frame):
 
         ## Help Field
         self.help_field = tk.Text(self.app_layout, height=2, width=30)
-        self.help_field.pack()
         self.help_field.insert(tk.END, "1=Create Array \t2=Create Else Statement \t3=Create Else-If Statement \t4=Create If Statement \t5=Create While Loop "+\
                                         "\t6=Create For Loop \t7=Return Statement \t8=Assign Old Variable \t9=Create New Variable\n10=Copy Text \t11=Select Block "+\
                                         "\t12=Select Line \t13=Select Word \t14=Move to Word \t15=Move Cursor \t16=Paste Text \t17=Redo Command "+\
                                         "\t18=Undo Command")
         self.help_field.grid_propagate(False)
-
         self.app_layout.grid(row=1,padx=5,pady=5,sticky='nsew')
         self.voice_recog.grid(column=0,row=0,padx=5,pady=5,sticky='nsew')
 
@@ -83,7 +81,6 @@ class Application(tk.Frame):
         self.cmd_receiver.rowconfigure(0,weight=1)
         self.cmd_receiver_txt.grid(row=0,column=0,padx=5,pady=5,sticky='nsew')
         
-
         ## Packing all the widgets in System Output
         self.sys_out.grid(column=0,row=1,padx=5,pady=5,sticky='nsew')
         self.sys_out.columnconfigure(0,weight=1)
