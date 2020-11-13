@@ -34,11 +34,19 @@ class Application(tk.Frame):
         ## Voice recorder Frame
         self.voice_recog = tk.LabelFrame(self.app_layout, text = "Voice Recorder",width=600, height=200, borderwidth=2, relief="ridge")
         self.voice_recog.grid_propagate(False)
-        self.noti_label = tk.Label(self.voice_recog, text="Not currently recording")
-        self.noti_label.grid_propagate(False)
+
+        ##self.noti_label = tk.Label(self.voice_recog, text="not recording")
+        ##self.noti_label.grid_propagate(False)
+        self.indicator = tk.Frame(self.voice_recog, borderwidth=1, relief="ridge")
+        self.gc = Image.open("assets/grayCircle.png")
+        self.rendergc = ImageTk.PhotoImage(self.gc)
+        self.img_gc = tk.Label(self.indicator,image=self.rendergc)
+        self.img_gc.image = self.rendergc
+        self.img_gc.pack()
+
         self.start_button = tk.Button(self.voice_recog,text="START",command=lambda: self.rec_buttons("start"))
         self.end_button = tk.Button(self.voice_recog,text="END",command=lambda: self.rec_buttons("end"))
-        self.cmd_receiver = tk.LabelFrame(self.voice_recog, text="command(s) received",width=450,height=180)
+        self.cmd_receiver = tk.LabelFrame(self.voice_recog, text="command(s) received",width=500,height=180)
         self.cmd_receiver.grid_propagate(False)
         self.cmd_receiver_txt = tk.Listbox(self.cmd_receiver)
         
@@ -75,7 +83,8 @@ class Application(tk.Frame):
         ## Packing all the widgets in Voice Recorder
         self.start_button.grid(column=0,row=0)
         self.end_button.grid(column=0,row=1)
-        self.noti_label.grid(column=0,row=2)
+        ##self.noti_label.grid(column=0,row=2)
+        self.indicator.grid(column=0,row=2,padx=3,pady=1,sticky='nsew')
         self.cmd_receiver.grid(column=1,row=0,rowspan=3,sticky='nsew')
         self.cmd_receiver.columnconfigure(0,weight=1)
         self.cmd_receiver.rowconfigure(0,weight=1)
@@ -111,10 +120,18 @@ class Application(tk.Frame):
     ## Handling start and end buttons
     def rec_buttons(self, string):
         if string == "start":
-            self.noti_label.configure(text="Currently recording       ")
+            ##self.noti_label.configure(text="Currently recording       ")
+            self.rc = Image.open("assets/redCircle.png")
+            self.renderrc = ImageTk.PhotoImage(self.rc)
+            self.img_rc = tk.Label(self.indicator,image=self.renderrc)
+            self.img_rc.image = self.renderrc
+            self.img_rc.pack()
+            self.img_gc.pack_forget()
             vr.listen(self.txt_editor_field)
         else:
-            self.noti_label.configure(text="Currently not recording")
+            ##self.noti_label.configure(text="Currently not recording")
+            self.img_gc.pack()
+            self.img_rc.pack_forget()            
             
 def main():
     root = tk.Tk()
