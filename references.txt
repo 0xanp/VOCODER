@@ -1,1 +1,3 @@
 https://stackoverflow.com/questions/493174/is-there-a-way-to-convert-number-words-to-integers
+https://www.python-course.eu/tkinter_events_binds.php
+https://stackoverflow.com/questions/41657449/tkinter-not-changing-image-on-button-press
