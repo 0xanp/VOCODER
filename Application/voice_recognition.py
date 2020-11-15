@@ -10,6 +10,13 @@ import os
 import json
 import pyaudio
 
+# variables for strings to return to UI
+sysOutputTxt = "this is for the system output text box"
+cmndMgrTxt = "this is for the command manager text box"
+cmndRcvdTxt = "this is for the command(s) received text box"
+txtEditorTxt = "this is for the text editor text box"
+cmndLineTxt = "this is for the command line text box"
+
 # list of commands, has some extra strings for testing
 commandWords = [ "create new variable", 
                  "assign old variable",
@@ -58,25 +65,23 @@ def getVoiceInput():
 
 def phraseMatch(audioToText):
     print("input: " + audioToText + "\n")
-
     closestString = getClosestString(audioToText, commandWords)            
-
     if closestString == "create new variable":
-        string = createNewVariable()
+        stringP = createNewVariable()
     elif closestString == "show set of variables":
         showSet()
-        string = "used showSet()\n"
+        stringP = "used showSet()\n"
     elif closestString == "assign old variable":
-        string = assignOldVariable()
+        stringP = assignOldVariable()
     elif closestString == "return statement":
-        string = returnStatement()
+        stringP = returnStatement()
     elif closestString == "create for loop":
-        string = createForLoop()
+        stringP = createForLoop()
     elif closestString == "create if statement":
-        string = createIfStatement()
+        stringP = createIfStatement()
     else:
-        string = "no matching phrase found: " + audioToText + "\n"
-    return string
+        stringP = "no matching phrase found: " + audioToText + "\n"
+    return stringP
 
 def getClosestString(inputString, listToMatch):
     i = 0
@@ -459,9 +464,7 @@ def createIfStatement():
                 expression = expression + vInputSplit[i]
             else:
                 expression = expression + vInputSplit[i]
-           
-        print("Condition: " + expression + "\n" +
-              "Is this correct? (Yes/No)")
+        print("Condition: " + expression + "\n" + "Is this correct? (Yes/No)")
         if confirm(): correctCondition = True
     
     condition = expression
@@ -470,7 +473,7 @@ def createIfStatement():
 
 def cbc(txt):
 
-    return lambda : callback(tex)
+    return lambda : callback(txt)
 
 def callback(tex):
     button = "Listen" 
@@ -491,6 +494,7 @@ def listen(tex):
         tex.insert(tk.END, audio_txt)
         tex.see(tk.END)
         '''
+
         model = Model("model")
         rec = KaldiRecognizer(model, 16000)
         p = pyaudio.PyAudio()
@@ -503,11 +507,13 @@ def listen(tex):
                 audioToText = json.loads(rec.Result())["text"]
                 break
         audio_txt = phraseMatch(audioToText)
+        
         tex.insert(tk.END, audio_txt)
         tex.see(tk.END)
-    
+
     a_thread = threading.Thread(target = callback(tex))
     a_thread.start()
+
 '''
 top = tk.Tk()
 tex = tk.Text(master=top)

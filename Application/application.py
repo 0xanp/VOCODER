@@ -44,9 +44,11 @@ class Application(tk.Frame):
         self.end_button = tk.Button(self.voice_recog,text="end",command=lambda: self.change_indicator("end"))
         #####
         def vrListen(event):
+            #vr.listen(self.cmd_man_txt)
+            #vr.listen(self.cmd_receiver_txt)
             vr.listen(self.txt_editor_field)
-            vr.listen(self.cmd_receiver_txt)
-            vr.listen(self.sys_out_txt) 
+            #vr.listen(self.sys_out_txt)
+            self.change_indicator("end")
         self.start_button.bind('<Leave>', vrListen)
         #####
         self.cmd_receiver = tk.LabelFrame(self.voice_recog, text="command(s) received",width=500,height=180)
