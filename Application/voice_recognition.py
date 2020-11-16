@@ -10,13 +10,6 @@ import os
 import json
 import pyaudio
 
-# variables for strings to return to UI
-sysOutputTxt = "this is for the system output text box"
-cmndMgrTxt = "this is for the command manager text box"
-cmndRcvdTxt = "this is for the command(s) received text box"
-txtEditorTxt = "this is for the text editor text box"
-cmndLineTxt = "this is for the command line text box"
-
 # list of commands, has some extra strings for testing
 commandWords = [ "create new variable", 
                  "assign old variable",
@@ -63,27 +56,49 @@ def getVoiceInput():
             break
     return audioToText
 
-def phraseMatch(audioToText):
+def phraseMatch(audioToText,tex2,tex3,tex4):
     print("input: " + audioToText + "\n")
-    closestString = getClosestString(audioToText, commandWords)            
+    validCommand = False
+    #send info to command manager window on UI
+    tex3.insert(tk.END, "matching phrase to command..." + "\n")
+    tex3.see(tk.END)
+    closestString = getClosestString(audioToText, commandWords,tex3)
+    #send matched command to Command(s) Received window on UI
+    tex2.insert(tk.END, closestString + "\n")
+    tex2.see(tk.END)
+    #set stringP to call for matching functions
     if closestString == "create new variable":
-        stringP = createNewVariable()
+        validCommand = True
+        stringP = createNewVariable(tex3)
     elif closestString == "show set of variables":
+        validCommand = True
         showSet()
         stringP = "used showSet()\n"
     elif closestString == "assign old variable":
-        stringP = assignOldVariable()
+        validCommand = True
+        stringP = assignOldVariable(tex3)
     elif closestString == "return statement":
-        stringP = returnStatement()
+        validCommand = True
+        stringP = returnStatement(tex3)
     elif closestString == "create for loop":
-        stringP = createForLoop()
+        validCommand = True
+        stringP = createForLoop(tex3)
     elif closestString == "create if statement":
-        stringP = createIfStatement()
+        validCommand = True
+        stringP = createIfStatement(tex3)
     else:
-        stringP = "no matching phrase found: " + audioToText + "\n"
+        stringP = ""
+        #send response to System Output window on UI
+        tex4.insert(tk.END, "no matching phrase found: " + audioToText + "\n")
+        tex4.see(tk.END)
+    if validCommand:
+        #send response to System Output window on UI
+        tex4.insert(tk.END, "valid command received..." + "\n")
+        tex4.see(tk.END)
+    validCommand = False
     return stringP
 
-def getClosestString(inputString, listToMatch):
+def getClosestString(inputString, listToMatch,tex3):
     i = 0
     highest = 0
     closestString = ""
@@ -102,8 +117,10 @@ def getClosestString(inputString, listToMatch):
             closestString = string
     
     print("\nClosest string to match input was\n")
-    print(closestString + ": " + str(highest))    
-            
+    print(closestString + ": " + str(highest))
+    #send status to command manager window on UI
+    tex3.insert(tk.END, "closest match: " + closestString + "\n")
+    tex3.see(tk.END)    
     return closestString
     
 # Operations dictionary for string to symbol
@@ -178,7 +195,7 @@ def confirm():
 #     expression   = one plus two minus three
 #     output:        test_variable = 1 + 2 - 3
 
-def createNewVariable():
+def createNewVariable(tex3):
     # Get and format variable name, will use snake case
     correctName = False
     nameTaken = True
@@ -235,7 +252,7 @@ def createNewVariable():
                 # if so, it must be a preexisting variable name and 
                 # match it with one from the setOfVariableNames
                 if vInputSplit[i][0].isalpha():
-                    closestVariable = getClosestString(vInputSplit[i], setOfVariableNames)
+                    closestVariable = getClosestString(vInputSplit[i], setOfVariableNames,tex3)
                     
                     print("Got input of: " + str(vInputSplit) + "\n")
                     print("Closest match was: " + str(closestVariable) + "\n")
@@ -263,7 +280,7 @@ def createNewVariable():
     string = variableName + " = " + expression + "\n"
     return string
 
-def assignOldVariable():
+def assignOldVariable(tex3):
     # check if there are any old variables
     if not setOfVariableNames:
         print("No variable names already initialized.\n")
@@ -274,7 +291,7 @@ def assignOldVariable():
     while not correctName:
         print("Say the name of the variable you want to modify.\n")
         vInput = getVoiceInput()
-        variableName = getClosestString(vInput, setOfVariableNames)
+        variableName = getClosestString(vInput, setOfVariableNames,tex3)
         print("Variable name: " + variableName + "\n" +
               "Is this correct? (Yes/No)")
         if confirm(): correctName = True
@@ -311,7 +328,7 @@ def assignOldVariable():
                 # if so, it must be a preexisting variable name and 
                 # match it with one from the setOfVariableNames
                 if vInputSplit[i][0].isalpha():
-                    closestVariable = getClosestString(vInputSplit[i], setOfVariableNames)
+                    closestVariable = getClosestString(vInputSplit[i], setOfVariableNames,tex3)
                     
                     print("Got input of: " + str(vInputSplit) + "\n")
                     print("Closest match was: " + str(closestVariable) + "\n")
@@ -332,7 +349,7 @@ def assignOldVariable():
     string = variableName + " = " + expression + "\n"
     return string
     
-def returnStatement():
+def returnStatement(tex3):
     # get voice input
     correctExpression = False
     while not correctExpression:    
@@ -367,7 +384,7 @@ def returnStatement():
                 # if so, it must be a preexisting variable name and 
                 # match it with one from the setOfVariableNames
                 if vInputSplit[i][0].isalpha():
-                    closestVariable = getClosestString(vInputSplit[i], setOfVariableNames)
+                    closestVariable = getClosestString(vInputSplit[i], setOfVariableNames,tex3)
                     
                     print("Got input of: " + str(vInputSplit) + "\n")
                     print("Closest match was: " + str(closestVariable) + "\n")
@@ -389,7 +406,7 @@ def returnStatement():
     return expression
 
 # for now, can only create a for loop with range function
-def createForLoop():
+def createForLoop(tex3):
     correctVariable = False
     while not correctVariable:
         print("Say the name of looping variable.\n")
@@ -420,7 +437,7 @@ def createForLoop():
     return string
 
     
-def createIfStatement():
+def createIfStatement(tex3):
     correctCondition = False
     while not correctCondition:
         print("Say the condition you want for the if statement.\n")
@@ -451,7 +468,7 @@ def createIfStatement():
                 # if so, it must be a preexisting variable name and 
                 # match it with one from the setOfVariableNames
                 if vInputSplit[i][0].isalpha():
-                    closestVariable = getClosestString(vInputSplit[i], setOfVariableNames)
+                    closestVariable = getClosestString(vInputSplit[i], setOfVariableNames,tex3)
                     
                     print("Got input of: " + str(vInputSplit) + "\n")
                     print("Closest match was: " + str(closestVariable) + "\n")
@@ -470,19 +487,16 @@ def createIfStatement():
     condition = expression
     string = "if " + condition + ":\n"
     return string
-
+'''
 def cbc(txt):
-
     return lambda : callback(txt)
-
 def callback(tex):
     button = "Listen" 
-
-    tex.insert(tk.END, button)
+    tex.insert(tk.END, txtEditorTxt)
     tex.see(tk.END)# Scroll if necessary
-
-def listen(tex):
-    def callback(tex):
+'''
+def listen(tex,tex2,tex3,tex4):
+    def callback(tex,tex2,tex3,tex4):
         '''
         r = sr.Recognizer()
         with sr.Microphone() as source:
@@ -506,12 +520,11 @@ def listen(tex):
             if rec.AcceptWaveform(data) and len(data) != 0:
                 audioToText = json.loads(rec.Result())["text"]
                 break
-        audio_txt = phraseMatch(audioToText)
-        
-        tex.insert(tk.END, audio_txt)
+        txtEditorTxt = phraseMatch(audioToText,tex2,tex3,tex4)
+        tex.insert(tk.END, txtEditorTxt)
         tex.see(tk.END)
 
-    a_thread = threading.Thread(target = callback(tex))
+    a_thread = threading.Thread(target = callback(tex,tex2,tex3,tex4))
     a_thread.start()
 
 '''
