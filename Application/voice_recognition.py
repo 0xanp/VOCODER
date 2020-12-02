@@ -36,7 +36,6 @@ setOfVariableNames = []
 
 # function to get voice input and returns as a string
 def getVoiceInput():
-    '''
     r = sr.Recognizer()
     with sr.Microphone() as source:
         audio = r.listen(source)
@@ -55,7 +54,7 @@ def getVoiceInput():
             audioToText = json.loads(rec.Result())["text"]
             break
     return audioToText
-
+    '''
 def phraseMatch(audioToText,tex2,tex3,tex4):
     print("input: " + audioToText + "\n")
     validCommand = False
@@ -500,18 +499,17 @@ def callback(tex):
 '''
 def listen(tex,tex2,tex3,tex4):
     def callback(tex,tex2,tex3,tex4):
-        '''
+
         r = sr.Recognizer()
         with sr.Microphone() as source:
             audio = r.listen(source)
             #audioToText = r.recognize_sphinx(audio)
             audioToText = r.recognize_google(audio)
-            audio_txt = phraseMatch(audioToText)
+            txtEditorTxt = phraseMatch(audioToText,tex2,tex3,tex4)
 
-        tex.insert(tk.END, audio_txt)
+        tex.insert(tk.END, txtEditorTxt)
         tex.see(tk.END)
         '''
-
         model = Model("model")
         rec = KaldiRecognizer(model, 16000)
         p = pyaudio.PyAudio()
@@ -526,7 +524,7 @@ def listen(tex,tex2,tex3,tex4):
         txtEditorTxt = phraseMatch(audioToText,tex2,tex3,tex4)
         tex.insert(tk.END, txtEditorTxt)
         tex.see(tk.END)
-
+        '''
     a_thread = threading.Thread(target = callback(tex,tex2,tex3,tex4))
     a_thread.start()
 
