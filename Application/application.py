@@ -125,15 +125,22 @@ class Application(tk.Frame):
             self.loadred = Image.open("assets/redCircle.jpg")
             self.renderred = ImageTk.PhotoImage(self.loadred)
             self.imggray.configure(image=self.renderred)
+        elif string == "end":
+            vr.test_compiler(self.txt_editor_field.get(1.0,tk.END), self.terminal)
         else:
-            self.imggray.configure(image=self.rendergray)     
+            self.imggray.configure(image=self.rendergray)
+    def quit(self):
+        self.master.destroy()
+                 
             
 def main():
     root = tk.Tk()
     app = Application(master=root)
     app.master.title("VOCODER")
     #app.master.geometry("1727x900")
+    root.protocol("WM_DELETE_WINDOW", app.quit)
     app.mainloop()
+    
 
 if __name__ == "__main__":
     main()

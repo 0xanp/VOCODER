@@ -20,17 +20,11 @@ def iter_except(function, exception):
         return
 
 class DisplaySubprocessOutputDemo:
-    def __init__(self, root):
+    def __init__(self, root, script):
         self.root = root
-
+        self.script = script
         # start dummy subprocess to generate some output
-        self.process = Popen([sys.executable, "-u", "-c", dedent("""
-            import itertools, time
-
-            for i in itertools.count():
-                print("%d.%d" % divmod(i, 10))
-                time.sleep(0.1)
-            """)], stdout=PIPE)
+        self.process = Popen([sys.executable, "-u", "-c", self.script], stdout=PIPE)
         # launch thread to read the subprocess output
         #   (put the subprocess output into the queue in a background thread,
         #    get output from the queue in the GUI thread.
@@ -41,8 +35,10 @@ class DisplaySubprocessOutputDemo:
         t.start()
 
         # show subprocess' stdout in GUI
-        self.label = tk.Label(root, text="  ", font=(None, 200))
-        self.label.pack(ipadx=4, padx=4, ipady=4, pady=4, fill='both')
+        self.listbox = tk.Listbox(self.root)
+        self.listbox.grid(row=0,column=0,padx=5,pady=5,sticky='nsew')
+        #self.label = tk.Label(root, text = "")
+        #self.label.pack(ipadx=4, padx=4, ipady=4, pady=4, fill='both')
         self.update(q) # start update loop
 
     def reader_thread(self, q):
@@ -58,10 +54,9 @@ class DisplaySubprocessOutputDemo:
         """Update GUI with items from the queue."""
         for line in iter_except(q.get_nowait, Empty): # display all content
             if line is None:
-                self.quit()
                 return
             else:
-                self.label['text'] = line # update GUI
+                self.listbox.insert(tk.END,line) # update GUI
                 break # display no more than one line per 40 milliseconds
         self.root.after(40, self.update, q) # schedule next update
 
@@ -70,9 +65,15 @@ class DisplaySubprocessOutputDemo:
         self.root.destroy()
 
 
-root = tk.Tk()
-app = DisplaySubprocessOutputDemo(root)
-root.protocol("WM_DELETE_WINDOW", app.quit)
-# center window
-#root.eval('tk::PlaceWindow %s center' % root.winfo_pathname(root.winfo_id()))
-root.mainloop()
+def main(text,root):
+    app = DisplaySubprocessOutputDemo(root,text)
+'''
+text = dedent("""
+                import itertools, time
+
+                for i in itertools.count():
+                    print("%d.%d" % divmod(i, 10))
+                    time.sleep(0.1)
+                """)
+main(text)
+'''

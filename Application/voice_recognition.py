@@ -9,7 +9,7 @@ SetLogLevel(-1)
 import os
 import json
 import pyaudio
-
+import compiler as comp
 # list of commands, has some extra strings for testing
 commandWords = [ "create new variable", 
                  "assign old variable",
@@ -97,6 +97,9 @@ def phraseMatch(audioToText,tex2,tex3,tex4):
         tex4.see(tk.END)
     validCommand = False
     return stringP
+
+def test_compiler(text,root):
+    comp.main(text,root)
 
 def getClosestString(inputString, listToMatch,tex3):
     i = 0
