@@ -8,7 +8,6 @@ class Application(tk.Frame):
         self.master = master
         self.grid(sticky=tk.N+tk.S+tk.E+tk.W)
         self.create_widgets()
-       
 
     def create_widgets(self):
         # Making the App window resizeable
@@ -129,7 +128,6 @@ class Application(tk.Frame):
             vr.test_compiler(self.txt_editor_field.get(1.0,tk.END), self.terminal)
         else:
             self.imggray.configure(image=self.rendergray)
-                 
             
 def main():
     root = tk.Tk()
