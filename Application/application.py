@@ -126,6 +126,7 @@ class Application(tk.Frame):
             self.imggray.configure(image=self.renderred)
         elif string == "end":
             vr.test_compiler(self.txt_editor_field.get(1.0,tk.END), self.terminal)
+            self.imggray.configure(image=self.rendergray)
         else:
             self.imggray.configure(image=self.rendergray)
             

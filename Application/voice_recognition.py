@@ -29,6 +29,8 @@ commandWords = [ "create new variable",
                  "select block",
                  "copy text",
                  "paste text",
+                 "print statement",
+                 "print variable",
                  "show set of variables"]
 
 # this set will contain variable names created by createNewVariable()                 
@@ -85,6 +87,12 @@ def phraseMatch(audioToText,tex2,tex3,tex4):
     elif closestString == "create if statement":
         validCommand = True
         stringP = createIfStatement(tex3)
+    elif closestString == "print variable":
+        validCommand = True
+        stringP = printVariable(tex3)
+    elif closestString == "print statement":
+        validCommand = True
+        stringP = printStatement(tex3)
     else:
         stringP = ""
         #send response to System Output window on UI
@@ -489,6 +497,41 @@ def createIfStatement(tex3):
     condition = expression
     string = "if " + condition + ":\n"
     return string
+
+def printVariable(tex3):
+    correctPrint = False
+    while not correctPrint:
+        print("Say the variable for printing.\n")
+        vInput = getVoiceInput()
+        
+        # vInput = vInput.replace(".","")
+        # vInput = vInput.replace(" ","_")
+        print("variable: " + vInput + "\n" +
+              "Is this correct? (Yes/No)")
+        if confirm(): correctPrint = True
+        
+    printVar = vInput
+    
+    string = "print(" + printVar + ")\n"
+    return string
+
+def printStatement(tex3):
+    correctPrint = False
+    while not correctPrint:
+        print("Say the line for printing.\n")
+        vInput = getVoiceInput()
+        
+        # vInput = vInput.replace(".","")
+        # vInput = vInput.replace(" ","_")
+        print("line: " + vInput + "\n" +
+              "Is this correct? (Yes/No)")
+        if confirm(): correctPrint = True
+        
+    printLine = vInput
+    
+    string = "print('" + printLine + "')\n"
+    return string
+
 '''
 def cbc(txt):
     return lambda : callback(txt)
