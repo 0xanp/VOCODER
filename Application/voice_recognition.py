@@ -34,13 +34,16 @@ commandWords = [ "create new variable",
 # this set will contain variable names created by createNewVariable()                 
 setOfVariableNames = []
 
+# path needed to find location of application
+path = os.getcwd()
+
 # function to get voice input and returns as a string
 def getVoiceInput():
     r = sr.Recognizer()
     with sr.Microphone() as source:
         audio = r.listen(source)
-        #audioToText = r.recognize_sphinx(audio)
-        audioToText = r.recognize_google(audio)
+        audioToText = r.recognize_sphinx(audio, language = path + "/../VoiceTraining/Profiles/en-US")
+        #audioToText = r.recognize_google(audio)
     return audioToText
     '''
     model = Model("model")
@@ -503,8 +506,8 @@ def listen(tex,tex2,tex3,tex4):
         r = sr.Recognizer()
         with sr.Microphone() as source:
             audio = r.listen(source)
-            #audioToText = r.recognize_sphinx(audio)
-            audioToText = r.recognize_google(audio)
+            audioToText = r.recognize_sphinx(audio, language = path + "/../VoiceTraining/Profiles/en-US")
+            #audioToText = r.recognize_google(audio)
             txtEditorTxt = phraseMatch(audioToText,tex2,tex3,tex4)
 
         tex.insert(tk.END, txtEditorTxt)
