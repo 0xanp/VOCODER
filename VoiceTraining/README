@@ -1,0 +1,28 @@
+This directory should include an AcousticModels, Profiles and TrainingModel directory, recordAudio.py, training_script.py, bw, cmudict-en-us.dict, en-us.lm.bin, map_adapt and this README.
+
+Dependencies:
+    sudo apt-get install -qq python python-dev python3-pip build-essential swig libpulse-dev
+    sudo apt install sox
+    pip3 install pydub
+    pip3 install ffprobe
+    
+    There might be some that I forgot to note down.
+    
+How to use training programs:
+    1. Execute recordAudio.py
+    2. Give the relative path to the training set
+       This is in TrainingModel/*
+       Example: TrainingModel/test
+    3. Give the filename of the fileids and transcription file without extension name.
+       Example: test
+    4. Follow the prompts on screen.
+       After recording the voice lines, it saves them as wav files in the directory of the training set.
+    5. Execute training_script.py
+    6. Follow the prompts on screen.
+       After execution, the personalized language model is created in the AcousticModels directory with specified name.
+    
+How to use language model in application (temporary):
+    1. Go into the AcousticModels directory and copy the language model you want to use.
+    2. Go into Profiles/en-US and paste the model into there.
+    3. Delete the acoustic-model folder that was already in there
+    4. Rename the new model to acoustic-model
