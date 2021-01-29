@@ -505,7 +505,7 @@ def printVariable(tex3):
         vInput = getVoiceInput()
         
         # vInput = vInput.replace(".","")
-        # vInput = vInput.replace(" ","_")
+        vInput = vInput.replace(" ","_")
         print("variable: " + vInput + "\n" +
               "Is this correct? (Yes/No)")
         if confirm(): correctPrint = True
