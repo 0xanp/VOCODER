@@ -1,15 +1,14 @@
 import tkinter as tk
 import speech_recognition as sr
-import threading
 import re as re
 from fuzzywuzzy import fuzz
-from vosk import Model, KaldiRecognizer
 from vosk import SetLogLevel
 SetLogLevel(-1)
 import os
 import json
 import pyaudio
 import compiler as comp
+
 # list of commands, has some extra strings for testing
 commandWords = [ "create new variable", 
                  "assign old variable",
@@ -36,6 +35,9 @@ commandWords = [ "create new variable",
 # this set will contain variable names created by createNewVariable()                 
 setOfVariableNames = []
 
+## Some simple attributes for the popup command prompts
+
+
 # function to get voice input and returns as a string
 def getVoiceInput():
     r = sr.Recognizer()
@@ -44,20 +46,12 @@ def getVoiceInput():
         #audioToText = r.recognize_sphinx(audio)
         audioToText = r.recognize_google(audio)
     return audioToText
-    '''
-    model = Model("model")
-    rec = KaldiRecognizer(model, 44100)
-    p = pyaudio.PyAudio()
-    stream = p.open(format=pyaudio.paInt16, channels=1, rate=44100, input=True, frames_per_buffer=8000)
-    stream.start_stream()
-    while True:
-        data = stream.read(4000)
-        if rec.AcceptWaveform(data) and len(data) != 0:
-            audioToText = json.loads(rec.Result())["text"]
-            break
-    return audioToText
-    '''
+
 def phraseMatch(audioToText,tex2,tex3,tex4):
+    win = tk.Toplevel()
+    win.wm_title("Prompts")
+    prompt = tk.Text(win, width=50, height=15)
+    prompt.grid(row=0,column=0,padx=5,pady=5,sticky='nsew')
     print("input: " + audioToText + "\n")
     validCommand = False
     #send info to command manager window on UI
@@ -70,7 +64,7 @@ def phraseMatch(audioToText,tex2,tex3,tex4):
     #set stringP to call for matching functions
     if closestString == "create new variable":
         validCommand = True
-        stringP = createNewVariable(tex3)
+        stringP = createNewVariable(tex3, prompt)
     elif closestString == "show set of variables":
         validCommand = True
         showSet()
@@ -102,6 +96,7 @@ def phraseMatch(audioToText,tex2,tex3,tex4):
         #send response to System Output window on UI
         tex4.insert(tk.END, "valid command received..." + "\n")
         tex4.see(tk.END)
+        win.after(1000, lambda: win.destroy())
     validCommand = False
     return stringP
 
@@ -187,12 +182,14 @@ def showSet():
         print("          " + i + ",")
         
 # receives input from user saying yes or no and returns true if yes, false if no
-def confirm():
+def confirm(prompt):
     vInput = getVoiceInput()
     yesRatio = fuzz.ratio(vInput, "yes")
     noRatio = fuzz.ratio(vInput, "no")
     print("yes: " + str(yesRatio) + "\n" +
           "no:  " + str(noRatio)  + "\n")
+    prompt.insert(tk.END, "\nyes: " + str(yesRatio) + "\n" +
+          "no:  " + str(noRatio)  + "\n" )
     if yesRatio > noRatio: return True 
     else: return False
 
@@ -205,7 +202,7 @@ def confirm():
 #     expression   = one plus two minus three
 #     output:        test_variable = 1 + 2 - 3
 
-def createNewVariable(tex3):
+def createNewVariable(tex3,prompt):
     # Get and format variable name, will use snake case
     correctName = False
     nameTaken = True
@@ -214,19 +211,24 @@ def createNewVariable(tex3):
         nameTaken = True
         
         print("Say name of new variable.\n")
+        prompt.insert(tk.END,"Say name of new variable.\n")
         vInput = getVoiceInput()
         vInput = vInput.replace(" ","_")
         variableName = vInput
         
         print("Variable name: " + variableName + "\n" +
               "Is this correct? (Yes/No)")
-        if confirm(): correctName = True
+        prompt.insert(tk.END,"Variable name: " + variableName + '\n' +
+              "Is this correct? (Yes/No)")
+        if confirm(prompt): correctName = True
         else: continue
         
         if variableName in setOfVariableNames:
             print("Variable name: " + variableName + ", is already used in the program.\n" +
                   "Do you still want to use it? (Yes/No)")
-            if confirm(): nameTaken = False
+            prompt.insert(tk.END,"Variable name: " + variableName + ", is already used in the program.\n" +
+                  "Do you still want to use it? (Yes/No)")
+            if confirm(prompt): nameTaken = False
         else:
             nameTaken = False
              
@@ -235,8 +237,8 @@ def createNewVariable(tex3):
     correctExpression = False
     while not correctExpression:    
         print("Say full expression.\n")
+        prompt.insert(tk.END,"Say full expression.\n")
         vInput = getVoiceInput()
-        
         # replace operation words with symbols
         for word, symbol in op_dict.items():
             vInput = vInput.replace(word, symbol)   
@@ -265,7 +267,9 @@ def createNewVariable(tex3):
                     closestVariable = getClosestString(vInputSplit[i], setOfVariableNames,tex3)
                     
                     print("Got input of: " + str(vInputSplit) + "\n")
+                    prompt.insert(tk.END,"Got input of: " + str(vInputSplit) + "\n")
                     print("Closest match was: " + str(closestVariable) + "\n")
+                    prompt.insert(tk.END,"Closest match was: " + str(closestVariable) + "\n")
                     vInputSplit[i] = closestVariable
         
         # reformat expression
@@ -276,9 +280,11 @@ def createNewVariable(tex3):
             else:
                 expression = expression + vInputSplit[i]
                 
-        print("Expression: " + expression + "\n" +
+        print("Expression: " + expression + '\n' +
               "Is this correct? (Yes/No)")
-        if confirm(): correctExpression = True
+        prompt.insert(tk.END,"Expression: " + expression + "\n" +
+              "Is this correct? (Yes/No)")
+        if confirm(prompt): correctExpression = True
         
     
     # used for checking correctness in terminal    
@@ -532,55 +538,14 @@ def printStatement(tex3):
     string = "print('" + printLine + "')\n"
     return string
 
-'''
-def cbc(txt):
-    return lambda : callback(txt)
-def callback(tex):
-    button = "Listen" 
-    tex.insert(tk.END, txtEditorTxt)
-    tex.see(tk.END)# Scroll if necessary
-'''
 def listen(tex,tex2,tex3,tex4):
-    def callback(tex,tex2,tex3,tex4):
-
-        r = sr.Recognizer()
-        with sr.Microphone() as source:
-            audio = r.listen(source)
+    r = sr.Recognizer()
+    with sr.Microphone() as source:
+        audio = r.listen(source)
+        try:
             #audioToText = r.recognize_sphinx(audio)
             audioToText = r.recognize_google(audio)
             txtEditorTxt = phraseMatch(audioToText,tex2,tex3,tex4)
-
-        tex.insert(tk.END, txtEditorTxt)
-        tex.see(tk.END)
-        '''
-        model = Model("model")
-        rec = KaldiRecognizer(model, 16000)
-        p = pyaudio.PyAudio()
-        stream = p.open(format=pyaudio.paInt16, channels=1, rate=16000, input=True, frames_per_buffer=8000)
-        stream.start_stream()
-        data = stream.read(4000)
-        while True:
-            data = stream.read(4000)
-            if rec.AcceptWaveform(data) and len(data) != 0:
-                audioToText = json.loads(rec.Result())["text"]
-                break
-        txtEditorTxt = phraseMatch(audioToText,tex2,tex3,tex4)
-        tex.insert(tk.END, txtEditorTxt)
-        tex.see(tk.END)
-        '''
-    a_thread = threading.Thread(target = callback(tex,tex2,tex3,tex4))
-    a_thread.start()
-
-'''
-top = tk.Tk()
-tex = tk.Text(master=top)
-tex.pack(side=tk.RIGHT)
-bop = tk.Frame()
-bop.pack(side=tk.LEFT)
-
-
-tk.Button(bop, text='Listen', command=lambda: listen(tex)).pack()
-tk.Button(bop, text='Exit', command=top.destroy).pack()
-
-top.mainloop()
-'''
+        except sr.UnknownValueError:
+            pass
+    return txtEditorTxt

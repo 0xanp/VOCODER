@@ -1,15 +1,15 @@
 import tkinter as tk
 from PIL import Image, ImageTk
 import voice_recognition as vr
+import multiprocessing as mp
+import threading
+import queue
 
 class Application(tk.Frame):
     def __init__(self, master=None):
         super().__init__(master)
         self.master = master
         self.grid(sticky=tk.N+tk.S+tk.E+tk.W)
-        self.create_widgets()
-
-    def create_widgets(self):
         # Making the App window resizeable
         top=self.winfo_toplevel()                
         top.rowconfigure(0, weight=1)            
@@ -39,14 +39,9 @@ class Application(tk.Frame):
         self.imggray = tk.Label(self.indicator,image=self.rendergray)
         self.imggray.image = self.rendergray
         self.imggray.pack()
-        self.start_button = tk.Button(self.voice_recog,text="start",command=lambda: self.change_indicator("start"))
-        self.end_button = tk.Button(self.voice_recog,text="end",command=lambda: self.change_indicator("end"))
-        #####
-        def vrListen(event):
-            #self.txt_editor_field = tex, self.cmd_receiver_txt = tex2, self.cmd_man_txt = tex3, self.sys_out_txt = tex4
-            vr.listen(self.txt_editor_field,self.cmd_receiver_txt,self.cmd_man_txt,self.sys_out_txt)
-            self.change_indicator("end")
-        self.start_button.bind('<Leave>', vrListen)
+        self.start_button = tk.Button(self.voice_recog,text="start",command=lambda: self.update_text())
+        self.end_button = tk.Button(self.voice_recog,text="end",command=lambda: self.change_indicator())
+
         #####
         self.cmd_receiver = tk.LabelFrame(self.voice_recog, text="command(s) received",width=500,height=180)
         self.cmd_receiver.grid_propagate(False)
@@ -117,26 +112,38 @@ class Application(tk.Frame):
 
         ## Packing all the widgets in Help
         self.help_field.grid(row=3,columnspan=3,padx=5,pady=5,sticky='nsew')
+    
+    def text_queue(self, thread_queue=None):
+        result = vr.listen(self.txt_editor_field,self.cmd_receiver_txt,self.cmd_man_txt,self.sys_out_txt)
+        thread_queue.put(result)
 
-    ## Handling start and end buttons
-    def change_indicator(self, string):
-        if string == "start":
-            self.loadred = Image.open("assets/redCircle.jpg")
-            self.renderred = ImageTk.PhotoImage(self.loadred)
-            self.imggray.configure(image=self.renderred)
-        elif string == "end":
-            vr.test_compiler(self.txt_editor_field.get(1.0,tk.END), self.terminal)
-            self.imggray.configure(image=self.rendergray)
-        else:
-            self.imggray.configure(image=self.rendergray)
+    def update_text(self):
+        self.loadred = Image.open("assets/redCircle.jpg")
+        self.renderred = ImageTk.PhotoImage(self.loadred)
+        self.imggray.configure(image=self.renderred)
+        self.thread_queue = queue.Queue()
+        self.new_thread = threading.Thread(
+            target=self.text_queue,
+            kwargs={'thread_queue':self.thread_queue})
+        self.new_thread.start()
+        self.after(100, self.listen_for_result)
+
+    def listen_for_result(self):
+        try:
+            self.txt_editor_field.insert(tk.END, self.thread_queue.get(0))
+        except queue.Empty:
+            self.after(100, self.listen_for_result)
+    
+    ## Handling end/compile buttons
+    def change_indicator(self):
+        vr.test_compiler(self.txt_editor_field.get(1.0,tk.END), self.terminal)
+        self.imggray.configure(image=self.rendergray) 
             
 def main():
     root = tk.Tk()
     app = Application(master=root)
     app.master.title("VOCODER")
-    #app.master.geometry("1727x900")
     app.mainloop()
     
-
 if __name__ == "__main__":
     main()
