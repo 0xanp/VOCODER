@@ -199,8 +199,8 @@ def confirm(prompt):
     noRatio = fuzz.ratio(vInput, "no")
     print("yes: " + str(yesRatio) + "\n" +
           "no:  " + str(noRatio)  + "\n")
-    prompt.insert(tk.END, "\nyes: " + str(yesRatio) + "\n" +
-          "no:  " + str(noRatio)  + "\n" )
+    # prompt.insert(tk.END, "\nyes: " + str(yesRatio) + "\n" +"no:  " + str(noRatio)  + "\n" )
+    prompt.insert(tk.END, "\n")
     if yesRatio > noRatio: return True 
     else: return False
 
@@ -449,36 +449,36 @@ def returnStatement(tex3, prompt):
 def createForLoop(tex3, prompt):
     correctVariable = False
     while not correctVariable:
-        print("Say the name of looping variable.\n")
-        prompt.insert(tk.END, "Say the name of looping variable.\n")
+        # print("Say the name of looping variable.\n")
+        # system asks user for variable in the popup window of GUI
+        prompt.insert(tk.END, "Say the name of the looping variable.\n")
         vInput = getVoiceInput()
         
         vInput = vInput.replace(".","")
         vInput = vInput.replace(" ","_")
-        print("Looping variable: " + vInput + "\n" +
-              "Is this correct? (Yes/No)")
-        prompt.insert(tk.END, "Looping variable: " + vInput + "\n" +
-              "Is this correct? (Yes/No)")
+        # print("Looping variable: " + vInput + "\n" + "Is this correct? (Yes/No)")
+        # confirmation sent to user in popup window of GUI
+        prompt.insert(tk.END, "Looping variable: " + vInput + "\n" + "Is this correct? (Yes/No)")
         if confirm(prompt): correctVariable = True
         
     loopingVariable = vInput
         
     correctRange = False
     while not correctRange:
-        print("How many times do you want to repeat this loop?\n")
+        # print("How many times do you want to repeat this loop?\n")
+        # question sent to user in popup window of GUI
         prompt.insert(tk.END, "How many times do you want to repeat this loop?\n")
         vInput = getVoiceInput()
-        
         vInput = str(text2int(vInput))
         
-        print("Amount of loops: " + vInput + "\n" + 
-              "Is this correct? (Yes/No)")
-        prompt.insert(tk.END, "How many times do you want to repeat this loop?\n")
+        # print("Amount of loops: " + vInput + "\n" + "Is this correct? (Yes/No)")
+        # confirmation sent to user in popup window of GUI
+        prompt.insert(tk.END, "Amount of loops: " + vInput + "\n" + "Is this correct? (Yes/No)")
         if confirm(prompt): correctRange = True
         
     rangeInt = vInput
-    
-    string = "for " + loopingVariable + " in range(" + rangeInt + "):\n"
+    # string created for insertion in text editor window of GUI
+    string = "for " + loopingVariable + " in range(" + rangeInt + "):\n    "
     return string
 
     
