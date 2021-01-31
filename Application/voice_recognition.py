@@ -124,19 +124,19 @@ def getClosestString(inputString, listToMatch,tex3):
             highest = ratio
             closestString = string
     
-    print("\nClosest string to match input was\n")
+    # print("\nClosest string to match input was\n")
     # check for threshold of 80 or greater to find matching command
     if highest >= 80:
-        print(closestString + ": " + str(highest))
-        #send status to command manager window on UI
+        # print(closestString + ": " + str(highest))
+        # send status to command manager window on UI
         tex3.insert(tk.END, "closest match: " + closestString + "\n")
         tex3.see(tk.END)
     else:
-        print("not found")
-        #send status to command manager window on UI
-        tex3.insert(tk.END, "command: " + inputString + " not found.\n")
+        # print("not found")
+        # send status to command manager window on UI
+        tex3.insert(tk.END, inputString + " not found.\n")
         tex3.see(tk.END)
-        closestString = ""
+        closestString = "invalid"
     return closestString
     
 # Operations dictionary for string to symbol
@@ -247,8 +247,8 @@ def createNewVariable(tex3,prompt):
     # Get expression
     correctExpression = False
     while not correctExpression:    
-        print("Say full expression.\n")
-        prompt.insert(tk.END,"Say full expression.\n")
+        print("State value for variable.\n")
+        prompt.insert(tk.END,"State value for variable.\n")
         vInput = getVoiceInput()
         # replace operation words with symbols
         for word, symbol in op_dict.items():
@@ -291,10 +291,8 @@ def createNewVariable(tex3,prompt):
             else:
                 expression = expression + vInputSplit[i]
                 
-        print("Expression: " + expression + '\n' +
-              "Is this correct? (Yes/No)")
-        prompt.insert(tk.END,"Expression: " + expression + "\n" +
-              "Is this correct? (Yes/No)")
+        # print("Expression: " + expression + '\n' + "Is this correct? (Yes/No)")
+        prompt.insert(tk.END, variableName + " = " + expression + "\n" + "Is this correct? (Yes/No)")
         if confirm(prompt): correctExpression = True
         
     
@@ -317,21 +315,27 @@ def assignOldVariable(tex3, prompt):
     # get input for the variable name to be modified
     correctName = False
     while not correctName:
-        print("Say the name of the variable you want to modify.\n")
+        # print("Say the name of the variable you want to modify.\n")
+        # ask user for variable to modify in the GUI popup
         prompt.insert(tk.END, "Say the name of the variable you want to modify.\n")
         vInput = getVoiceInput()
         variableName = getClosestString(vInput, setOfVariableNames,tex3)
-        print("Variable name: " + variableName + "\n" +
-              "Is this correct? (Yes/No)")
-        prompt.insert(tk.END, "Say the name of the variable you want to modify.\n")
+        if variableName == "invalid":
+            variableName = vInput
+            prompt.insert(tk.END, "New variable detected.\n")
+            tex3.insert(tk.END, variableName + " not found, creating new variable.\n")
+            tex3.see(tk.END)
+        # print("Variable name: " + variableName + "\n" + "Is this correct? (Yes/No)")
+        # ask user for confirmation in GUI popup
+        prompt.insert(tk.END, "Variable name: " + variableName + "\n" + "Is this correct? (Yes/No)")
         if confirm(prompt): correctName = True
         else: continue
         
     # get expression
     correctExpression = False
     while not correctExpression:    
-        print("Say full expression.\n")
-        prompt.insert(tk.END, "Say full expression.\n")
+        # print("State what the variable equals.\n")
+        prompt.insert(tk.END, "State value for variable.\n")
         vInput = getVoiceInput()
         
         # replace operation words with symbols
@@ -360,12 +364,12 @@ def assignOldVariable(tex3, prompt):
                 # match it with one from the setOfVariableNames
                 if vInputSplit[i][0].isalpha():
                     closestVariable = getClosestString(vInputSplit[i], setOfVariableNames,tex3)
-                    
-                    print("Got input of: " + str(vInputSplit) + "\n")
-                    prompt.insert(tk.END, "Got input of: " + str(vInputSplit) + "\n")
-                    print("Closest match was: " + str(closestVariable) + "\n")
-                    prompt.insert(tk.END, "Closest match was: " + str(closestVariable) + "\n")
-                    vInputSplit[i] = closestVariable
+                    if closestVariable=="invalid":
+                        # print("Got input of: " + str(vInputSplit) + "\n")
+                        prompt.insert(tk.END, vInputSplit[i] + " is not defined\n")
+                        # vInputSplit[i] = closestVariable
+                    else:
+                        vInputSplit[i] = closestVariable
         
         # reformat expression
         expression = ""
@@ -375,10 +379,9 @@ def assignOldVariable(tex3, prompt):
             else:
                 expression = expression + vInputSplit[i]
                 
-        print("Expression: " + expression + "\n" +
-              "Is this correct? (Yes/No)")
-        prompt.insert(tk.END, "Expression: " + expression + "\n" +
-              "Is this correct? (Yes/No)")
+        # print("Expression: " + expression + "\n" + "Is this correct? (Yes/No)")
+        # confirm output from user in GUI popup
+        prompt.insert(tk.END, variableName + " = " + expression + "\n" + "Is this correct? (Yes/No)")
         if confirm(prompt): correctExpression = True
         
     string = variableName + " = " + expression + "\n"
@@ -423,9 +426,9 @@ def returnStatement(tex3, prompt):
                     closestVariable = getClosestString(vInputSplit[i], setOfVariableNames,tex3)
                     
                     print("Got input of: " + str(vInputSplit) + "\n")
-                    prompt.insert(tk.END, "Got input of: " + str(vInputSplit) + "\n")
+                    # prompt.insert(tk.END, "Got input of: " + str(vInputSplit) + "\n")
                     print("Closest match was: " + str(closestVariable) + "\n")
-                    prompt.insert(tk.END, "Closest match was: " + str(closestVariable) + "\n")
+                    # prompt.insert(tk.END, "Closest match was: " + str(closestVariable) + "\n")
                     vInputSplit[i] = closestVariable
         
         # reformat expression
@@ -438,7 +441,7 @@ def returnStatement(tex3, prompt):
                 
         print("Expression: " + expression + "\n" +
               "Is this correct? (Yes/No)")
-        prompt.insert(tk.END, "Expression: " + expression + "\n" +
+        prompt.insert(tk.END, "return " + expression + "\n" +
               "Is this correct? (Yes/No)")
         if confirm(prompt): correctExpression = True
     
@@ -517,9 +520,9 @@ def createIfStatement(tex3, prompt):
                     closestVariable = getClosestString(vInputSplit[i], setOfVariableNames,tex3)
                     
                     print("Got input of: " + str(vInputSplit) + "\n")
-                    prompt.insert(tk.END, "Got input of: " + str(vInputSplit) + "\n")
+                    # prompt.insert(tk.END, "Got input of: " + str(vInputSplit) + "\n")
                     print("Closest match was: " + str(closestVariable) + "\n")
-                    prompt.insert(tk.END, "Closest match was: " + str(closestVariable) + "\n")
+                    # prompt.insert(tk.END, "Closest match was: " + str(closestVariable) + "\n")
                     vInputSplit[i] = closestVariable
         
         # reformat expression
@@ -530,7 +533,7 @@ def createIfStatement(tex3, prompt):
             else:
                 expression = expression + vInputSplit[i]
         print("Condition: " + expression + "\n" + "Is this correct? (Yes/No)")
-        prompt.insert(tk.END, "Condition: " + expression + "\n" + "Is this correct? (Yes/No)")
+        prompt.insert(tk.END, "if " + expression + "\n" + "Is this correct? (Yes/No)")
         if confirm(prompt): correctCondition = True
     
     condition = expression
@@ -549,7 +552,7 @@ def createDef(tex3,prompt):
         vInput = vInput.replace(" ","_")
         print("new def(): " + vInput + "\n" +
               "Is this correct? (Yes/No)")
-        prompt.insert(tk.END, "new def(): " + vInput + "\n" +
+        prompt.insert(tk.END, "def " + vInput + "():\n" +
               "Is this correct? (Yes/No)")
         if confirm(prompt): correctPrint = True
         
