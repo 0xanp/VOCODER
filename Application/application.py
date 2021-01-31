@@ -9,7 +9,10 @@ import os
 import sys
 
 class Application(tk.Frame):
+    """This is the documentation for Application"""
     def __init__(self, master=None):
+        """ inits Application with a complete UI
+        """
         super().__init__(master)
         self.master = master
         self.grid(sticky=tk.N+tk.S+tk.E+tk.W)
@@ -136,7 +139,7 @@ class Application(tk.Frame):
             self.txt_editor_field.insert(tk.END, self.thread_queue.get(0))
         except queue.Empty:
             self.after(100, self.listen_for_result)
-    
+
     ## Handling end/compile buttons
     def change_indicator(self):
         vr.test_compiler(self.txt_editor_field.get(1.0,tk.END), self.terminal)
@@ -146,7 +149,7 @@ def on_closing():
         if messagebox.askokcancel("Quit", "Do you want to quit?"):
             os.popen('find . | grep -E "(__pycache__|\.pyc|\.pyo$)" | xargs rm -rf')
             root.destroy()
-            
+          
 def main():
     app = Application(master=root)
     app.master.title("VOCODER")
