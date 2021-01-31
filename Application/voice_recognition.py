@@ -94,6 +94,7 @@ def phraseMatch(audioToText,tex2,tex3,tex4):
         #send response to System Output window on UI
         tex4.insert(tk.END, "no matching phrase found: " + audioToText + "\n")
         tex4.see(tk.END)
+        win.after(1000, lambda: win.destroy())
     if validCommand:
         #send response to System Output window on UI
         tex4.insert(tk.END, "valid command received..." + "\n")
@@ -124,10 +125,18 @@ def getClosestString(inputString, listToMatch,tex3):
             closestString = string
     
     print("\nClosest string to match input was\n")
-    print(closestString + ": " + str(highest))
-    #send status to command manager window on UI
-    tex3.insert(tk.END, "closest match: " + closestString + "\n")
-    tex3.see(tk.END)    
+    # check for threshold of 80 or greater to find matching command
+    if highest >= 80:
+        print(closestString + ": " + str(highest))
+        #send status to command manager window on UI
+        tex3.insert(tk.END, "closest match: " + closestString + "\n")
+        tex3.see(tk.END)
+    else:
+        print("not found")
+        #send status to command manager window on UI
+        tex3.insert(tk.END, "command: " + inputString + " not found.\n")
+        tex3.see(tk.END)
+        closestString = ""
     return closestString
     
 # Operations dictionary for string to symbol
