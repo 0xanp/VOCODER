@@ -1,9 +1,12 @@
 import tkinter as tk
+from tkinter import messagebox
 from PIL import Image, ImageTk
 import voice_recognition as vr
 import multiprocessing as mp
 import threading
 import queue
+import os
+import sys
 
 class Application(tk.Frame):
     def __init__(self, master=None):
@@ -138,12 +141,18 @@ class Application(tk.Frame):
     def change_indicator(self):
         vr.test_compiler(self.txt_editor_field.get(1.0,tk.END), self.terminal)
         self.imggray.configure(image=self.rendergray) 
+
+def on_closing():
+        if messagebox.askokcancel("Quit", "Do you want to quit?"):
+            os.popen('find . | grep -E "(__pycache__|\.pyc|\.pyo$)" | xargs rm -rf')
+            root.destroy()
             
 def main():
-    root = tk.Tk()
     app = Application(master=root)
     app.master.title("VOCODER")
+    root.protocol("WM_DELETE_WINDOW", on_closing)
     app.mainloop()
     
 if __name__ == "__main__":
+    root = tk.Tk()
     main()
