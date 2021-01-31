@@ -72,7 +72,7 @@ class Application(tk.Frame):
         self.help_field.insert(tk.END, "1=Create Array \t2=Create Else Statement \t3=Create Else-If Statement \t4=Create If Statement \t5=Create While Loop "+\
                                         "\t6=Create For Loop \t7=Return Statement \t8=Assign Old Variable \t9=Create New Variable\n10=Copy Text \t11=Select Block "+\
                                         "\t12=Select Line \t13=Select Word \t14=Move to Word \t15=Move Cursor \t16=Paste Text \t17=Redo Command "+\
-                                        "\t18=Undo Command")
+                                        "\t18=Undo Command \t19 Print Statement \t20 Print Variable \t21Create Function")
         self.help_field.grid_propagate(False)
         self.app_layout.grid(row=1,padx=5,pady=5,sticky='nsew')
         self.voice_recog.grid(column=0,row=0,padx=5,pady=5,sticky='nsew')

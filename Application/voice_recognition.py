@@ -537,7 +537,7 @@ def printVariable(tex3, prompt):
               "Is this correct? (Yes/No)")
         prompt.insert(tk.END, "variable: " + vInput + "\n" +
               "Is this correct? (Yes/No)")
-        if confirm(): correctPrint = True
+        if confirm(prompt): correctPrint = True
         
     printVar = vInput
     
@@ -555,7 +555,8 @@ def printStatement(tex3, prompt):
         # vInput = vInput.replace(" ","_")
         print("line: " + vInput + "\n" +
               "Is this correct? (Yes/No)")
-        prompt.insert(tk.END, "Say the line for printing.\n")
+        prompt.insert(tk.END, "line: " + vInput + "\n" +
+              "Is this correct? (Yes/No)")
         if confirm(prompt): correctPrint = True
         
     printLine = vInput
