@@ -598,5 +598,6 @@ def listen(tex,tex2,tex3,tex4):
             audioToText = r.recognize_google(audio)
             txtEditorTxt = phraseMatch(audioToText,tex2,tex3,tex4)
         except sr.UnknownValueError:
-            pass
+            tex4.insert(tk.END,"No command received. Please say a commands!")
+            return ""
     return txtEditorTxt
