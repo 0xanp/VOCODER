@@ -28,6 +28,7 @@ commandWords = [ "create new variable",
                  "select block",
                  "copy text",
                  "paste text",
+                 "create function",
                  "print statement",
                  "print variable",
                  "show set of variables"]
@@ -79,6 +80,9 @@ def phraseMatch(audioToText,tex2,tex3,tex4):
     elif closestString == "create if statement":
         validCommand = True
         stringP = createIfStatement(tex3, prompt)
+    elif closestString == "create function":
+        validCommand = True
+        stringP = createDef(tex3, prompt)
     elif closestString == "print variable":
         validCommand = True
         stringP = printVariable(tex3, prompt)
@@ -522,6 +526,27 @@ def createIfStatement(tex3, prompt):
     
     condition = expression
     string = "if " + condition + ":\n"
+    return string
+
+# command "create function" results in a line: def my_func():
+def createDef(tex3,prompt):
+    correctPrint = False
+    while not correctPrint:
+        print("Say name of function.\n")
+        prompt.insert(tk.END, "Say name of the function.\n")
+        vInput = getVoiceInput()
+        
+        # vInput = vInput.replace(".","")
+        vInput = vInput.replace(" ","_")
+        print("new def(): " + vInput + "\n" +
+              "Is this correct? (Yes/No)")
+        prompt.insert(tk.END, "new def(): " + vInput + "\n" +
+              "Is this correct? (Yes/No)")
+        if confirm(prompt): correctPrint = True
+        
+    printLine = vInput
+    
+    string = "def " + printLine + "():\n    "
     return string
 
 def printVariable(tex3, prompt):
