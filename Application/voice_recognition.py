@@ -66,8 +66,8 @@ def phraseMatch(audioToText,tex2,tex3,tex4):
         stringP = createNewVariable(tex3, prompt)
     elif closestString == "show set of variables":
         validCommand = True
-        showSet()
-        stringP = "used showSet()\n"
+        showSet(tex4)
+        stringP = ""
     elif closestString == "assign old variable":
         validCommand = True
         stringP = assignOldVariable(tex3, prompt)
@@ -186,11 +186,12 @@ def text2int(textnum, numwords={}):
     return result + current
 
 # Test function just to see if the set works    
-def showSet():
-    print("Currently in showSet() function.\n" +
-          "Set of variable names:")
+def showSet(tex4):
+    #print("Currently in showSet() function.\n" +
+    tex4.insert(tk.END, "Set of variable names:")
     for i in setOfVariableNames:
-        print("          " + i + ",")
+        tex4.insert(tk.END, "          " + i + ",")
+        tex4.see(tk.END)
         
 # receives input from user saying yes or no and returns true if yes, false if no
 def confirm(prompt):
