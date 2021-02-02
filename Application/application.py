@@ -136,7 +136,11 @@ class Application(tk.Frame):
 
     def listen_for_result(self):
         try:
-            self.txt_editor_field.insert(tk.END, self.thread_queue.get(0))
+            if self.thread_queue.get(0) == "":
+                self.sys_out_txt.insert(tk.END,"No command received. Please say a commands!")
+                self.imggray.configure(image=self.rendergray)
+            else:
+                self.txt_editor_field.insert(tk.END, self.thread_queue.get(0))
         except queue.Empty:
             self.after(100, self.listen_for_result)
 
@@ -151,11 +155,11 @@ def on_closing():
             root.destroy()
           
 def main():
-    app = Application(master=root)
     app.master.title("VOCODER")
     root.protocol("WM_DELETE_WINDOW", on_closing)
     app.mainloop()
     
 if __name__ == "__main__":
     root = tk.Tk()
+    app = Application(master=root)
     main()
