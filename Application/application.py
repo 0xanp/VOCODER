@@ -136,11 +136,13 @@ class Application(tk.Frame):
 
     def listen_for_result(self):
         try:
-            if self.thread_queue.get(0) == "":
+            text = self.thread_queue.get(0)
+            if text == "":
                 self.sys_out_txt.insert(tk.END,"No command received. Please say a commands!")
                 self.imggray.configure(image=self.rendergray)
             else:
-                self.txt_editor_field.insert(tk.END, self.thread_queue.get(0))
+                self.txt_editor_field.insert(tk.END, text)
+                self.imggray.configure(image=self.rendergray)
         except queue.Empty:
             self.after(100, self.listen_for_result)
 
