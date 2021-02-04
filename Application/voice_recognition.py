@@ -77,6 +77,9 @@ def phraseMatch(audioToText,tex2,tex3,tex4):
     elif closestString == "create for loop":
         validCommand = True
         stringP = createForLoop(tex3, prompt)
+    elif closestString == "create while loop":
+        validCommand = True
+        stringP = createWhileLoop(tex3, prompt)
     elif closestString == "create if statement":
         validCommand = True
         stringP = createIfStatement(tex3, prompt)
@@ -506,6 +509,60 @@ def createForLoop(tex3, prompt):
 # command "create while loop" returns string = "while " + condition + ":\n"
 # use case 5, CWL
 # *********************************************************************************
+def createWhileLoop(tex3, prompt):
+    correctCondition = False
+    while not correctCondition:
+        print("Say the condition you want for the while loop.\n")
+        prompt.insert(tk.END, "Say the condition you want for the while loop.\n")
+        vInput = getVoiceInput()
+        
+        vInput = vInput.replace(".","")
+        
+        # replace strings of comparison operators with symbols
+        for x, y in compare_dict.items():
+            vInput = vInput.replace(x, y)
+        
+        
+        # split string into array, while keeping the operator symbols
+        vInputSplit = re.split("([<]|[<=]|[>]|[>=][==][!=])", vInput)
+        
+        # find location of operators    
+        opLocations = []
+        for i in range(0, len(vInputSplit)):
+            if vInputSplit[i] in compare_dict.values():
+                opLocations.append(i)    
+        
+        # go through the split string and replace with symbols/literals            
+        for i in range(0, len(vInputSplit)):
+            if i not in opLocations:   
+                vInputSplit[i] = str(text2int(vInputSplit[i]))
+                
+                # check if the term starts with a letter
+                # if so, it must be a preexisting variable name and 
+                # match it with one from the setOfVariableNames
+                if vInputSplit[i][0].isalpha():
+                    closestVariable = getClosestString(vInputSplit[i], setOfVariableNames,tex3)
+                    
+                    print("Got input of: " + str(vInputSplit) + "\n")
+                    # prompt.insert(tk.END, "Got input of: " + str(vInputSplit) + "\n")
+                    print("Closest match was: " + str(closestVariable) + "\n")
+                    # prompt.insert(tk.END, "Closest match was: " + str(closestVariable) + "\n")
+                    vInputSplit[i] = closestVariable
+        
+        # reformat expression
+        expression = ""
+        for i in range(0, len(vInputSplit)): 
+            if i in opLocations:   
+                expression = expression + vInputSplit[i]
+            else:
+                expression = expression + vInputSplit[i]
+        print("Condition: " + expression + "\n" + "Is this correct? (Yes/No)")
+        prompt.insert(tk.END, "while " + expression + "\n" + "Is this correct? (Yes/No)")
+        if confirm(prompt): correctCondition = True
+    
+    condition = expression
+    string = "while " + condition + ":\n    "
+    return string
 
 # *********************************************************************************
 # command "create if statement" returns string = "if " + condition + ":\n"
@@ -563,7 +620,7 @@ def createIfStatement(tex3, prompt):
         if confirm(prompt): correctCondition = True
     
     condition = expression
-    string = "if " + condition + ":\n"
+    string = "if " + condition + ":\n    "
     return string
 
 # *********************************************************************************
