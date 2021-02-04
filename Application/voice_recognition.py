@@ -214,6 +214,10 @@ def confirm(prompt):
 #     expression   = one plus two minus three
 #     output:        test_variable = 1 + 2 - 3
 
+# ***************************************************************************************
+# command "create new variable" returns string = variableName + " = " + expression + "\n"
+# use case 1, CNV
+# ***************************************************************************************
 def createNewVariable(tex3,prompt):
     # Get and format variable name, will use snake case
     correctName = False
@@ -306,6 +310,10 @@ def createNewVariable(tex3,prompt):
     string = variableName + " = " + expression + "\n"
     return string
 
+# *********************************************************************************
+# command "assign old variable" returns string = variableName + " = " + expression + "\n"
+# use case 2, AOV
+# *********************************************************************************
 def assignOldVariable(tex3, prompt):
     # check if there are any old variables
     if not setOfVariableNames:
@@ -387,7 +395,11 @@ def assignOldVariable(tex3, prompt):
         
     string = variableName + " = " + expression + "\n"
     return string
-    
+
+# *********************************************************************************
+# command "return statement" returns expression = "return " + expression + "\n"
+# use case 3, RS
+# *********************************************************************************  
 def returnStatement(tex3, prompt):
     # get voice input
     correctExpression = False
@@ -449,7 +461,12 @@ def returnStatement(tex3, prompt):
     expression = "return " + expression + "\n"
     return expression
 
+# *********************************************************************************
+# command "create for loop" returns string = "for " + loopingVariable + " in range
+#                                             (" + rangeInt + "):\n    "
 # for now, can only create a for loop with range function
+# use case 4, CFL
+# *********************************************************************************
 def createForLoop(tex3, prompt):
     correctVariable = False
     while not correctVariable:
@@ -485,7 +502,15 @@ def createForLoop(tex3, prompt):
     string = "for " + loopingVariable + " in range(" + rangeInt + "):\n    "
     return string
 
-    
+# *********************************************************************************
+# command "create while loop" returns string = "while " + condition + ":\n"
+# use case 5, CWL
+# *********************************************************************************
+
+# *********************************************************************************
+# command "create if statement" returns string = "if " + condition + ":\n"
+# use case 6, CIF
+# *********************************************************************************    
 def createIfStatement(tex3, prompt):
     correctCondition = False
     while not correctCondition:
@@ -541,47 +566,70 @@ def createIfStatement(tex3, prompt):
     string = "if " + condition + ":\n"
     return string
 
-# command "create function" results in a line: def my_func():
-def createDef(tex3,prompt):
-    correctPrint = False
-    while not correctPrint:
-        print("Say name of function.\n")
-        prompt.insert(tk.END, "Say name of the function.\n")
-        vInput = getVoiceInput()
-        
-        # vInput = vInput.replace(".","")
-        vInput = vInput.replace(" ","_")
-        print("new def(): " + vInput + "\n" +
-              "Is this correct? (Yes/No)")
-        prompt.insert(tk.END, "def " + vInput + "():\n" +
-              "Is this correct? (Yes/No)")
-        if confirm(prompt): correctPrint = True
-        
-    printLine = vInput
-    
-    string = "def " + printLine + "():\n    "
-    return string
+# *********************************************************************************
+# command "create else-if statement" returns string = "elif " + condition + ":\n"
+# use case 7, CEIF
+# *********************************************************************************
 
-def printVariable(tex3, prompt):
-    correctPrint = False
-    while not correctPrint:
-        print("Say the variable for printing.\n")
-        prompt.insert(tk.END, "Say the variable for printing.\n")
-        vInput = getVoiceInput()
-        
-        # vInput = vInput.replace(".","")
-        vInput = vInput.replace(" ","_")
-        print("variable: " + vInput + "\n" +
-              "Is this correct? (Yes/No)")
-        prompt.insert(tk.END, "variable: " + vInput + "\n" +
-              "Is this correct? (Yes/No)")
-        if confirm(prompt): correctPrint = True
-        
-    printVar = vInput
-    
-    string = "print(" + printVar + ")\n"
-    return string
+# *********************************************************************************
+# command "create else statement" returns string = "else:\n"
+# use case 8, CEF
+# *********************************************************************************
 
+# *********************************************************************************
+# command "create array" returns string = "array = [" + var(s) + "]\n"
+# use case 9, CA
+# *********************************************************************************
+
+# *********************************************************************************
+# command "move cursor"
+# use case 10, MC
+# *********************************************************************************
+
+# *********************************************************************************
+# command "move to word"
+# use case 11, MTW
+# *********************************************************************************
+
+# *********************************************************************************
+# command "undo"
+# use case 12, UC
+# *********************************************************************************
+
+# *********************************************************************************
+# command "redo"
+# use case 13, RC
+# *********************************************************************************
+
+# *********************************************************************************
+# command "select word"
+# use case 14, SW
+# *********************************************************************************
+
+# *********************************************************************************
+# command "select line"
+# use case 15, SL
+# *********************************************************************************
+
+# *********************************************************************************
+# command "select block"
+# use case 16, SB
+# *********************************************************************************
+
+# *********************************************************************************
+# command "copy text"
+# use case 17, CT
+# *********************************************************************************
+
+# *********************************************************************************
+# command "paste text"
+# use case 18, PT
+# *********************************************************************************
+
+# *********************************************************************************
+# command "print statement" returns string = "print('" + printLine + "')\n"
+# use case 19, PS
+# *********************************************************************************
 def printStatement(tex3, prompt):
     correctPrint = False
     while not correctPrint:
@@ -602,6 +650,58 @@ def printStatement(tex3, prompt):
     string = "print('" + printLine + "')\n"
     return string
 
+# *********************************************************************************
+# command "print variable" returns string = "print(" + printVar + ")\n"
+# use case 20, PV
+# *********************************************************************************
+def printVariable(tex3, prompt):
+    correctPrint = False
+    while not correctPrint:
+        print("Say the variable for printing.\n")
+        prompt.insert(tk.END, "Say the variable for printing.\n")
+        vInput = getVoiceInput()
+        
+        # vInput = vInput.replace(".","")
+        vInput = vInput.replace(" ","_")
+        print("variable: " + vInput + "\n" +
+              "Is this correct? (Yes/No)")
+        prompt.insert(tk.END, "variable: " + vInput + "\n" +
+              "Is this correct? (Yes/No)")
+        if confirm(prompt): correctPrint = True
+        
+    printVar = vInput
+    
+    string = "print(" + printVar + ")\n"
+    return string
+
+# *********************************************************************************
+# command "create function" returns string = "def " + printLine + "():\n    "
+# still need to implement functions with arguments
+# use case 21, CF
+# *********************************************************************************
+def createDef(tex3,prompt):
+    correctPrint = False
+    while not correctPrint:
+        print("Say name of function.\n")
+        prompt.insert(tk.END, "Say name of the function.\n")
+        vInput = getVoiceInput()
+        
+        # vInput = vInput.replace(".","")
+        vInput = vInput.replace(" ","_")
+        print("new def(): " + vInput + "\n" +
+              "Is this correct? (Yes/No)")
+        prompt.insert(tk.END, "def " + vInput + "():\n" +
+              "Is this correct? (Yes/No)")
+        if confirm(prompt): correctPrint = True
+        
+    printLine = vInput
+    
+    string = "def " + printLine + "():\n    "
+    return string
+
+# *********************************************************************************
+# returns strings to GUI windows: tex,tex2,tex3,tex4
+# *********************************************************************************
 def listen(tex,tex2,tex3,tex4):
     r = sr.Recognizer()
     with sr.Microphone() as source:
