@@ -83,6 +83,9 @@ def phraseMatch(audioToText,tex2,tex3,tex4):
     elif closestString == "create if statement":
         validCommand = True
         stringP = createIfStatement(tex3, prompt)
+    elif closestString == "create else if statement":
+        validCommand = True
+        stringP = createElseIfStatement(tex3, prompt)
     elif closestString == "create function":
         validCommand = True
         stringP = createDef(tex3, prompt)
