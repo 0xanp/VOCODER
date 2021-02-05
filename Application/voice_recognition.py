@@ -143,17 +143,17 @@ def getClosestString(inputString, listToMatch,tex3):
     return closestString
     
 # Operations dictionary for string to symbol
-op_dict = { "plus":"+", 
-           "minus":"-", 
-           "times":"*",
-           "divided by":"/" }
+op_dict = {"plus"       :"+", 
+           "minus"      :"-", 
+           "times"      :"*",
+           "divided by" :"/" }
            
-compare_dict = { "less than"                : "<",
-                 "less than or equal to"    : "<=",
-                 "greater than"             : ">",
-                 "greater than or equal to" : ">=",
-                 "equal to"                 : "==",
-                 "not equal to"             : "!=" }
+compare_dict = { "less than or equal to"      : "<=",
+                 "less than"                  : "<",
+                 "greater than or equal to"   : ">=",
+                 "greater than"               : ">",
+                 "not equal to"               : "!=",
+                 "equal to"                   : "==" }
 
 # obtained from https://stackoverflow.com/questions/493174/is-there-a-way-to-convert-number-words-to-integers
 # will convert number words to int literals
@@ -524,7 +524,7 @@ def createWhileLoop(tex3, prompt):
         
         
         # split string into array, while keeping the operator symbols
-        vInputSplit = re.split("([<]|[<=]|[>]|[>=][==][!=])", vInput)
+        vInputSplit = re.split("([<=][>=][!=][==]|[>]|[<])", vInput)
         
         # find location of operators    
         opLocations = []
@@ -581,9 +581,67 @@ def createIfStatement(tex3, prompt):
         for x, y in compare_dict.items():
             vInput = vInput.replace(x, y)
         
+        # split string into array, while keeping the operator symbols
+        vInputSplit = re.split("([<=][>=][!=][==]|[>]|[<])", vInput)
+        
+        # find location of operators    
+        opLocations = []
+        for i in range(0, len(vInputSplit)):
+            if vInputSplit[i] in compare_dict.values():
+                opLocations.append(i)    
+        
+        # go through the split string and replace with symbols/literals            
+        for i in range(0, len(vInputSplit)):
+            if i not in opLocations:   
+                vInputSplit[i] = str(text2int(vInputSplit[i]))
+                
+                # check if the term starts with a letter
+                # if so, it must be a preexisting variable name and 
+                # match it with one from the setOfVariableNames
+                if vInputSplit[i][0].isalpha():
+                    closestVariable = getClosestString(vInputSplit[i], setOfVariableNames,tex3)
+                    
+                    print("Got input of: " + str(vInputSplit) + "\n")
+                    # prompt.insert(tk.END, "Got input of: " + str(vInputSplit) + "\n")
+                    print("Closest match was: " + str(closestVariable) + "\n")
+                    # prompt.insert(tk.END, "Closest match was: " + str(closestVariable) + "\n")
+                    vInputSplit[i] = closestVariable
+        
+        # reformat expression
+        expression = ""
+        for i in range(0, len(vInputSplit)):
+            if i in opLocations:
+                expression = expression + vInputSplit[i]
+            else:
+                expression = expression + vInputSplit[i]
+        print("Condition: " + expression + "\n" + "Is this correct? (Yes/No)")
+        prompt.insert(tk.END, "if " + expression + "\n" + "Is this correct? (Yes/No)")
+        if confirm(prompt): correctCondition = True
+    
+    condition = expression
+    string = "if " + condition + ":\n    "
+    return string
+
+# *********************************************************************************
+# command "create else-if statement" returns string = "elif " + condition + ":\n"
+# use case 7, CEIF
+# *********************************************************************************
+def createElseIfStatement(tex3, prompt):
+    correctCondition = False
+    while not correctCondition:
+        print("Say the condition you want for the else if statement.\n")
+        prompt.insert(tk.END, "Say the condition you want for the else if statement.\n")
+        vInput = getVoiceInput()
+        
+        vInput = vInput.replace(".","")
+        
+        # replace strings of comparison operators with symbols
+        for x, y in compare_dict.items():
+            vInput = vInput.replace(x, y)
+        
         
         # split string into array, while keeping the operator symbols
-        vInputSplit = re.split("([<]|[<=]|[>]|[>=][==][!=])", vInput)
+        vInputSplit = re.split("([<=][>=][!=][==]|[>]|[<])", vInput)
         
         # find location of operators    
         opLocations = []
@@ -616,17 +674,12 @@ def createIfStatement(tex3, prompt):
             else:
                 expression = expression + vInputSplit[i]
         print("Condition: " + expression + "\n" + "Is this correct? (Yes/No)")
-        prompt.insert(tk.END, "if " + expression + "\n" + "Is this correct? (Yes/No)")
+        prompt.insert(tk.END, "elif " + expression + "\n" + "Is this correct? (Yes/No)")
         if confirm(prompt): correctCondition = True
     
     condition = expression
-    string = "if " + condition + ":\n    "
+    string = "elif " + condition + ":\n    "
     return string
-
-# *********************************************************************************
-# command "create else-if statement" returns string = "elif " + condition + ":\n"
-# use case 7, CEIF
-# *********************************************************************************
 
 # *********************************************************************************
 # command "create else statement" returns string = "else:\n"
