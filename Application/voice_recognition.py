@@ -54,7 +54,7 @@ def phraseMatch(audioToText,tex2,tex3,tex4):
     prompt.insert(tk.END, "input: " + audioToText + "\n")
     validCommand = False
     #send info to command manager window on UI
-    tex3.insert(tk.END, "matching phrase to command..." + "\n")
+    tex3.insert(tk.END, "matched voice input to command..." + "\n")
     tex3.see(tk.END)
     closestString = getClosestString(audioToText, commandWords,tex3)
     #send matched command to Command(s) Received window on UI
@@ -337,8 +337,9 @@ def assignOldVariable(tex3, prompt):
         variableName = getClosestString(vInput, setOfVariableNames,tex3)
         if variableName == "invalid":
             variableName = vInput
+            setOfVariableNames.append(variableName)
             prompt.insert(tk.END, "New variable detected.\n")
-            tex3.insert(tk.END, variableName + " not found, creating new variable.\n")
+            tex3.insert(tk.END, variableName + " not found, created new variable.\n")
             tex3.see(tk.END)
         # print("Variable name: " + variableName + "\n" + "Is this correct? (Yes/No)")
         # ask user for confirmation in GUI popup
@@ -508,24 +509,23 @@ def createForLoop(tex3, prompt):
     string = "for " + loopingVariable + " in range(" + rangeInt + "):\n    "
     return string
 
-# *********************************************************************************
-# command "create while loop" returns string = "while " + condition + ":\n"
-# use case 5, CWL
-# *********************************************************************************
-def createWhileLoop(tex3, prompt):
+# *****************************************************************************
+# a function to simplify the repetition in case 5,6 and 7 of dealing with the
+# operator symbols and creating the necessary strings for the text window
+# *****************************************************************************
+def getSymbols(tex3, prompt, case):
     correctCondition = False
+
     while not correctCondition:
-        print("Say the condition you want for the while loop.\n")
-        prompt.insert(tk.END, "Say the condition you want for the while loop.\n")
+        print("Say the condition you want for the " + case + ".\n")
+        prompt.insert(tk.END, "Say the condition you want for the " + case + ".\n")
         vInput = getVoiceInput()
-        
         vInput = vInput.replace(".","")
         
         # replace strings of comparison operators with symbols
         for x, y in compare_dict.items():
             vInput = vInput.replace(x, y)
-        
-        
+                
         # split string into array, while keeping the operator symbols
         vInputSplit = re.split("([<=][>=][!=][==]|[>]|[<])", vInput)
         
@@ -541,16 +541,15 @@ def createWhileLoop(tex3, prompt):
                 vInputSplit[i] = str(text2int(vInputSplit[i]))
                 
                 # check if the term starts with a letter
-                # if so, it must be a preexisting variable name and 
-                # match it with one from the setOfVariableNames
+                # if so, it must be a preexisting variable name, if not warn the user 
+                # that the variable does not exist
                 if vInputSplit[i][0].isalpha():
                     closestVariable = getClosestString(vInputSplit[i], setOfVariableNames,tex3)
-                    
-                    print("Got input of: " + str(vInputSplit) + "\n")
-                    # prompt.insert(tk.END, "Got input of: " + str(vInputSplit) + "\n")
-                    print("Closest match was: " + str(closestVariable) + "\n")
-                    # prompt.insert(tk.END, "Closest match was: " + str(closestVariable) + "\n")
-                    vInputSplit[i] = closestVariable
+                    if closestVariable == "invalid":                   
+                        print("Got input of: " + str(vInputSplit) + "\n")
+                        # prompt.insert(tk.END, "Got input of: " + str(vInputSplit) + "\n")
+                        print(vInputSplit[i] + " is an unknown variable\n")
+                        prompt.insert(tk.END, vInputSplit[i] + " is an unknown variable\n")
         
         # reformat expression
         expression = ""
@@ -560,11 +559,19 @@ def createWhileLoop(tex3, prompt):
             else:
                 expression = expression + vInputSplit[i]
         print("Condition: " + expression + "\n" + "Is this correct? (Yes/No)")
-        prompt.insert(tk.END, "while " + expression + "\n" + "Is this correct? (Yes/No)")
+        prompt.insert(tk.END, "Condition: " + expression + "\n" + "Is this correct? (Yes/No)")
         if confirm(prompt): correctCondition = True
-    
-    condition = expression
-    string = "while " + condition + ":\n    "
+
+    tex3.insert(tk.END, "created condition for " + case + "\n")
+    tex3.see(tk.END)
+    return expression
+
+# *********************************************************************************
+# command "create while loop" returns string = "while " + condition + ":\n"
+# use case 5, CWL
+# *********************************************************************************
+def createWhileLoop(tex3, prompt):
+    string = "while " + getSymbols(tex3,prompt,"while loop") + ":\n    "
     return string
 
 # *********************************************************************************
@@ -572,57 +579,7 @@ def createWhileLoop(tex3, prompt):
 # use case 6, CIF
 # *********************************************************************************    
 def createIfStatement(tex3, prompt):
-    correctCondition = False
-    while not correctCondition:
-        print("Say the condition you want for the if statement.\n")
-        prompt.insert(tk.END, "Say the condition you want for the if statement.\n")
-        vInput = getVoiceInput()
-        
-        vInput = vInput.replace(".","")
-        
-        # replace strings of comparison operators with symbols
-        for x, y in compare_dict.items():
-            vInput = vInput.replace(x, y)
-        
-        # split string into array, while keeping the operator symbols
-        vInputSplit = re.split("([<=][>=][!=][==]|[>]|[<])", vInput)
-        
-        # find location of operators    
-        opLocations = []
-        for i in range(0, len(vInputSplit)):
-            if vInputSplit[i] in compare_dict.values():
-                opLocations.append(i)    
-        
-        # go through the split string and replace with symbols/literals            
-        for i in range(0, len(vInputSplit)):
-            if i not in opLocations:   
-                vInputSplit[i] = str(text2int(vInputSplit[i]))
-                
-                # check if the term starts with a letter
-                # if so, it must be a preexisting variable name and 
-                # match it with one from the setOfVariableNames
-                if vInputSplit[i][0].isalpha():
-                    closestVariable = getClosestString(vInputSplit[i], setOfVariableNames,tex3)
-                    
-                    print("Got input of: " + str(vInputSplit) + "\n")
-                    # prompt.insert(tk.END, "Got input of: " + str(vInputSplit) + "\n")
-                    print("Closest match was: " + str(closestVariable) + "\n")
-                    # prompt.insert(tk.END, "Closest match was: " + str(closestVariable) + "\n")
-                    vInputSplit[i] = closestVariable
-        
-        # reformat expression
-        expression = ""
-        for i in range(0, len(vInputSplit)):
-            if i in opLocations:
-                expression = expression + vInputSplit[i]
-            else:
-                expression = expression + vInputSplit[i]
-        print("Condition: " + expression + "\n" + "Is this correct? (Yes/No)")
-        prompt.insert(tk.END, "if " + expression + "\n" + "Is this correct? (Yes/No)")
-        if confirm(prompt): correctCondition = True
-    
-    condition = expression
-    string = "if " + condition + ":\n    "
+    string = "if " + getSymbols(tex3,prompt,"if statement") + ":\n    "
     return string
 
 # *********************************************************************************
@@ -630,58 +587,7 @@ def createIfStatement(tex3, prompt):
 # use case 7, CEIF
 # *********************************************************************************
 def createElseIfStatement(tex3, prompt):
-    correctCondition = False
-    while not correctCondition:
-        print("Say the condition you want for the else if statement.\n")
-        prompt.insert(tk.END, "Say the condition you want for the else if statement.\n")
-        vInput = getVoiceInput()
-        
-        vInput = vInput.replace(".","")
-        
-        # replace strings of comparison operators with symbols
-        for x, y in compare_dict.items():
-            vInput = vInput.replace(x, y)
-        
-        
-        # split string into array, while keeping the operator symbols
-        vInputSplit = re.split("([<=][>=][!=][==]|[>]|[<])", vInput)
-        
-        # find location of operators    
-        opLocations = []
-        for i in range(0, len(vInputSplit)):
-            if vInputSplit[i] in compare_dict.values():
-                opLocations.append(i)    
-        
-        # go through the split string and replace with symbols/literals            
-        for i in range(0, len(vInputSplit)):
-            if i not in opLocations:   
-                vInputSplit[i] = str(text2int(vInputSplit[i]))
-                
-                # check if the term starts with a letter
-                # if so, it must be a preexisting variable name and 
-                # match it with one from the setOfVariableNames
-                if vInputSplit[i][0].isalpha():
-                    closestVariable = getClosestString(vInputSplit[i], setOfVariableNames,tex3)
-                    
-                    print("Got input of: " + str(vInputSplit) + "\n")
-                    # prompt.insert(tk.END, "Got input of: " + str(vInputSplit) + "\n")
-                    print("Closest match was: " + str(closestVariable) + "\n")
-                    # prompt.insert(tk.END, "Closest match was: " + str(closestVariable) + "\n")
-                    vInputSplit[i] = closestVariable
-        
-        # reformat expression
-        expression = ""
-        for i in range(0, len(vInputSplit)): 
-            if i in opLocations:   
-                expression = expression + vInputSplit[i]
-            else:
-                expression = expression + vInputSplit[i]
-        print("Condition: " + expression + "\n" + "Is this correct? (Yes/No)")
-        prompt.insert(tk.END, "elif " + expression + "\n" + "Is this correct? (Yes/No)")
-        if confirm(prompt): correctCondition = True
-    
-    condition = expression
-    string = "elif " + condition + ":\n    "
+    string = "elif " + getSymbols(tex3,prompt,"else-if statement") + ":\n    "
     return string
 
 # *********************************************************************************
