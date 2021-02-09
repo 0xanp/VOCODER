@@ -1,10 +1,13 @@
 # Program to read a .transcription file from a specified directory and record the user speaking each line from them.
 
 import os
-import wave
-
+#import wave
+import shutil
 import sounddevice as sd
 from scipy.io.wavfile import write
+#from playsound import playsound
+from pydub import AudioSegment
+from pydub.playback import play
 
 path = ""
 pathExists = False
@@ -53,14 +56,21 @@ for fileLine in fileLines:
         sd.wait()
         write(fileName + ".wav", freq, recording)
 
-        os.system("play " + fileName + ".wav")
+        print("Playing recording back...")
+        #playsound(fileName + ".wav")
+        #os.system("play " + fileName + ".wav")
+
+        sound = AudioSegment.from_file(fileName + ".wav")
+        play(sound)
+
         userInput = input("Is the recording fine? (Y/N): ")
         if userInput == "Y" or userInput == "y":
             goodRecording = True
-            os.system("mv " + fileName + ".wav " + dirPath)
+            shutil.move(fileName + ".wav ", dirPath + "/" + fileName + ".wav")
         else:
             print("Retaking recording, please resay the line.")
-            os.system("rm " + fileName + ".wav")
+            #os.system("rm " + fileName + ".wav")
+            os.remove(fileName + ".wav")
 
 
 print("Recording finished.")

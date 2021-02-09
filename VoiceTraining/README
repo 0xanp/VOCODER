@@ -2,9 +2,13 @@ This directory should include an AcousticModels, Profiles and TrainingModel dire
 
 Dependencies:
     sudo apt-get install -qq python python-dev python3-pip build-essential swig libpulse-dev
-    sudo apt install sox
+    #sudo apt install sox used for play command in linux
     pip3 install pydub
     pip3 install ffprobe
+    pip install sounddevice
+    pip install scipy
+    pip install playsound #works with vscode but doesnt close out of wavfile right away
+    pip install pydub #works with vscode and closes out properly after playing
     
     There might be some that I forgot to note down.
     

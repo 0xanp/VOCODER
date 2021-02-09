@@ -1,13 +1,13 @@
 import os
 
-os.system('clear')
+#os.system('clear')
 os.system('echo "Creating adapted language model"')
 
 path = ""
 profileExists = True
 while profileExists:
     profileName = input("What's the name you want to use for the language model?\n")
-    isdir = os.path.isdir(path + "AcousticModels/en-us-" + profileName)
+    isdir = os.path.isdir(path + "AcousticModels/" + profileName)
     if isdir == False:
         profileExists = False
     else:
