@@ -7,11 +7,16 @@ Dependencies:
     pip3 install ffprobe
     pip install sounddevice
     pip install scipy
-    pip install playsound #works with vscode but doesnt close out of wavfile right away
-    pip install pydub #works with vscode and closes out properly after playing
+    pip install pydub
     
     There might be some that I forgot to note down.
-    
+
+Path Variable:
+    VoiceTraining\sphinxbase\bin\Debug\Win32
+    VoiceTraining\sphinxtrain-master\bin\Debug\Win32
+
+    Add these 2 relative paths to the system environment variables
+
 How to use training programs:
     1. Execute recordAudio.py
     2. Give the relative path to the training set

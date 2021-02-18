@@ -1,6 +1,7 @@
 import os
+import shutil
+import glob
 
-#os.system('clear')
 os.system('echo "Creating adapted language model"')
 
 path = ""
@@ -10,6 +11,7 @@ while profileExists:
     isdir = os.path.isdir(path + "AcousticModels/" + profileName)
     if isdir == False:
         profileExists = False
+        os.mkdir("AcousticModels/" + profileName)
     else:
         reply = input("Model name already exists. Would you like to overwrite it? (Y/N)\n")
         if reply == "y" or reply == "Y":
@@ -56,7 +58,7 @@ os.system("sphinx_fe " +
 
          
 os.chdir(dirName)
-os.system("../.././bw " +
+os.system("bw " +
             "-hmmdir ../../AcousticModels/en-us " +
             "-moddeffn ../../AcousticModels/en-us/mdef.txt " +
             "-ts2cbfn .ptm. " +
@@ -70,9 +72,10 @@ os.system("../.././bw " +
             "-accumdir .")            
 os.chdir("../..")
 
-os.system("cp -af AcousticModels/en-us AcousticModels/" + profileName)
+for file in glob.glob(r"AcousticModels/en-us/*"):
+    shutil.copy(file, "AcousticModels/" + profileName)
 
-os.system("./map_adapt " +
+os.system("map_adapt " +
             "-moddeffn AcousticModels/en-us/mdef.txt " +
             "-ts2cbfn .ptm. " +
             "-meanfn AcousticModels/en-us/means " +
@@ -84,3 +87,5 @@ os.system("./map_adapt " +
             "-mapvarfn AcousticModels/" + profileName + "/variances " +
             "-mapmixwfn AcousticModels/" + profileName + "/mixture_weights " +
             "-maptmatfn AcousticModels/" + profileName + "/transition_matrices")
+
+print("New adapted language model created.")
