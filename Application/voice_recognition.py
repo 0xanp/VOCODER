@@ -89,6 +89,9 @@ def phraseMatch(audioToText,tex2,tex3,tex4):
     elif closestString == "create else statement done":
         validCommand = True
         stringP = createElseStatement(tex3, prompt)
+    elif closestString == "create array":
+        validCommand = True
+        stringP = createArray(tex3, prompt)
     elif closestString == "create function":
         validCommand = True
         stringP = createDef(tex3, prompt)
@@ -604,7 +607,55 @@ def createElseStatement(tex3, prompt):
 # command "create array" returns string = "array = [" + var(s) + "]\n"
 # use case 9, CA
 # *********************************************************************************
-
+def createArray(tex3, prompt):
+    # Get and format variable name, will use snake case
+    correctName = False
+    nameTaken = True
+    while not correctName or nameTaken:
+        correctName = False
+        nameTaken = True
+        
+        print("Say name of new array.\n")
+        prompt.insert(tk.END,"Say name of new array.\n")
+        vInput = getVoiceInput()
+        vInput = vInput.replace(" ","_")
+        arrayName = vInput
+        
+        print("Array name: " + arrayName + "\n" +
+              "Is this correct? (Yes/No)")
+        prompt.insert(tk.END,"Array name: " + arrayName + '\n' +
+              "Is this correct? (Yes/No)")
+        if confirm(prompt): correctName = True
+        else: continue
+        
+        if arrayName in setOfVariableNames:
+            print("Array name: " + arrayName + ", is already used in the program.\n" +
+                  "Do you still want to use it? (Yes/No)")
+            prompt.insert(tk.END,"Array name: " + arrayName + ", is already used in the program.\n" +
+                  "Do you still want to use it? (Yes/No)")
+            if confirm(prompt): nameTaken = False
+        else:
+            nameTaken = False
+             
+    
+    # Get expression
+    correctExpression = False
+    while not correctExpression:    
+        print("State values for array. Say 'stop' to denote seperation of values.\n")
+        prompt.insert(tk.END,"State values for array. Say 'stop' to denote seperation of values.\n")
+        vInput = getVoiceInput()       
+        # replace 'comma' with '", "' to place quotations around elements of array
+        vInput = vInput.replace(' stop ', "\", \"")
+        expression = vInput    
+        # print(arrayName + ' = ["' + expression + '"]' + "\n" + "Is this correct? (Yes/No)")
+        prompt.insert(tk.END, arrayName + " = [\"" + expression + "\"]" + "\nIs this correct? (Yes/No)")
+        if confirm(prompt): correctExpression = True
+    
+    if arrayName not in setOfVariableNames:
+        setOfVariableNames.append(arrayName)  
+    
+    string = arrayName + ' = ["' + expression + '"]' + "\n"
+    return string
 # *********************************************************************************
 # command "move cursor"
 # use case 10, MC
