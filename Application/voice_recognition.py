@@ -17,7 +17,7 @@ commandWords = [ "create new variable",
                  "create while loop",
                  "create if statement",
                  "create else if statement",
-                 "create else statement",
+                 "create else statement done",
                  "create array",
                  "move cursor",
                  "move to word",
@@ -86,6 +86,9 @@ def phraseMatch(audioToText,tex2,tex3,tex4):
     elif closestString == "create else if statement":
         validCommand = True
         stringP = createElseIfStatement(tex3, prompt)
+    elif closestString == "create else statement done":
+        validCommand = True
+        stringP = createElseStatement(tex3, prompt)
     elif closestString == "create function":
         validCommand = True
         stringP = createDef(tex3, prompt)
@@ -591,10 +594,12 @@ def createElseIfStatement(tex3, prompt):
     return string
 
 # *********************************************************************************
-# command "create else statement" returns string = "else:\n"
+# command "create else statement done" returns string = "else:\n"
 # use case 8, CEF
 # *********************************************************************************
-
+def createElseStatement(tex3, prompt):
+    string = "else:\n    "
+    return string
 # *********************************************************************************
 # command "create array" returns string = "array = [" + var(s) + "]\n"
 # use case 9, CA
