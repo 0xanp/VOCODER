@@ -1,0 +1,153 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>compiler module &#8212; VOCODER  documentation</title>
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" href="_static/alabaster.css" type="text/css" />
+    <script id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+    <script src="_static/jquery.js"></script>
+    <script src="_static/underscore.js"></script>
+    <script src="_static/doctools.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="voice_recognition module" href="voice_recognition.html" />
+    <link rel="prev" title="application module" href="application.html" />
+   
+  <link rel="stylesheet" href="_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <div class="section" id="module-compiler">
+<span id="compiler-module"></span><h1>compiler module<a class="headerlink" href="#module-compiler" title="Permalink to this headline">¶</a></h1>
+<ul class="simple">
+<li><p>read output from a subprocess in a background thread</p></li>
+<li><p>show the output in the GUI</p></li>
+</ul>
+<dl class="py class">
+<dt id="compiler.DisplaySubprocessOutputDemo">
+<em class="property">class </em><code class="sig-prename descclassname">compiler.</code><code class="sig-name descname">DisplaySubprocessOutputDemo</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">root</span></em>, <em class="sig-param"><span class="n">script</span></em><span class="sig-paren">)</span><a class="headerlink" href="#compiler.DisplaySubprocessOutputDemo" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<dl class="py method">
+<dt id="compiler.DisplaySubprocessOutputDemo.quit">
+<code class="sig-name descname">quit</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#compiler.DisplaySubprocessOutputDemo.quit" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="compiler.DisplaySubprocessOutputDemo.reader_thread">
+<code class="sig-name descname">reader_thread</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">q</span></em><span class="sig-paren">)</span><a class="headerlink" href="#compiler.DisplaySubprocessOutputDemo.reader_thread" title="Permalink to this definition">¶</a></dt>
+<dd><p>Read subprocess output and put it into the queue.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="compiler.DisplaySubprocessOutputDemo.update">
+<code class="sig-name descname">update</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">q</span></em><span class="sig-paren">)</span><a class="headerlink" href="#compiler.DisplaySubprocessOutputDemo.update" title="Permalink to this definition">¶</a></dt>
+<dd><p>Update GUI with items from the queue.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py function">
+<dt id="compiler.iter_except">
+<code class="sig-prename descclassname">compiler.</code><code class="sig-name descname">iter_except</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">function</span></em>, <em class="sig-param"><span class="n">exception</span></em><span class="sig-paren">)</span><a class="headerlink" href="#compiler.iter_except" title="Permalink to this definition">¶</a></dt>
+<dd><p>Works like builtin 2-argument <cite>iter()</cite>, but stops on <cite>exception</cite>.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt id="compiler.main">
+<code class="sig-prename descclassname">compiler.</code><code class="sig-name descname">main</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">text</span></em>, <em class="sig-param"><span class="n">root</span></em><span class="sig-paren">)</span><a class="headerlink" href="#compiler.main" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</div>
+
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="index.html">VOCODER</a></h1>
+
+
+
+
+
+
+
+
+<h3>Navigation</h3>
+<p class="caption"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="modules.html">Application</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="application.html">application module</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">compiler module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="voice_recognition.html">voice_recognition module</a></li>
+</ul>
+</li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="index.html">Documentation overview</a><ul>
+  <li><a href="modules.html">Application</a><ul>
+      <li>Previous: <a href="application.html" title="previous chapter">application module</a></li>
+      <li>Next: <a href="voice_recognition.html" title="next chapter">voice_recognition module</a></li>
+  </ul></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+
+
+
+
+
+
+
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2021, BAP.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 3.4.3</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
+      
+      |
+      <a href="_sources/compiler.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>

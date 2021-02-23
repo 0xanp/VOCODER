@@ -1,15 +1,14 @@
 import tkinter as tk
 import speech_recognition as sr
-import threading
 import re as re
 from fuzzywuzzy import fuzz
-from vosk import Model, KaldiRecognizer
 from vosk import SetLogLevel
 SetLogLevel(-1)
 import os
 import json
 import pyaudio
 import compiler as comp
+
 # list of commands, has some extra strings for testing
 commandWords = [ "create new variable", 
                  "assign old variable",
@@ -29,6 +28,9 @@ commandWords = [ "create new variable",
                  "select block",
                  "copy text",
                  "paste text",
+                 "create function",
+                 "print statement",
+                 "print variable",
                  "show set of variables"]
 
 # this set will contain variable names created by createNewVariable()                 
@@ -45,24 +47,17 @@ def getVoiceInput():
         audioToText = r.recognize_sphinx(audio, language = path + "/../VoiceTraining/Profiles/en-US")
         #audioToText = r.recognize_google(audio)
     return audioToText
-    '''
-    model = Model("model")
-    rec = KaldiRecognizer(model, 44100)
-    p = pyaudio.PyAudio()
-    stream = p.open(format=pyaudio.paInt16, channels=1, rate=44100, input=True, frames_per_buffer=8000)
-    stream.start_stream()
-    while True:
-        data = stream.read(4000)
-        if rec.AcceptWaveform(data) and len(data) != 0:
-            audioToText = json.loads(rec.Result())["text"]
-            break
-    return audioToText
-    '''
+
 def phraseMatch(audioToText,tex2,tex3,tex4):
+    win = tk.Toplevel()
+    win.wm_title("Prompts")
+    prompt = tk.Text(win, width=50, height=15)
+    prompt.grid(row=0,column=0,padx=5,pady=5,sticky='nsew')
     print("input: " + audioToText + "\n")
+    prompt.insert(tk.END, "input: " + audioToText + "\n")
     validCommand = False
     #send info to command manager window on UI
-    tex3.insert(tk.END, "matching phrase to command..." + "\n")
+    tex3.insert(tk.END, "matched voice input to command..." + "\n")
     tex3.see(tk.END)
     closestString = getClosestString(audioToText, commandWords,tex3)
     #send matched command to Command(s) Received window on UI
@@ -71,32 +66,49 @@ def phraseMatch(audioToText,tex2,tex3,tex4):
     #set stringP to call for matching functions
     if closestString == "create new variable":
         validCommand = True
-        stringP = createNewVariable(tex3)
+        stringP = createNewVariable(tex3, prompt)
     elif closestString == "show set of variables":
         validCommand = True
-        showSet()
-        stringP = "used showSet()\n"
+        showSet(tex4)
+        stringP = ""
     elif closestString == "assign old variable":
         validCommand = True
-        stringP = assignOldVariable(tex3)
+        stringP = assignOldVariable(tex3, prompt)
     elif closestString == "return statement":
         validCommand = True
-        stringP = returnStatement(tex3)
+        stringP = returnStatement(tex3, prompt)
     elif closestString == "create for loop":
         validCommand = True
-        stringP = createForLoop(tex3)
+        stringP = createForLoop(tex3, prompt)
+    elif closestString == "create while loop":
+        validCommand = True
+        stringP = createWhileLoop(tex3, prompt)
     elif closestString == "create if statement":
         validCommand = True
-        stringP = createIfStatement(tex3)
+        stringP = createIfStatement(tex3, prompt)
+    elif closestString == "create else if statement":
+        validCommand = True
+        stringP = createElseIfStatement(tex3, prompt)
+    elif closestString == "create function":
+        validCommand = True
+        stringP = createDef(tex3, prompt)
+    elif closestString == "print variable":
+        validCommand = True
+        stringP = printVariable(tex3, prompt)
+    elif closestString == "print statement":
+        validCommand = True
+        stringP = printStatement(tex3, prompt)
     else:
         stringP = ""
         #send response to System Output window on UI
         tex4.insert(tk.END, "no matching phrase found: " + audioToText + "\n")
         tex4.see(tk.END)
+        win.after(1000, lambda: win.destroy())
     if validCommand:
         #send response to System Output window on UI
         tex4.insert(tk.END, "valid command received..." + "\n")
         tex4.see(tk.END)
+        win.after(1000, lambda: win.destroy())
     validCommand = False
     return stringP
 
@@ -121,25 +133,33 @@ def getClosestString(inputString, listToMatch,tex3):
             highest = ratio
             closestString = string
     
-    print("\nClosest string to match input was\n")
-    print(closestString + ": " + str(highest))
-    #send status to command manager window on UI
-    tex3.insert(tk.END, "closest match: " + closestString + "\n")
-    tex3.see(tk.END)    
+    # print("\nClosest string to match input was\n")
+    # check for threshold of 80 or greater to find matching command
+    if highest >= 80:
+        # print(closestString + ": " + str(highest))
+        # send status to command manager window on UI
+        tex3.insert(tk.END, "closest match: " + closestString + "\n")
+        tex3.see(tk.END)
+    else:
+        # print("not found")
+        # send status to command manager window on UI
+        tex3.insert(tk.END, inputString + " not found.\n")
+        tex3.see(tk.END)
+        closestString = "invalid"
     return closestString
     
 # Operations dictionary for string to symbol
-op_dict = { "plus":"+", 
-           "minus":"-", 
-           "times":"*",
-           "divided by":"/" }
+op_dict = {"plus"       :"+", 
+           "minus"      :"-", 
+           "times"      :"*",
+           "divided by" :"/" }
            
-compare_dict = { "less than"                : "<",
-                 "less than or equal to"    : "<=",
-                 "greater than"             : ">",
-                 "greater than or equal to" : ">=",
-                 "equal to"                 : "==",
-                 "not equal to"             : "!=" }
+compare_dict = { "less than or equal to"      : "<=",
+                 "less than"                  : "<",
+                 "greater than or equal to"   : ">=",
+                 "greater than"               : ">",
+                 "not equal to"               : "!=",
+                 "equal to"                   : "==" }
 
 # obtained from https://stackoverflow.com/questions/493174/is-there-a-way-to-convert-number-words-to-integers
 # will convert number words to int literals
@@ -175,19 +195,22 @@ def text2int(textnum, numwords={}):
     return result + current
 
 # Test function just to see if the set works    
-def showSet():
-    print("Currently in showSet() function.\n" +
-          "Set of variable names:")
+def showSet(tex4):
+    #print("Currently in showSet() function.\n" +
+    tex4.insert(tk.END, "Set of variable names:")
     for i in setOfVariableNames:
-        print("          " + i + ",")
+        tex4.insert(tk.END, "          " + i + ",")
+        tex4.see(tk.END)
         
 # receives input from user saying yes or no and returns true if yes, false if no
-def confirm():
+def confirm(prompt):
     vInput = getVoiceInput()
     yesRatio = fuzz.ratio(vInput, "yes")
     noRatio = fuzz.ratio(vInput, "no")
     print("yes: " + str(yesRatio) + "\n" +
           "no:  " + str(noRatio)  + "\n")
+    # prompt.insert(tk.END, "\nyes: " + str(yesRatio) + "\n" +"no:  " + str(noRatio)  + "\n" )
+    prompt.insert(tk.END, "\n")
     if yesRatio > noRatio: return True 
     else: return False
 
@@ -200,7 +223,11 @@ def confirm():
 #     expression   = one plus two minus three
 #     output:        test_variable = 1 + 2 - 3
 
-def createNewVariable(tex3):
+# ***************************************************************************************
+# command "create new variable" returns string = variableName + " = " + expression + "\n"
+# use case 1, CNV
+# ***************************************************************************************
+def createNewVariable(tex3,prompt):
     # Get and format variable name, will use snake case
     correctName = False
     nameTaken = True
@@ -209,19 +236,24 @@ def createNewVariable(tex3):
         nameTaken = True
         
         print("Say name of new variable.\n")
+        prompt.insert(tk.END,"Say name of new variable.\n")
         vInput = getVoiceInput()
         vInput = vInput.replace(" ","_")
         variableName = vInput
         
         print("Variable name: " + variableName + "\n" +
               "Is this correct? (Yes/No)")
-        if confirm(): correctName = True
+        prompt.insert(tk.END,"Variable name: " + variableName + '\n' +
+              "Is this correct? (Yes/No)")
+        if confirm(prompt): correctName = True
         else: continue
         
         if variableName in setOfVariableNames:
             print("Variable name: " + variableName + ", is already used in the program.\n" +
                   "Do you still want to use it? (Yes/No)")
-            if confirm(): nameTaken = False
+            prompt.insert(tk.END,"Variable name: " + variableName + ", is already used in the program.\n" +
+                  "Do you still want to use it? (Yes/No)")
+            if confirm(prompt): nameTaken = False
         else:
             nameTaken = False
              
@@ -229,9 +261,9 @@ def createNewVariable(tex3):
     # Get expression
     correctExpression = False
     while not correctExpression:    
-        print("Say full expression.\n")
+        print("State value for variable.\n")
+        prompt.insert(tk.END,"State value for variable.\n")
         vInput = getVoiceInput()
-        
         # replace operation words with symbols
         for word, symbol in op_dict.items():
             vInput = vInput.replace(word, symbol)   
@@ -260,7 +292,9 @@ def createNewVariable(tex3):
                     closestVariable = getClosestString(vInputSplit[i], setOfVariableNames,tex3)
                     
                     print("Got input of: " + str(vInputSplit) + "\n")
+                    prompt.insert(tk.END,"Got input of: " + str(vInputSplit) + "\n")
                     print("Closest match was: " + str(closestVariable) + "\n")
+                    prompt.insert(tk.END,"Closest match was: " + str(closestVariable) + "\n")
                     vInputSplit[i] = closestVariable
         
         # reformat expression
@@ -271,9 +305,9 @@ def createNewVariable(tex3):
             else:
                 expression = expression + vInputSplit[i]
                 
-        print("Expression: " + expression + "\n" +
-              "Is this correct? (Yes/No)")
-        if confirm(): correctExpression = True
+        # print("Expression: " + expression + '\n' + "Is this correct? (Yes/No)")
+        prompt.insert(tk.END, variableName + " = " + expression + "\n" + "Is this correct? (Yes/No)")
+        if confirm(prompt): correctExpression = True
         
     
     # used for checking correctness in terminal    
@@ -285,27 +319,42 @@ def createNewVariable(tex3):
     string = variableName + " = " + expression + "\n"
     return string
 
-def assignOldVariable(tex3):
+# *********************************************************************************
+# command "assign old variable" returns string = variableName + " = " + expression + "\n"
+# use case 2, AOV
+# *********************************************************************************
+def assignOldVariable(tex3, prompt):
     # check if there are any old variables
     if not setOfVariableNames:
         print("No variable names already initialized.\n")
+        prompt.insert(tk.END, "No variable names already initialized.\n")
         return ""
         
     # get input for the variable name to be modified
     correctName = False
     while not correctName:
-        print("Say the name of the variable you want to modify.\n")
+        # print("Say the name of the variable you want to modify.\n")
+        # ask user for variable to modify in the GUI popup
+        prompt.insert(tk.END, "Say the name of the variable you want to modify.\n")
         vInput = getVoiceInput()
         variableName = getClosestString(vInput, setOfVariableNames,tex3)
-        print("Variable name: " + variableName + "\n" +
-              "Is this correct? (Yes/No)")
-        if confirm(): correctName = True
+        if variableName == "invalid":
+            variableName = vInput
+            setOfVariableNames.append(variableName)
+            prompt.insert(tk.END, "New variable detected.\n")
+            tex3.insert(tk.END, variableName + " not found, created new variable.\n")
+            tex3.see(tk.END)
+        # print("Variable name: " + variableName + "\n" + "Is this correct? (Yes/No)")
+        # ask user for confirmation in GUI popup
+        prompt.insert(tk.END, "Variable name: " + variableName + "\n" + "Is this correct? (Yes/No)")
+        if confirm(prompt): correctName = True
         else: continue
         
     # get expression
     correctExpression = False
     while not correctExpression:    
-        print("Say full expression.\n")
+        # print("State what the variable equals.\n")
+        prompt.insert(tk.END, "State value for variable.\n")
         vInput = getVoiceInput()
         
         # replace operation words with symbols
@@ -334,10 +383,12 @@ def assignOldVariable(tex3):
                 # match it with one from the setOfVariableNames
                 if vInputSplit[i][0].isalpha():
                     closestVariable = getClosestString(vInputSplit[i], setOfVariableNames,tex3)
-                    
-                    print("Got input of: " + str(vInputSplit) + "\n")
-                    print("Closest match was: " + str(closestVariable) + "\n")
-                    vInputSplit[i] = closestVariable
+                    if closestVariable=="invalid":
+                        # print("Got input of: " + str(vInputSplit) + "\n")
+                        prompt.insert(tk.END, vInputSplit[i] + " is not defined\n")
+                        # vInputSplit[i] = closestVariable
+                    else:
+                        vInputSplit[i] = closestVariable
         
         # reformat expression
         expression = ""
@@ -347,18 +398,24 @@ def assignOldVariable(tex3):
             else:
                 expression = expression + vInputSplit[i]
                 
-        print("Expression: " + expression + "\n" +
-              "Is this correct? (Yes/No)")
-        if confirm(): correctExpression = True
+        # print("Expression: " + expression + "\n" + "Is this correct? (Yes/No)")
+        # confirm output from user in GUI popup
+        prompt.insert(tk.END, variableName + " = " + expression + "\n" + "Is this correct? (Yes/No)")
+        if confirm(prompt): correctExpression = True
         
     string = variableName + " = " + expression + "\n"
     return string
-    
-def returnStatement(tex3):
+
+# *********************************************************************************
+# command "return statement" returns expression = "return " + expression + "\n"
+# use case 3, RS
+# *********************************************************************************  
+def returnStatement(tex3, prompt):
     # get voice input
     correctExpression = False
     while not correctExpression:    
         print("Say what you want to return.\n")
+        prompt.insert(tk.END, "Say what you want to return.\n")
         vInput = getVoiceInput()
         
         if vInput == "none":
@@ -392,7 +449,9 @@ def returnStatement(tex3):
                     closestVariable = getClosestString(vInputSplit[i], setOfVariableNames,tex3)
                     
                     print("Got input of: " + str(vInputSplit) + "\n")
+                    # prompt.insert(tk.END, "Got input of: " + str(vInputSplit) + "\n")
                     print("Closest match was: " + str(closestVariable) + "\n")
+                    # prompt.insert(tk.END, "Closest match was: " + str(closestVariable) + "\n")
                     vInputSplit[i] = closestVariable
         
         # reformat expression
@@ -405,58 +464,73 @@ def returnStatement(tex3):
                 
         print("Expression: " + expression + "\n" +
               "Is this correct? (Yes/No)")
-        if confirm(): correctExpression = True
+        prompt.insert(tk.END, "return " + expression + "\n" +
+              "Is this correct? (Yes/No)")
+        if confirm(prompt): correctExpression = True
     
     expression = "return " + expression + "\n"
     return expression
 
+# *********************************************************************************
+# command "create for loop" returns string = "for " + loopingVariable + " in range
+#                                             (" + rangeInt + "):\n    "
 # for now, can only create a for loop with range function
-def createForLoop(tex3):
+# use case 4, CFL
+# *********************************************************************************
+def createForLoop(tex3, prompt):
     correctVariable = False
     while not correctVariable:
-        print("Say the name of looping variable.\n")
+        # print("Say the name of looping variable.\n")
+        # system asks user for variable in the popup window of GUI
+        prompt.insert(tk.END, "Say the name of the looping variable.\n")
         vInput = getVoiceInput()
         
         vInput = vInput.replace(".","")
         vInput = vInput.replace(" ","_")
-        print("Looping variable: " + vInput + "\n" +
-              "Is this correct? (Yes/No)")
-        if confirm(): correctVariable = True
+        # print("Looping variable: " + vInput + "\n" + "Is this correct? (Yes/No)")
+        # confirmation sent to user in popup window of GUI
+        prompt.insert(tk.END, "Looping variable: " + vInput + "\n" + "Is this correct? (Yes/No)")
+        if confirm(prompt): correctVariable = True
         
     loopingVariable = vInput
         
     correctRange = False
     while not correctRange:
-        print("How many times do you want to repeat this loop?\n")
+        # print("How many times do you want to repeat this loop?\n")
+        # question sent to user in popup window of GUI
+        prompt.insert(tk.END, "How many times do you want to repeat this loop?\n")
         vInput = getVoiceInput()
-        
         vInput = str(text2int(vInput))
         
-        print("Amount of loops: " + vInput + "\n" + 
-              "Is this correct? (Yes/No)")
-        if confirm(): correctRange = True
+        # print("Amount of loops: " + vInput + "\n" + "Is this correct? (Yes/No)")
+        # confirmation sent to user in popup window of GUI
+        prompt.insert(tk.END, "Amount of loops: " + vInput + "\n" + "Is this correct? (Yes/No)")
+        if confirm(prompt): correctRange = True
         
     rangeInt = vInput
-    
-    string = "for " + loopingVariable + " in range(" + rangeInt + "):\n"
+    # string created for insertion in text editor window of GUI
+    string = "for " + loopingVariable + " in range(" + rangeInt + "):\n    "
     return string
 
-    
-def createIfStatement(tex3):
+# *****************************************************************************
+# a function to simplify the repetition in case 5,6 and 7 of dealing with the
+# operator symbols and creating the necessary strings for the text window
+# *****************************************************************************
+def getSymbols(tex3, prompt, case):
     correctCondition = False
+
     while not correctCondition:
-        print("Say the condition you want for the if statement.\n")
+        print("Say the condition you want for the " + case + ".\n")
+        prompt.insert(tk.END, "Say the condition you want for the " + case + ".\n")
         vInput = getVoiceInput()
-        
         vInput = vInput.replace(".","")
         
         # replace strings of comparison operators with symbols
         for x, y in compare_dict.items():
             vInput = vInput.replace(x, y)
-        
-        
+                
         # split string into array, while keeping the operator symbols
-        vInputSplit = re.split("([<]|[<=]|[>]|[>=][==][!=])", vInput)
+        vInputSplit = re.split("([<=][>=][!=][==]|[>]|[<])", vInput)
         
         # find location of operators    
         opLocations = []
@@ -470,14 +544,15 @@ def createIfStatement(tex3):
                 vInputSplit[i] = str(text2int(vInputSplit[i]))
                 
                 # check if the term starts with a letter
-                # if so, it must be a preexisting variable name and 
-                # match it with one from the setOfVariableNames
+                # if so, it must be a preexisting variable name, if not warn the user 
+                # that the variable does not exist
                 if vInputSplit[i][0].isalpha():
                     closestVariable = getClosestString(vInputSplit[i], setOfVariableNames,tex3)
-                    
-                    print("Got input of: " + str(vInputSplit) + "\n")
-                    print("Closest match was: " + str(closestVariable) + "\n")
-                    vInputSplit[i] = closestVariable
+                    if closestVariable == "invalid":                   
+                        print("Got input of: " + str(vInputSplit) + "\n")
+                        # prompt.insert(tk.END, "Got input of: " + str(vInputSplit) + "\n")
+                        print(vInputSplit[i] + " is an unknown variable\n")
+                        prompt.insert(tk.END, vInputSplit[i] + " is an unknown variable\n")
         
         # reformat expression
         expression = ""
@@ -487,60 +562,178 @@ def createIfStatement(tex3):
             else:
                 expression = expression + vInputSplit[i]
         print("Condition: " + expression + "\n" + "Is this correct? (Yes/No)")
-        if confirm(): correctCondition = True
-    
-    condition = expression
-    string = "if " + condition + ":\n"
+        prompt.insert(tk.END, "Condition: " + expression + "\n" + "Is this correct? (Yes/No)")
+        if confirm(prompt): correctCondition = True
+
+    tex3.insert(tk.END, "created condition for " + case + "\n")
+    tex3.see(tk.END)
+    return expression
+
+# *********************************************************************************
+# command "create while loop" returns string = "while " + condition + ":\n"
+# use case 5, CWL
+# *********************************************************************************
+def createWhileLoop(tex3, prompt):
+    string = "while " + getSymbols(tex3,prompt,"while loop") + ":\n    "
     return string
-'''
-def cbc(txt):
-    return lambda : callback(txt)
-def callback(tex):
-    button = "Listen" 
-    tex.insert(tk.END, txtEditorTxt)
-    tex.see(tk.END)# Scroll if necessary
-'''
+
+# *********************************************************************************
+# command "create if statement" returns string = "if " + condition + ":\n"
+# use case 6, CIF
+# *********************************************************************************    
+def createIfStatement(tex3, prompt):
+    string = "if " + getSymbols(tex3,prompt,"if statement") + ":\n    "
+    return string
+
+# *********************************************************************************
+# command "create else-if statement" returns string = "elif " + condition + ":\n"
+# use case 7, CEIF
+# *********************************************************************************
+def createElseIfStatement(tex3, prompt):
+    string = "elif " + getSymbols(tex3,prompt,"else-if statement") + ":\n    "
+    return string
+
+# *********************************************************************************
+# command "create else statement" returns string = "else:\n"
+# use case 8, CEF
+# *********************************************************************************
+
+# *********************************************************************************
+# command "create array" returns string = "array = [" + var(s) + "]\n"
+# use case 9, CA
+# *********************************************************************************
+
+# *********************************************************************************
+# command "move cursor"
+# use case 10, MC
+# *********************************************************************************
+
+# *********************************************************************************
+# command "move to word"
+# use case 11, MTW
+# *********************************************************************************
+
+# *********************************************************************************
+# command "undo"
+# use case 12, UC
+# *********************************************************************************
+
+# *********************************************************************************
+# command "redo"
+# use case 13, RC
+# *********************************************************************************
+
+# *********************************************************************************
+# command "select word"
+# use case 14, SW
+# *********************************************************************************
+
+# *********************************************************************************
+# command "select line"
+# use case 15, SL
+# *********************************************************************************
+
+# *********************************************************************************
+# command "select block"
+# use case 16, SB
+# *********************************************************************************
+
+# *********************************************************************************
+# command "copy text"
+# use case 17, CT
+# *********************************************************************************
+
+# *********************************************************************************
+# command "paste text"
+# use case 18, PT
+# *********************************************************************************
+
+# *********************************************************************************
+# command "print statement" returns string = "print('" + printLine + "')\n"
+# use case 19, PS
+# *********************************************************************************
+def printStatement(tex3, prompt):
+    correctPrint = False
+    while not correctPrint:
+        print("Say the line for printing.\n")
+        prompt.insert(tk.END, "Say the line for printing.\n")
+        vInput = getVoiceInput()
+        
+        # vInput = vInput.replace(".","")
+        # vInput = vInput.replace(" ","_")
+        print("line: " + vInput + "\n" +
+              "Is this correct? (Yes/No)")
+        prompt.insert(tk.END, "line: " + vInput + "\n" +
+              "Is this correct? (Yes/No)")
+        if confirm(prompt): correctPrint = True
+        
+    printLine = vInput
+    
+    string = "print('" + printLine + "')\n"
+    return string
+
+# *********************************************************************************
+# command "print variable" returns string = "print(" + printVar + ")\n"
+# use case 20, PV
+# *********************************************************************************
+def printVariable(tex3, prompt):
+    correctPrint = False
+    while not correctPrint:
+        print("Say the variable for printing.\n")
+        prompt.insert(tk.END, "Say the variable for printing.\n")
+        vInput = getVoiceInput()
+        
+        # vInput = vInput.replace(".","")
+        vInput = vInput.replace(" ","_")
+        print("variable: " + vInput + "\n" +
+              "Is this correct? (Yes/No)")
+        prompt.insert(tk.END, "variable: " + vInput + "\n" +
+              "Is this correct? (Yes/No)")
+        if confirm(prompt): correctPrint = True
+        
+    printVar = vInput
+    
+    string = "print(" + printVar + ")\n"
+    return string
+
+# *********************************************************************************
+# command "create function" returns string = "def " + printLine + "():\n    "
+# still need to implement functions with arguments
+# use case 21, CF
+# *********************************************************************************
+def createDef(tex3,prompt):
+    correctPrint = False
+    while not correctPrint:
+        print("Say name of function.\n")
+        prompt.insert(tk.END, "Say name of the function.\n")
+        vInput = getVoiceInput()
+        
+        # vInput = vInput.replace(".","")
+        vInput = vInput.replace(" ","_")
+        print("new def(): " + vInput + "\n" +
+              "Is this correct? (Yes/No)")
+        prompt.insert(tk.END, "def " + vInput + "():\n" +
+              "Is this correct? (Yes/No)")
+        if confirm(prompt): correctPrint = True
+        
+    printLine = vInput
+    
+    string = "def " + printLine + "():\n    "
+    return string
+
+# *********************************************************************************
+# returns strings to GUI windows: tex,tex2,tex3,tex4
+# *********************************************************************************
 def listen(tex,tex2,tex3,tex4):
-    def callback(tex,tex2,tex3,tex4):
-
-        r = sr.Recognizer()
-        with sr.Microphone() as source:
-            audio = r.listen(source)
-            audioToText = r.recognize_sphinx(audio, language = path + "/../VoiceTraining/Profiles/en-US")
-            #audioToText = r.recognize_google(audio)
+    r = sr.Recognizer()
+    with sr.Microphone() as source:
+        audio = r.listen(source)
+        try:
+            #audioToText = r.recognize_sphinx(audio)
+            audioToText = r.recognize_google(audio)
             txtEditorTxt = phraseMatch(audioToText,tex2,tex3,tex4)
-
-        tex.insert(tk.END, txtEditorTxt)
-        tex.see(tk.END)
-        '''
-        model = Model("model")
-        rec = KaldiRecognizer(model, 16000)
-        p = pyaudio.PyAudio()
-        stream = p.open(format=pyaudio.paInt16, channels=1, rate=16000, input=True, frames_per_buffer=8000)
-        stream.start_stream()
-        data = stream.read(4000)
-        while True:
-            data = stream.read(4000)
-            if rec.AcceptWaveform(data) and len(data) != 0:
-                audioToText = json.loads(rec.Result())["text"]
-                break
-        txtEditorTxt = phraseMatch(audioToText,tex2,tex3,tex4)
-        tex.insert(tk.END, txtEditorTxt)
-        tex.see(tk.END)
-        '''
-    a_thread = threading.Thread(target = callback(tex,tex2,tex3,tex4))
-    a_thread.start()
-
-'''
-top = tk.Tk()
-tex = tk.Text(master=top)
-tex.pack(side=tk.RIGHT)
-bop = tk.Frame()
-bop.pack(side=tk.LEFT)
-
-
-tk.Button(bop, text='Listen', command=lambda: listen(tex)).pack()
-tk.Button(bop, text='Exit', command=top.destroy).pack()
-
-top.mainloop()
-'''
+        except sr.UnknownValueError:
+            return ""
+        except sr.RequestError:
+            return ""
+    return txtEditorTxt
