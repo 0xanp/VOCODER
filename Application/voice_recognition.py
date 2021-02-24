@@ -45,7 +45,7 @@ def getVoiceInput():
         audioToText = r.recognize_google(audio)
     return audioToText
 
-def phraseMatch(audioToText,tex2,tex3,tex4):
+def phraseMatch(audioToText,tex,tex2,tex3,tex4):
     win = tk.Toplevel()
     win.wm_title("Prompts")
     prompt = tk.Text(win, width=50, height=15)
@@ -67,7 +67,7 @@ def phraseMatch(audioToText,tex2,tex3,tex4):
     elif closestString == "show set of variables":
         validCommand = True
         showSet(tex4)
-        stringP = ""
+        stringP = "*"
     elif closestString == "assign old variable":
         validCommand = True
         stringP = assignOldVariable(tex3, prompt)
@@ -92,6 +92,11 @@ def phraseMatch(audioToText,tex2,tex3,tex4):
     elif closestString == "create array":
         validCommand = True
         stringP = createArray(tex3, prompt)
+    elif closestString == "move cursor":
+        validCommand = True
+        pos = moveCursor(tex3, prompt)
+        tex.mark_set(tk.INSERT, pos)
+        stringP = "*"
     elif closestString == "create function":
         validCommand = True
         stringP = createDef(tex3, prompt)
@@ -660,7 +665,26 @@ def createArray(tex3, prompt):
 # command "move cursor"
 # use case 10, MC
 # *********************************************************************************
+def moveCursor(tex3, prompt):
+    correctLine = False
+    while not correctLine:
+        prompt.insert(tk.END,"State line number.\n")
+        vInput = getVoiceInput()
+        line = vInput
+        prompt.insert(tk.END,"line number: " + line + "\nIs this correct? (Yes/No)")
+        if confirm(prompt): correctLine = True
 
+    correctColumn = False
+    while not correctColumn:
+        prompt.insert(tk.END,"State column number.\n")
+        vInput = getVoiceInput()
+        column = vInput
+        prompt.insert(tk.END,"column number: " + column + "\nIs this correct? (Yes/No)")
+        if confirm(prompt): correctColumn = True
+
+    pos = line + '.' + column
+    tex3.insert(tk.END,"moved cursor to: " + pos + "\n")
+    return pos
 # *********************************************************************************
 # command "move to word"
 # use case 11, MTW
@@ -716,8 +740,7 @@ def printStatement(tex3, prompt):
         # vInput = vInput.replace(" ","_")
         print("line: " + vInput + "\n" +
               "Is this correct? (Yes/No)")
-        prompt.insert(tk.END, "line: " + vInput + "\n" +
-              "Is this correct? (Yes/No)")
+        prompt.insert(tk.END, "line: " + vInput + "\nIs this correct? (Yes/No)")
         if confirm(prompt): correctPrint = True
         
     printLine = vInput
@@ -740,8 +763,7 @@ def printVariable(tex3, prompt):
         vInput = vInput.replace(" ","_")
         print("variable: " + vInput + "\n" +
               "Is this correct? (Yes/No)")
-        prompt.insert(tk.END, "variable: " + vInput + "\n" +
-              "Is this correct? (Yes/No)")
+        prompt.insert(tk.END, "variable: " + vInput + "\nIs this correct? (Yes/No)")
         if confirm(prompt): correctPrint = True
         
     printVar = vInput
@@ -765,8 +787,7 @@ def createDef(tex3,prompt):
         vInput = vInput.replace(" ","_")
         print("new def(): " + vInput + "\n" +
               "Is this correct? (Yes/No)")
-        prompt.insert(tk.END, "def " + vInput + "():\n" +
-              "Is this correct? (Yes/No)")
+        prompt.insert(tk.END, "def " + vInput + "():\nIs this correct? (Yes/No)")
         if confirm(prompt): correctPrint = True
         
     printLine = vInput
@@ -784,7 +805,7 @@ def listen(tex,tex2,tex3,tex4):
         try:
             #audioToText = r.recognize_sphinx(audio)
             audioToText = r.recognize_google(audio)
-            txtEditorTxt = phraseMatch(audioToText,tex2,tex3,tex4)
+            txtEditorTxt = phraseMatch(audioToText,tex,tex2,tex3,tex4)
         except sr.UnknownValueError:
             return ""
         except sr.RequestError:

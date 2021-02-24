@@ -140,8 +140,11 @@ class Application(tk.Frame):
             if text == "":
                 self.sys_out_txt.insert(tk.END,"No command received. Please say a commands!")
                 self.imggray.configure(image=self.rendergray)
+            elif text == "*":
+                self.txt_editor_field.insert(tk.INSERT, "")
+                self.imggray.configure(image=self.rendergray)
             else:
-                self.txt_editor_field.insert(tk.END, text)
+                self.txt_editor_field.insert(tk.INSERT, text)
                 self.imggray.configure(image=self.rendergray)
         except queue.Empty:
             self.after(100, self.listen_for_result)
