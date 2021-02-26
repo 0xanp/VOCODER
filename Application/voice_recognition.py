@@ -97,6 +97,14 @@ def phraseMatch(audioToText,tex,tex2,tex3,tex4):
         pos = moveCursor(tex3, prompt)
         tex.mark_set(tk.INSERT, pos)
         stringP = "*"
+    elif closestString == "select line":
+        validCommand = True
+        selectLine(tex3, tex, prompt)
+        stringP = "*"
+    elif closestString == "select block":
+        validCommand = True
+        selectBlock(tex3, tex, prompt)
+        stringP = "*"
     elif closestString == "create function":
         validCommand = True
         stringP = createDef(tex3, prompt)
@@ -709,12 +717,49 @@ def moveCursor(tex3, prompt):
 # command "select line"
 # use case 15, SL
 # *********************************************************************************
+def selectLine(tex3, tex, prompt):
+    correctLine = False
+    while not correctLine:
+        prompt.insert(tk.END,"State line number.\n")
+        vInput = getVoiceInput()
+        line = vInput
+        prompt.insert(tk.END,"line number: " + line + "\nIs this correct? (Yes/No)")
+        if confirm(prompt): correctLine = True
 
+    lineNum = str(line)
+    beg = lineNum + '.0'
+    end = lineNum + '.130'
+    tex.tag_add('sel', beg, end)
+    tex.tag_delete('sel')
+    tex3.insert(tk.END,"selected line " + lineNum + "\n")
 # *********************************************************************************
 # command "select block"
 # use case 16, SB
 # *********************************************************************************
+def selectBlock(tex3, tex, prompt):
+    correctBLine = False
+    while not correctBLine:
+        prompt.insert(tk.END,"State beginning of block line number.\n")
+        vInput = getVoiceInput()
+        bline = vInput
+        prompt.insert(tk.END,"line number: " + bline + "\nIs this correct? (Yes/No)")
+        if confirm(prompt): correctBLine = True
 
+    correctELine = False
+    while not correctELine:
+        prompt.insert(tk.END,"State end of block line number.\n")
+        vInput = getVoiceInput()
+        eline = vInput
+        prompt.insert(tk.END,"line number: " + eline + "\nIs this correct? (Yes/No)")
+        if confirm(prompt): correctELine = True
+
+    blineNum = str(bline)
+    elineNum = str(eline)
+    beg = blineNum + '.0'
+    end = elineNum + '.130'
+    tex.tag_add('sel', beg, end)
+    tex.tag_delete('sel')
+    tex3.insert(tk.END,"selected block of lines " + blineNum + " through " + elineNum + "\n")
 # *********************************************************************************
 # command "copy text"
 # use case 17, CT
