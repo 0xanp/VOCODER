@@ -97,6 +97,10 @@ def phraseMatch(audioToText,tex,tex2,tex3,tex4):
         pos = moveCursor(tex3, prompt)
         tex.mark_set(tk.INSERT, pos)
         stringP = "*"
+    elif closestString == "select word":
+        validCommand = True
+        selectWord(tex3, tex, prompt)
+        stringP = "*"
     elif closestString == "select line":
         validCommand = True
         selectLine(tex3, tex, prompt)
@@ -712,7 +716,49 @@ def moveCursor(tex3, prompt):
 # command "select word"
 # use case 14, SW
 # *********************************************************************************
+def selectWord(tex3, tex, prompt):
+    correctBLWord = False
+    while not correctBLWord:
+        prompt.insert(tk.END,"State line of word beginning.\n")
+        vInput = getVoiceInput()
+        bLWord = vInput
+        prompt.insert(tk.END,"line number: " + bLWord + "\nIs this correct? (Yes/No)")
+        if confirm(prompt): correctBLWord = True
 
+    correctBCWord = False
+    while not correctBCWord:
+        prompt.insert(tk.END,"State column of word beginning.\n")
+        vInput = getVoiceInput()
+        bCWord = vInput
+        prompt.insert(tk.END,"column number: " + bCWord + "\nIs this correct? (Yes/No)")
+        if confirm(prompt): correctBCWord = True
+
+    correctELWord = False
+    while not correctELWord:
+        prompt.insert(tk.END,"State line of word ending.\n")
+        vInput = getVoiceInput()
+        eLWord = vInput
+        prompt.insert(tk.END,"line number: " + eLWord + "\nIs this correct? (Yes/No)")
+        if confirm(prompt): correctELWord = True
+
+    correctECWord = False
+    while not correctECWord:
+        prompt.insert(tk.END,"State column of word ending.\n")
+        vInput = getVoiceInput()
+        eCWord = vInput
+        prompt.insert(tk.END,"column number: " + eCWord + "\nIs this correct? (Yes/No)")
+        if confirm(prompt): correctECWord = True
+
+    blineNum = str(bLWord)
+    bcolNum = str(bCWord)
+    elineNum = str(eLWord)
+    ecolNum = str(eCWord)
+    beg = blineNum + '.' + bcolNum
+    end = elineNum + '.' + ecolNum
+    tex.tag_add('sel', beg, end)
+    tex.mark_set(tk.INSERT, beg)
+    #tex.tag_delete('sel')
+    tex3.insert(tk.END,"selected word " + beg + " through " + end + "\n")
 # *********************************************************************************
 # command "select line"
 # use case 15, SL
@@ -730,7 +776,8 @@ def selectLine(tex3, tex, prompt):
     beg = lineNum + '.0'
     end = lineNum + '.130'
     tex.tag_add('sel', beg, end)
-    tex.tag_delete('sel')
+    tex.mark_set(tk.INSERT, beg)
+    #tex.tag_delete('sel')
     tex3.insert(tk.END,"selected line " + lineNum + "\n")
 # *********************************************************************************
 # command "select block"
@@ -758,7 +805,8 @@ def selectBlock(tex3, tex, prompt):
     beg = blineNum + '.0'
     end = elineNum + '.130'
     tex.tag_add('sel', beg, end)
-    tex.tag_delete('sel')
+    tex.mark_set(tk.INSERT, beg)
+    #tex.tag_delete('sel')
     tex3.insert(tk.END,"selected block of lines " + blineNum + " through " + elineNum + "\n")
 # *********************************************************************************
 # command "copy text"
