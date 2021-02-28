@@ -20,7 +20,6 @@ commandWords = [ "create new variable",
                  "create else statement done",
                  "create array",
                  "move cursor",
-                 "move to word",
                  "undo command",
                  "redo command",
                  "select word",
@@ -28,6 +27,7 @@ commandWords = [ "create new variable",
                  "select block",
                  "copy text",
                  "paste text",
+                 "cut text",
                  "create function",
                  "print statement",
                  "print variable",
@@ -129,6 +129,10 @@ def phraseMatch(audioToText,tex,tex2,tex3,tex4):
     elif closestString == "paste text":
         validCommand = True
         stringP = pasteText(tex3, tex, prompt)
+    elif closestString == "cut text":
+        validCommand = True
+        cutText(tex3, tex, prompt)
+        stringP = "*"    
     elif closestString == "print variable":
         validCommand = True
         stringP = printVariable(tex3, prompt)
@@ -849,12 +853,25 @@ def copyText(tex3, tex, prompt):
 # use case 18, PT
 # *********************************************************************************
 def pasteText(tex3, tex, prompt):
-    global selEnd
+    # global selEnd
     copiedText = tex.clipboard_get()
     prompt.insert(tk.END,"copied text = " + copiedText + "\n")
     tex.tag_remove(tk.SEL, "1.0", tk.END)
     tex3.insert(tk.END,"pasted text\n")
     return copiedText
+# *********************************************************************************
+# command "cut text"
+# use case 11, CUT
+# *********************************************************************************
+def cutText(tex3, tex, prompt):
+    global selBeg, selEnd
+    tex.clipboard_clear()
+    # prompt.insert(tk.END,selBeg + "to " + selEnd + "\n")
+    copyString = tex.get(selBeg ,selEnd)
+    tex.clipboard_append(copyString)
+    tex.delete(selBeg, selEnd)
+    prompt.insert(tk.END,"delete: " + copyString + "\n")
+    tex3.insert(tk.END,"deleted: " + copyString + "\n")
 # *********************************************************************************
 # command "print statement" returns string = "print('" + printLine + "')\n"
 # use case 19, PS
