@@ -97,8 +97,7 @@ def phraseMatch(audioToText,tex,tex2,tex3,tex4):
         stringP = createArray(tex3, prompt)
     elif closestString == "move cursor":
         validCommand = True
-        pos = moveCursor(tex3, prompt)
-        tex.mark_set(tk.INSERT, pos)
+        moveCursor(tex3, tex, prompt)
         stringP = "*"
     elif closestString == "select word":
         validCommand = True
@@ -119,6 +118,9 @@ def phraseMatch(audioToText,tex,tex2,tex3,tex4):
         validCommand = True
         copyText(tex3, tex, prompt)
         stringP = "*"
+    elif closestString == "paste text":
+        validCommand = True
+        stringP = pasteText(tex3, tex, prompt)
     elif closestString == "print variable":
         validCommand = True
         stringP = printVariable(tex3, prompt)
@@ -684,7 +686,7 @@ def createArray(tex3, prompt):
 # command "move cursor"
 # use case 10, MC
 # *********************************************************************************
-def moveCursor(tex3, prompt):
+def moveCursor(tex3, tex, prompt):
     correctLine = False
     while not correctLine:
         prompt.insert(tk.END,"State line number.\n")
@@ -702,8 +704,9 @@ def moveCursor(tex3, prompt):
         if confirm(prompt): correctColumn = True
 
     pos = line + '.' + column
+    tex.tag_remove(tk.SEL, "1.0", tk.END)
+    tex.mark_set(tk.INSERT, pos)
     tex3.insert(tk.END,"moved cursor to: " + pos + "\n")
-    return pos
 # *********************************************************************************
 # command "move to word"
 # use case 11, MTW
@@ -725,6 +728,7 @@ def moveCursor(tex3, prompt):
 # *********************************************************************************
 def selectWord(tex3, tex, prompt):
     global selBeg, selEnd
+    tex.tag_remove(tk.SEL, "1.0", tk.END)
     correctBLWord = False
     while not correctBLWord:
         prompt.insert(tk.END,"State line of word beginning.\n")
@@ -773,6 +777,7 @@ def selectWord(tex3, tex, prompt):
 # *********************************************************************************
 def selectLine(tex3, tex, prompt):
     global selBeg, selEnd
+    tex.tag_remove(tk.SEL, "1.0", tk.END)
     correctLine = False
     while not correctLine:
         prompt.insert(tk.END,"State line number.\n")
@@ -794,6 +799,7 @@ def selectLine(tex3, tex, prompt):
 # *********************************************************************************
 def selectBlock(tex3, tex, prompt):
     global selBeg, selEnd
+    tex.tag_remove(tk.SEL, "1.0", tk.END)
     correctBLine = False
     while not correctBLine:
         prompt.insert(tk.END,"State beginning of block line number.\n")
@@ -834,7 +840,13 @@ def copyText(tex3, tex, prompt):
 # command "paste text"
 # use case 18, PT
 # *********************************************************************************
-
+def pasteText(tex3, tex, prompt):
+    global selEnd
+    copiedText = tex.clipboard_get()
+    prompt.insert(tk.END,"copied text = " + copiedText + "\n")
+    tex.tag_remove(tk.SEL, "1.0", tk.END)
+    tex3.insert(tk.END,"pasted text\n")
+    return copiedText
 # *********************************************************************************
 # command "print statement" returns string = "print('" + printLine + "')\n"
 # use case 19, PS
