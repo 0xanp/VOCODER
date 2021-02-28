@@ -99,6 +99,14 @@ def phraseMatch(audioToText,tex,tex2,tex3,tex4):
         validCommand = True
         moveCursor(tex3, tex, prompt)
         stringP = "*"
+    elif closestString == "undo command":
+        validCommand = True
+        tex.edit_undo()
+        stringP = "*"
+    elif closestString == "redo command":
+        validCommand = True
+        tex.edit_redo()
+        stringP = "*"
     elif closestString == "select word":
         validCommand = True
         selectWord(tex3, tex, prompt)

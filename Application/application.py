@@ -144,7 +144,7 @@ class Application:
         ## Text Editor
         self.txt_editor = tk.LabelFrame(self.app_layout,text="Text Editor",width=int(self.app_layout.winfo_width()*0.7), height=400,borderwidth=2, relief="ridge")
         self.txt_editor.grid_propagate(False)
-        self.txt_editor_field = tk.Text(self.txt_editor)
+        self.txt_editor_field = tk.Text(self.txt_editor, undo=True)
 
         ## Terminal
         self.terminal = tk.LabelFrame(self.app_layout,text="Terminal",width=1112, height=200,borderwidth=2, relief="ridge")
