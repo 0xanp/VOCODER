@@ -36,6 +36,9 @@ commandWords = [ "create new variable",
 # this set will contain variable names created by createNewVariable()                 
 setOfVariableNames = []
 
+# global variables used for selection of text in text editor
+global selBeg, selEnd
+
 # function to get voice input and returns as a string
 def getVoiceInput():
     r = sr.Recognizer()
@@ -112,6 +115,10 @@ def phraseMatch(audioToText,tex,tex2,tex3,tex4):
     elif closestString == "create function":
         validCommand = True
         stringP = createDef(tex3, prompt)
+    elif closestString == "copy text":
+        validCommand = True
+        copyText(tex3, tex, prompt)
+        stringP = "*"
     elif closestString == "print variable":
         validCommand = True
         stringP = printVariable(tex3, prompt)
@@ -717,6 +724,7 @@ def moveCursor(tex3, prompt):
 # use case 14, SW
 # *********************************************************************************
 def selectWord(tex3, tex, prompt):
+    global selBeg, selEnd
     correctBLWord = False
     while not correctBLWord:
         prompt.insert(tk.END,"State line of word beginning.\n")
@@ -753,17 +761,18 @@ def selectWord(tex3, tex, prompt):
     bcolNum = str(bCWord)
     elineNum = str(eLWord)
     ecolNum = str(eCWord)
-    beg = blineNum + '.' + bcolNum
-    end = elineNum + '.' + ecolNum
-    tex.tag_add('sel', beg, end)
-    tex.mark_set(tk.INSERT, beg)
+    selBeg = blineNum + '.' + bcolNum
+    selEnd = elineNum + '.' + ecolNum
+    tex.tag_add('sel', selBeg, selEnd)
+    tex.mark_set(tk.INSERT, selBeg)
     #tex.tag_delete('sel')
-    tex3.insert(tk.END,"selected word " + beg + " through " + end + "\n")
+    tex3.insert(tk.END,"selected word " + selBeg + " through " + selEnd + "\n")
 # *********************************************************************************
 # command "select line"
 # use case 15, SL
 # *********************************************************************************
 def selectLine(tex3, tex, prompt):
+    global selBeg, selEnd
     correctLine = False
     while not correctLine:
         prompt.insert(tk.END,"State line number.\n")
@@ -773,10 +782,10 @@ def selectLine(tex3, tex, prompt):
         if confirm(prompt): correctLine = True
 
     lineNum = str(line)
-    beg = lineNum + '.0'
-    end = lineNum + '.130'
-    tex.tag_add('sel', beg, end)
-    tex.mark_set(tk.INSERT, beg)
+    selBeg = lineNum + '.0'
+    selEnd = lineNum + '.130'
+    tex.tag_add('sel', selBeg, selEnd)
+    tex.mark_set(tk.INSERT, selBeg)
     #tex.tag_delete('sel')
     tex3.insert(tk.END,"selected line " + lineNum + "\n")
 # *********************************************************************************
@@ -784,6 +793,7 @@ def selectLine(tex3, tex, prompt):
 # use case 16, SB
 # *********************************************************************************
 def selectBlock(tex3, tex, prompt):
+    global selBeg, selEnd
     correctBLine = False
     while not correctBLine:
         prompt.insert(tk.END,"State beginning of block line number.\n")
@@ -802,17 +812,24 @@ def selectBlock(tex3, tex, prompt):
 
     blineNum = str(bline)
     elineNum = str(eline)
-    beg = blineNum + '.0'
-    end = elineNum + '.130'
-    tex.tag_add('sel', beg, end)
-    tex.mark_set(tk.INSERT, beg)
+    selBeg = blineNum + '.0'
+    selEnd = elineNum + '.130'
+    tex.tag_add('sel', selBeg, selEnd)
+    tex.mark_set(tk.INSERT, selBeg)
     #tex.tag_delete('sel')
     tex3.insert(tk.END,"selected block of lines " + blineNum + " through " + elineNum + "\n")
 # *********************************************************************************
 # command "copy text"
 # use case 17, CT
 # *********************************************************************************
-
+def copyText(tex3, tex, prompt):
+    global selBeg, selEnd
+    tex.clipboard_clear()
+    prompt.insert(tk.END,selBeg + "to " + selEnd + "\n")
+    copyString = tex.get(selBeg ,selEnd)
+    tex.clipboard_append(copyString)
+    prompt.insert(tk.END,copyString + "\n")
+    tex3.insert(tk.END,"copied: " + copyString + "\n")
 # *********************************************************************************
 # command "paste text"
 # use case 18, PT
