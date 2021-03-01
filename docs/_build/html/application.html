@@ -36,12 +36,37 @@
 <span id="application-module"></span><h1>application module<a class="headerlink" href="#module-application" title="Permalink to this headline">¶</a></h1>
 <dl class="py class">
 <dt id="application.Application">
-<em class="property">class </em><code class="sig-prename descclassname">application.</code><code class="sig-name descname">Application</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">master</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="headerlink" href="#application.Application" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">tkinter.Frame</span></code></p>
-<p>A naive Bayesian spam filter</p>
+<em class="property">class </em><code class="sig-prename descclassname">application.</code><code class="sig-name descname">Application</code><span class="sig-paren">(</span><em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="headerlink" href="#application.Application" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>This is the documentation for Application</p>
 <dl class="py method">
 <dt id="application.Application.change_indicator">
 <code class="sig-name descname">change_indicator</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#application.Application.change_indicator" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="application.Application.copy">
+<code class="sig-name descname">copy</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#application.Application.copy" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="application.Application.cut">
+<code class="sig-name descname">cut</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#application.Application.cut" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="application.Application.file">
+<code class="sig-name descname">file</code><em class="property"> = None</em><a class="headerlink" href="#application.Application.file" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="application.Application.height">
+<code class="sig-name descname">height</code><em class="property"> = 900</em><a class="headerlink" href="#application.Application.height" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="application.Application.image_resizer">
+<code class="sig-name descname">image_resizer</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">e</span></em><span class="sig-paren">)</span><a class="headerlink" href="#application.Application.image_resizer" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py method">
@@ -49,9 +74,84 @@
 <code class="sig-name descname">listen_for_result</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#application.Application.listen_for_result" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
+<dl class="py attribute">
+<dt id="application.Application.master">
+<code class="sig-name descname">master</code><em class="property"> = &lt;tkinter.Frame object .!frame&gt;</em><a class="headerlink" href="#application.Application.master" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="application.Application.menu_bar">
+<code class="sig-name descname">menu_bar</code><em class="property"> = &lt;tkinter.Menu object .!menu&gt;</em><a class="headerlink" href="#application.Application.menu_bar" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="application.Application.menu_edit">
+<code class="sig-name descname">menu_edit</code><em class="property"> = &lt;tkinter.Menu object .!menu.!menu2&gt;</em><a class="headerlink" href="#application.Application.menu_edit" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="application.Application.menu_file">
+<code class="sig-name descname">menu_file</code><em class="property"> = &lt;tkinter.Menu object .!menu.!menu&gt;</em><a class="headerlink" href="#application.Application.menu_file" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="application.Application.menu_help">
+<code class="sig-name descname">menu_help</code><em class="property"> = &lt;tkinter.Menu object .!menu.!menu4&gt;</em><a class="headerlink" href="#application.Application.menu_help" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="application.Application.menu_voice">
+<code class="sig-name descname">menu_voice</code><em class="property"> = &lt;tkinter.Menu object .!menu.!menu3&gt;</em><a class="headerlink" href="#application.Application.menu_voice" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="application.Application.newFile">
+<code class="sig-name descname">newFile</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#application.Application.newFile" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="application.Application.on_closing">
+<code class="sig-name descname">on_closing</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#application.Application.on_closing" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="application.Application.openFile">
+<code class="sig-name descname">openFile</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#application.Application.openFile" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="application.Application.paste">
+<code class="sig-name descname">paste</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#application.Application.paste" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="application.Application.root">
+<code class="sig-name descname">root</code><em class="property"> = &lt;tkinter.Tk object .&gt;</em><a class="headerlink" href="#application.Application.root" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="application.Application.saveFile">
+<code class="sig-name descname">saveFile</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#application.Application.saveFile" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="application.Application.setUpVoice">
+<code class="sig-name descname">setUpVoice</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#application.Application.setUpVoice" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="application.Application.showAbout">
+<code class="sig-name descname">showAbout</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#application.Application.showAbout" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
 <dl class="py method">
 <dt id="application.Application.text_queue">
 <code class="sig-name descname">text_queue</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">thread_queue</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="headerlink" href="#application.Application.text_queue" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="application.Application.txt_editor_field">
+<code class="sig-name descname">txt_editor_field</code><em class="property"> = &lt;tkinter.Text object .!frame.!text&gt;</em><a class="headerlink" href="#application.Application.txt_editor_field" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py method">
@@ -59,16 +159,16 @@
 <code class="sig-name descname">update_text</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#application.Application.update_text" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
+<dl class="py attribute">
+<dt id="application.Application.width">
+<code class="sig-name descname">width</code><em class="property"> = 1600</em><a class="headerlink" href="#application.Application.width" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
 </dd></dl>
 
 <dl class="py function">
 <dt id="application.main">
 <code class="sig-prename descclassname">application.</code><code class="sig-name descname">main</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#application.main" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="py function">
-<dt id="application.on_closing">
-<code class="sig-prename descclassname">application.</code><code class="sig-name descname">on_closing</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#application.on_closing" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 </div>
