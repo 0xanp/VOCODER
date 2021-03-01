@@ -36,16 +36,21 @@ commandWords = [ "create new variable",
 # this set will contain variable names created by createNewVariable()                 
 setOfVariableNames = []
 
+<<<<<<< HEAD
 # global variables used for selection of text in text editor
 global selBeg, selEnd
+=======
+# path needed to find location of application
+path = os.getcwd()
+>>>>>>> VoiceTraining
 
 # function to get voice input and returns as a string
 def getVoiceInput():
     r = sr.Recognizer()
     with sr.Microphone() as source:
         audio = r.listen(source)
-        #audioToText = r.recognize_sphinx(audio)
-        audioToText = r.recognize_google(audio)
+        audioToText = r.recognize_sphinx(audio, language = path + "/../VoiceTraining/Profiles/en-US")
+        #audioToText = r.recognize_google(audio)
     return audioToText
 
 def phraseMatch(audioToText,tex,tex2,tex3,tex4):
