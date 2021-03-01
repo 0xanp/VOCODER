@@ -158,6 +158,7 @@ class Application:
                                         "\t12=Select Line \t13=Select Word \t14=Cut Text \t15=Move Cursor \t16=Paste Text \t17=Redo Command "+\
                                         "\t18=Undo Command \t19 Print Statement \t20 Print Variable \t21Create Function")
         self.help_field.grid_propagate(False)
+        self.help_field.config(state=DISABLED)
         self.app_layout.grid(row=1,padx=5,pady=5,sticky='nsew')
         self.voice_recog.grid(column=0,row=0,padx=5,pady=5,sticky='nsew')
 
