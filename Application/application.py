@@ -8,6 +8,13 @@ import threading
 import queue
 import os
 import sys
+import glob
+import shutil
+import time
+import sounddevice as sd
+from scipy.io.wavfile import write
+from pydub import AudioSegment
+from pydub.playback import play
 from screeninfo import get_monitors
 
 class Application:
@@ -101,7 +108,9 @@ class Application:
         self.menu_bar.add_cascade(label="Edit", menu=self.menu_edit)
         
         # Voice option
-        self.menu_voice.add_command(label="Set up voice", command=self.setUpVoice)
+        self.menu_voice.add_command(label="Record voice lines", command=self.recordVoiceLines)
+        self.menu_voice.add_command(label="Train language model", command=self.trainLanguageModel)
+        self.menu_voice.add_command(label="Choose langugage model", command=self.chooseLanguageModel)
         self.menu_bar.add_cascade(label="Voice", menu = self.menu_voice)
 
         # Help option
@@ -262,8 +271,267 @@ class Application:
     def paste(self): 
         self.txt_editor_field.event_generate("<<Paste>>") 
 
-    def setUpVoice(self):
-        tk.messagebox.showinfo("Test")
+    def checkNameButton(self, inputString = None):
+        """Checks to see if there is a directory with the name of inputString in the path of VoiceTraining/AcousticModels/"""
+
+        profileName = inputString
+
+        # If no text was passed into this function, display messagebox and exit function
+        if inputString == None:
+            tk.messagebox.showinfo("No name was inputted.")
+            return
+
+        # Check if inputString is a preexisting directory in VoiceTraining/AcousticModels/ and display the relevant messagebox    
+        isdir = os.path.isdir("VoiceTraining/AcousticModels/" + profileName)
+        if isdir == False:
+            proceed = tk.messagebox.askyesno("Voice Training", inputString + " was not found. Do you want to create a new one?")
+        else:
+            proceed = tk.messagebox.askyesno("Voice Training", inputString + " was found as an already existing directory. Do you want to overwrite it?")
+
+    def trainModelButton(self, profileName = None, directoryName = None):
+        """Takes in a profileName and directoryName, adapts the language model with the profileName using the voice lines from directoryName"""
+
+        # If profileName does not already exist, creates a new directory with that name
+        isdir = os.path.isdir("VoiceTraining/AcousticModels/" + profileName)
+        if isdir == False:
+            os.mkdir("VoiceTraining/AcousticModels/" + profileName)
+        
+        # Gets the needed file name from directoryName
+        dirPath = "VoiceTraining/TrainingModel/" + directoryName
+        for file in glob.glob(r"VoiceTraining/TrainingModel/" + directoryName + "/*.fileids"):
+            fileName = file.split("\\")
+            fileName = fileName[1]
+            fileName = fileName.split(".")
+            fileName = fileName[0]
+            print(fileName)
+
+        idsName = fileName + ".fileids"
+        transName = fileName + ".transcription"
+
+        # Creates .mfc files from current .wav files
+        os.system("sphinx_fe " + 
+                    "-argfile VoiceTraining/AcousticModels/en-us/feat.params " +
+                    "-samprate 16000 " +
+                    "-c " + dirPath + "/" + idsName + " "
+                    "-di " + dirPath + "/ " +
+                    "-do " + dirPath + "/ " +
+                    "-ei wav " + 
+                    "-eo mfc " + 
+                    "-mswav yes")
+
+        # Create gauden_counts, mixw_counts, and tmat_counts from the .mfc files
+        os.chdir(dirPath)
+        os.system("bw " +
+                    "-hmmdir ../../AcousticModels/en-us " +
+                    "-moddeffn ../../AcousticModels/en-us/mdef.txt " +
+                    "-ts2cbfn .ptm. " +
+                    "-feat 1s_c_d_dd " +
+                    "-svspec 0-12/13-25/26-38 " +
+                    "-cmn current " +
+                    "-agc none " +
+                    "-dictfn ../../cmudict-en-us.dict " +
+                    "-ctlfn " + idsName + " " +
+                    "-lsnfn " + transName + " " +
+                    "-accumdir .")
+        os.chdir("../../..")
+
+        # Copy files from default language model to new language model
+        for file in glob.glob(r"VoiceTraining/AcousticModels/en-us/*"):
+            shutil.copy(file, "VoiceTraining/AcousticModels/" + profileName)
+
+        # Adapt the copied files in the new language model
+        os.system("map_adapt " +
+                    "-moddeffn VoiceTraining/AcousticModels/en-us/mdef.txt " +
+                    "-ts2cbfn .ptm. " +
+                    "-meanfn VoiceTraining/AcousticModels/en-us/means " +
+                    "-varfn VoiceTraining/AcousticModels/en-us/variances " +
+                    "-mixwfn VoiceTraining/AcousticModels/en-us/mixture_weights " +
+                    "-tmatfn VoiceTraining/AcousticModels/en-us/transition_matrices " +
+                    "-accumdir " + dirPath + " " +
+                    "-mapmeanfn VoiceTraining/AcousticModels/" + profileName + "/means " +
+                    "-mapvarfn VoiceTraining/AcousticModels/" + profileName + "/variances " +
+                    "-mapmixwfn VoiceTraining/AcousticModels/" + profileName + "/mixture_weights " +
+                    "-maptmatfn VoiceTraining/AcousticModels/" + profileName + "/transition_matrices")
+
+        print("New adapted language model created!")
+        tk.messagebox.showinfo(message="New adapted language model created!")
+
+    def trainLanguageModel(self):
+        """Window frame to train a language model. Includes a text field to enter name of language model, radiobutton options to choose which directory has the voice lines to use to train, a button to check the language model name, and a button to train the model. """
+
+        win = tk.Toplevel()
+        win.wm_title("Voice Adaption")
+
+        # LabelFrame for the name of language model to train.
+        modelNameLabelFrame = tk.LabelFrame(win, text="Enter the name you want to use for the language model, click the button to check if it's available.", width=600, height=10, borderwidth=2, relief="ridge")
+        modelNameLabelFrame.grid(column=0, columnspan=2, padx=10, pady=10, ipadx=35, ipady=10)
+        # Label for "Name"
+        nameLabel = tk.Label(modelNameLabelFrame, text="Name:")
+        nameLabel.grid(row=0, column=0, padx=10, pady=10)
+        # Text field to input name of model
+        nameTextField = tk.Entry(modelNameLabelFrame)
+        nameTextField.grid(row=0, column=1, ipadx=80, ipady=5)
+        # Button to check for model name availability
+        nameButton = tk.Button(modelNameLabelFrame, text="Check Availability", command=lambda: self.checkNameButton(inputString=nameTextField.get()))
+        nameButton.grid(row=0, column=2, padx=10, sticky="W")
+        
+        # LabelFrame for target directory and train button
+        targetDirLabelFrame = tk.LabelFrame(win, text="Choose the directory containing the recorded voice lines that you want to use to train the language model.", width=600, height=10, borderwidth=2, relief="ridge")
+        targetDirLabelFrame.grid(row=1, column=0, columnspan=2, padx=10, pady=10, ipadx=10, ipady=10)
+        # Radiobutton for list of directories to choose from
+        trainPath = "VoiceTraining/TrainingModel"
+        listOfDirs = os.listdir(trainPath)
+        dirNameChoice = tk.StringVar()
+        dirNameChoice.set("None")
+
+        for dirName in listOfDirs:
+            tk.Radiobutton(targetDirLabelFrame, text=dirName, variable=dirNameChoice, value=dirName, indicatoron=0, width=20, padx=20).pack()
+
+        # Button to start training the language model
+        trainButton = tk.Button(win, text="Traing the language model!", command=lambda: self.trainModelButton(profileName=nameTextField.get(), directoryName=dirNameChoice.get()))
+        trainButton.grid(row=2,column=0, padx=225, pady=10, sticky="nsew")
+
+    def recordingVoice(self, directory=None, window=None):
+        """Gets the transcription file from given directory and prompts the user to say the given lines while recording the user saying them."""
+        
+        # clear the previous tk frame to make room for new widgets
+        for widget in window.winfo_children():
+            widget.destroy()
+        
+        # get the name of the fileids/transcription file
+        for file in glob.glob(r"VoiceTraining/TrainingModel/" + directory + "/*.fileids"):
+            fileName = file.split("\\")
+            fileName = fileName[1]
+            fileName = fileName.split(".")
+            fileName = fileName[0]
+            print(fileName)
+
+        dirPath = "VoiceTraining/TrainingModel/" + directory + "/"
+        transPath = dirPath + fileName + ".transcription"
+
+        #isFile = os.path.isfile(transPath)
+        #if not isFile:
+        #    tk.messagebox.showerror(message="Transcription file not found in directory.")
+
+        # open the file and save it into a list
+        transFile = open(transPath, "r")
+        fileLines = transFile.read().split("\n")
+        fileLines.pop()
+        transFile.close()
+
+        # set up needed variables
+        duration = 8
+        freq = 16000
+        string = "You have " + str(duration) + " seconds to say each line up to the \":\" symbol."
+        print(string)
+
+        # set up label in window frame
+        instructionLabel = tk.LabelFrame(window, text=string, width = 200, height = 100, borderwidth=2)
+        instructionLabel.grid(row=0, column=0, padx=5, pady=5)
+        textLabel = tk.Label(instructionLabel, text="testing", width=60)
+        textLabel.grid()
+
+        for fileLine in fileLines:
+            # get index positions and name to save voice file as
+            line = fileLine
+            index = line.index("<",4)
+            lastIndex = line.index(")", index + 6)
+            fileName = line[index + 6: lastIndex]
+
+            # display the text line
+            string = line[4:index] + ": " + fileName
+            textLabel.config(text=string)
+            print(string)
+
+            # record the user's input for seconds equal to duration
+            recording = sd.rec(int(duration * freq), samplerate = freq, channels = 1, dtype="int16")
+            sd.wait()
+            write(fileName + ".wav", freq, recording)
+
+            # playback the just recorded .wav file
+            sound = AudioSegment.from_file(fileName + ".wav")
+            play(sound)
+
+            # move the .wav file to the training model directory
+            shutil.move(fileName + ".wav", dirPath + "/" + fileName + ".wav")
+
+    def recordVoiceLines(self):
+        """Window frame to record user voice lines reading from a .transcription file in specified directory."""
+        
+        win = tk.Toplevel()
+        win.wm_title("Voice Recordings")
+
+        # LabelFrame for choosing which folder to record voice lines from
+        recordVoiceLabelFrame = tk.LabelFrame(win, text="Choose the directory with the voice lines you want to record.", width=600, height=10, borderwidth=2, relief="ridge")
+        recordVoiceLabelFrame.grid(column=0, columnspan=10, padx=10, pady=10, ipadx=10, ipady=10)
+        
+        # Get list of available directories to train from
+        listOfDirs = os.listdir("VoiceTraining/TrainingModel")
+        dirNameChoice = tk.StringVar()
+
+        # Pack all the training model directories into a radiobutton
+        for dirName in listOfDirs:
+            tk.Radiobutton(recordVoiceLabelFrame, text=dirName, variable=dirNameChoice, value=dirName, command=lambda: self.recordingVoice(directory=dirNameChoice.get(), window=win), indicatoron=0, width=20, padx=20).pack()
+
+    def featureNotImplemented(self):
+        """Function to use to show that a feature has not been implemented yet."""
+        tk.messagebox.showinfo(message="This feature has not been implemented yet.")
+
+    def changeLanguageModel(self, modelName="None"):
+        """Displays a list of available language models and allows the user to choose one of them to use to parse incoming voice input"""
+
+        print("Inside change language model function")
+
+        # If no modelName, exit the function
+        if modelName == "None": return
+        print("Model chosen: " + modelName)
+
+        # Starting process of replacing file in 
+        # VoiceTraining/Profiles/en-US/acoustic-model/
+        # with files in
+        # VoiceTraining/AcousticModels/ + modelName
+        
+        pathUse    = "VoiceTraining/Profiles/en-US/acoustic-model/"
+        pathChosen = "VoiceTraining/AcousticModels/" + modelName + "/"
+
+        # First delete all the files in pathUse
+        print("Removing these files from " + pathUse)
+        for file in glob.glob(pathUse + "*"):
+            print(file)
+            os.remove(file)
+        print("Removed files from that path")
+
+        # Next copy files from pathChosen to pathUse
+        print("Copying files from " + pathChosen + " over to " + pathUse)
+        for file in glob.glob(pathChosen + "*"):
+            print(file)
+            shutil.copy(file, pathUse)
+        print("Finished copying over files")
+
+        print("Finished changing language model")
+        tk.messagebox.showinfo(message="Finished changing the language model.")
+        
+
+    def chooseLanguageModel(self):
+        """Window frame to choose a language model from a list of radiobutton options"""
+        #tk.messagebox.showinfo(message="In choose language model function")
+        win = tk.Toplevel()
+        win.wm_title("Choose Language Model")
+
+        # LabelFrame for choosing which language model to use
+        instructionLabelFrame = tk.LabelFrame(win, text="Choose the language model you want to use from the list below.", width=600, height=10, borderwidth=2, relief="ridge")
+        instructionLabelFrame.grid(column=0, columnspan=10, padx=10, pady=30, ipadx=10, ipady=10)
+        
+        # get list of available language models
+        listOfModels = os.listdir("VoiceTraining/AcousticModels")
+        modelNameChoice = tk.StringVar()
+
+        # pack Google into the list of radiobuttons
+        tk.Radiobutton(instructionLabelFrame, text="Google", variable=modelNameChoice, value="Google", command=lambda: self.featureNotImplemented(), indicatoron=0, width=20, padx=20).pack()
+
+        # pack the list of available language models
+        for modelName in listOfModels:
+            tk.Radiobutton(instructionLabelFrame, text=modelName, variable=modelNameChoice, value=modelName, command=lambda: self.changeLanguageModel(modelName=modelNameChoice.get()), indicatoron=0, width=20, padx=20).pack()
 
     def text_queue(self, thread_queue=None):
         result = vr.listen(self.txt_editor_field,self.cmd_receiver_txt,self.cmd_man_txt,self.sys_out_txt)
