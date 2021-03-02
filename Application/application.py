@@ -111,7 +111,7 @@ class Application:
         # Voice option
         self.menu_voice.add_command(label="Record voice lines", command=self.recordVoiceLines)
         self.menu_voice.add_command(label="Train language model", command=self.trainLanguageModel)
-        self.menu_voice.add_command(label="Choose langugage model", command=self.chooseLanguageModel)
+        self.menu_voice.add_command(label="Choose language model", command=self.chooseLanguageModel)
         self.menu_bar.add_cascade(label="Voice", menu = self.menu_voice)
 
         # Help option
@@ -261,7 +261,7 @@ class Application:
                   
         else: 
             file = open(self.file,"w") 
-            file.write(self.thisTextArea.get(1.0,tk.END)) 
+            file.write(self.txt_editor_field.get(1.0,tk.END)) 
             file.close() 
   
     def cut(self): 
