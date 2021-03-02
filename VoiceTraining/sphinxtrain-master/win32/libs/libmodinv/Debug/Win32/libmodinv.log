@@ -1,0 +1,27 @@
+﻿Build started 2/9/2021 11:44:15 AM.
+     1>Project "D:\Downloads\sphinxtrain-master\win32\libs\libmodinv\libmodinv.vcxproj" on node 4 (Build target(s)).
+     1>ClCompile:
+         C:\Program Files (x86)\Microsoft Visual Studio 11.0\VC\bin\CL.exe /c /I..\..\..\include /I..\..\..\..\sphinxbase\include\win32 /I..\..\..\..\sphinxbase\include /ZI /nologo /W3 /WX- /Od /Oy- /D _DEBUG /D _LIB /D _CRT_SECURE_NO_WARNINGS /D SPHINX_DLL /D _VC80_UPGRADE=0x0600 /D _MBCS /Gm /EHsc /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Fo".\Debug\Win32/" /Fd".\Debug\Win32/vc110.pdb" /Gd /TC /analyze- /errorReport:prompt ..\..\..\src\libs\libmodinv\gauden.c ..\..\..\src\libs\libmodinv\mod_inv.c
+         mod_inv.c
+         gauden.c
+     1>d:\downloads\sphinxtrain-master\src\libs\libmodinv\gauden.c(72): warning C4305: 'initializing' : truncation from 'double' to 'float32'
+     1>d:\downloads\sphinxtrain-master\src\libs\libmodinv\gauden.c(338): warning C4244: '+=' : conversion from 'double' to 'float32', possible loss of data
+     1>d:\downloads\sphinxtrain-master\src\libs\libmodinv\gauden.c(341): warning C4244: '=' : conversion from 'double' to 'float32', possible loss of data
+     1>d:\downloads\sphinxtrain-master\src\libs\libmodinv\gauden.c(343): warning C4244: 'return' : conversion from 'double' to 'float32', possible loss of data
+     1>d:\downloads\sphinxtrain-master\src\libs\libmodinv\gauden.c(360): warning C4244: '=' : conversion from 'double' to 'float32', possible loss of data
+     1>d:\downloads\sphinxtrain-master\src\libs\libmodinv\gauden.c(362): warning C4244: 'return' : conversion from 'double' to 'float32', possible loss of data
+     1>d:\downloads\sphinxtrain-master\src\libs\libmodinv\gauden.c(444): warning C4244: '=' : conversion from 'double' to 'float', possible loss of data
+     1>d:\downloads\sphinxtrain-master\src\libs\libmodinv\gauden.c(475): warning C4244: '=' : conversion from 'double' to 'float', possible loss of data
+     1>d:\downloads\sphinxtrain-master\src\libs\libmodinv\gauden.c(1841): warning C4244: 'initializing' : conversion from 'double' to 'float32', possible loss of data
+     1>d:\downloads\sphinxtrain-master\src\libs\libmodinv\gauden.c(1910): warning C4244: '=' : conversion from 'uint32' to 'float32', possible loss of data
+     1>d:\downloads\sphinxtrain-master\src\libs\libmodinv\gauden.c(2047): warning C4244: '=' : conversion from 'float64' to 'float32', possible loss of data
+         Generating Code...
+       Lib:
+         C:\Program Files (x86)\Microsoft Visual Studio 11.0\VC\bin\Lib.exe /OUT:".\..\..\..\lib\Debug\Win32\libmodinv.lib" sphinxbase.lib /LIBPATH:..\..\..\..\sphinxbase\bin\Debug\Win32 /NOLOGO .\Debug\Win32/gauden.obj
+         .\Debug\Win32/mod_inv.obj
+         libmodinv.vcxproj -> D:\Downloads\sphinxtrain-master\win32\libs\libmodinv\.\..\..\..\lib\Debug\Win32\libmodinv.lib
+     1>Done Building Project "D:\Downloads\sphinxtrain-master\win32\libs\libmodinv\libmodinv.vcxproj" (Build target(s)).
+
+Build succeeded.
+
+Time Elapsed 00:00:00.64

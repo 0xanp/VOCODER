@@ -29,7 +29,8 @@ class Application:
     menu_help = tk.Menu(menu_bar, tearoff=0)
     master = tk.Frame(root)
     txt_editor_field = tk.Text(master)
-    file = None    
+    file = None
+    useGoogle = False    
     
     def __init__(self,**kwargs):
         # Set icon 
@@ -389,7 +390,7 @@ class Application:
             tk.Radiobutton(targetDirLabelFrame, text=dirName, variable=dirNameChoice, value=dirName, indicatoron=0, width=20, padx=20).pack()
 
         # Button to start training the language model
-        trainButton = tk.Button(win, text="Traing the language model!", command=lambda: self.trainModelButton(profileName=nameTextField.get(), directoryName=dirNameChoice.get()))
+        trainButton = tk.Button(win, text="Train the language model!", command=lambda: self.trainModelButton(profileName=nameTextField.get(), directoryName=dirNameChoice.get()))
         trainButton.grid(row=2,column=0, padx=225, pady=10, sticky="nsew")
 
     def recordingVoice(self, directory=None, window=None):
@@ -438,23 +439,37 @@ class Application:
             index = line.index("<",4)
             lastIndex = line.index(")", index + 6)
             fileName = line[index + 6: lastIndex]
-
-            # display the text line
             string = line[4:index] + ": " + fileName
-            textLabel.config(text=string)
+
+            # display the text line    
             print(string)
+            textLabel.config(text=string)
+            textLabel.update()
 
-            # record the user's input for seconds equal to duration
-            recording = sd.rec(int(duration * freq), samplerate = freq, channels = 1, dtype="int16")
-            sd.wait()
-            write(fileName + ".wav", freq, recording)
+            goodRecording = False 
+            while not goodRecording:         
+                window.lift()
 
-            # playback the just recorded .wav file
-            sound = AudioSegment.from_file(fileName + ".wav")
-            play(sound)
+                # record the user's input for seconds equal to duration
+                recording = sd.rec(int(duration * freq), samplerate = freq, channels = 1, dtype="int16")
+                sd.wait()
+                write(fileName + ".wav", freq, recording)
+
+                # update text to textLabel
+                textLabel.config(text=string + "\n\nPlaying back recording.")
+                textLabel.update()
+
+                # playback the just recorded .wav file
+                sound = AudioSegment.from_file(fileName + ".wav")
+                play(sound)
+
+                goodRecording = tk.messagebox.askyesno(message="Use this recording?")
 
             # move the .wav file to the training model directory
             shutil.move(fileName + ".wav", dirPath + "/" + fileName + ".wav")
+
+        # After recording voice lines, destroy the window.
+        window.destroy()
 
     def recordVoiceLines(self):
         """Window frame to record user voice lines reading from a .transcription file in specified directory."""
@@ -483,34 +498,45 @@ class Application:
 
         print("Inside change language model function")
 
-        # If no modelName, exit the function
-        if modelName == "None": return
-        print("Model chosen: " + modelName)
+        # If Google was chosen, change flag to true
+        if modelName == "Google":
+            print("Going to use Google Voice")
+            self.useGoogle = True
 
-        # Starting process of replacing file in 
-        # VoiceTraining/Profiles/en-US/acoustic-model/
-        # with files in
-        # VoiceTraining/AcousticModels/ + modelName
-        
-        pathUse    = "VoiceTraining/Profiles/en-US/acoustic-model/"
-        pathChosen = "VoiceTraining/AcousticModels/" + modelName + "/"
+        # If modelName = "None" for some reason, quit
+        elif modelName == "None":
+            tk.messagebox.showerror(message="Unexpected error.\nmodelName = None")
+            return
 
-        # First delete all the files in pathUse
-        print("Removing these files from " + pathUse)
-        for file in glob.glob(pathUse + "*"):
-            print(file)
-            os.remove(file)
-        print("Removed files from that path")
+        # For all other options chosen
+        else:
+            print("Switching to " + modelName)
+            self.useGoogle = False
 
-        # Next copy files from pathChosen to pathUse
-        print("Copying files from " + pathChosen + " over to " + pathUse)
-        for file in glob.glob(pathChosen + "*"):
-            print(file)
-            shutil.copy(file, pathUse)
-        print("Finished copying over files")
+            # Starting process of replacing file in 
+            # VoiceTraining/Profiles/en-US/acoustic-model/
+            # with files in
+            # VoiceTraining/AcousticModels/ + modelName
+            
+            pathUse    = "VoiceTraining/Profiles/en-US/acoustic-model/"
+            pathChosen = "VoiceTraining/AcousticModels/" + modelName + "/"
 
-        print("Finished changing language model")
-        tk.messagebox.showinfo(message="Finished changing the language model.")
+            # First delete all the files in pathUse
+            print("Removing these files from " + pathUse)
+            for file in glob.glob(pathUse + "*"):
+                print(file)
+                os.remove(file)
+            print("Removed files from that path")
+
+            # Next copy files from pathChosen to pathUse
+            print("Copying files from " + pathChosen + " over to " + pathUse)
+            for file in glob.glob(pathChosen + "*"):
+                print(file)
+                shutil.copy(file, pathUse)
+            print("Finished copying over files")
+
+            print("Finished changing language model")
+            tk.messagebox.showinfo(message="Finished changing the language model.")
         
 
     def chooseLanguageModel(self):
@@ -528,14 +554,14 @@ class Application:
         modelNameChoice = tk.StringVar()
 
         # pack Google into the list of radiobuttons
-        tk.Radiobutton(instructionLabelFrame, text="Google", variable=modelNameChoice, value="Google", command=lambda: self.featureNotImplemented(), indicatoron=0, width=20, padx=20).pack()
+        tk.Radiobutton(instructionLabelFrame, text="Google", variable=modelNameChoice, value="Google", command=lambda: self.changeLanguageModel(modelName=modelNameChoice.get()), indicatoron=0, width=20, padx=20).pack()
 
         # pack the list of available language models
         for modelName in listOfModels:
             tk.Radiobutton(instructionLabelFrame, text=modelName, variable=modelNameChoice, value=modelName, command=lambda: self.changeLanguageModel(modelName=modelNameChoice.get()), indicatoron=0, width=20, padx=20).pack()
 
     def text_queue(self, thread_queue=None):
-        result = vr.listen(self.txt_editor_field,self.cmd_receiver_txt,self.cmd_man_txt,self.sys_out_txt)
+        result = vr.listen(self.txt_editor_field,self.cmd_receiver_txt,self.cmd_man_txt,self.sys_out_txt,self.useGoogle)
         thread_queue.put(result)
 
     def image_resizer(self, e):

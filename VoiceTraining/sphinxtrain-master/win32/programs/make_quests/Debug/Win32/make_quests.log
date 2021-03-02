@@ -1,0 +1,37 @@
+﻿Build started 2/9/2021 11:44:17 AM.
+     1>Project "D:\Downloads\sphinxtrain-master\win32\programs\make_quests\make_quests.vcxproj" on node 11 (Build target(s)).
+     1>ClCompile:
+         C:\Program Files (x86)\Microsoft Visual Studio 11.0\VC\bin\CL.exe /c /I..\..\..\include /I..\..\..\..\sphinxbase\include\win32 /I..\..\..\..\sphinxbase\include /ZI /nologo /W3 /WX- /Od /Oy- /D _DEBUG /D _CONSOLE /D _CRT_SECURE_NO_WARNINGS /D SPHINX_DLL /D _VC80_UPGRADE=0x0600 /D _MBCS /Gm /EHsc /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Fo".\Debug\Win32/" /Fd".\Debug\Win32/vc110.pdb" /Gd /TC /analyze- /errorReport:prompt ..\..\..\src\programs\make_quests\main.c ..\..\..\src\programs\make_quests\parse_cmd_ln.c
+         parse_cmd_ln.c
+         main.c
+     1>d:\downloads\sphinxtrain-master\src\programs\make_quests\main.c(128): warning C4244: '=' : conversion from 'double' to 'float32', possible loss of data
+     1>d:\downloads\sphinxtrain-master\src\programs\make_quests\main.c(139): warning C4244: '+=' : conversion from 'double' to 'float32', possible loss of data
+     1>d:\downloads\sphinxtrain-master\src\programs\make_quests\main.c(144): warning C4244: '-=' : conversion from 'double' to 'float32', possible loss of data
+     1>d:\downloads\sphinxtrain-master\src\programs\make_quests\main.c(172): warning C4305: '=' : truncation from 'double' to 'float32'
+     1>d:\downloads\sphinxtrain-master\src\programs\make_quests\main.c(260): warning C4305: '=' : truncation from 'double' to 'float32'
+     1>d:\downloads\sphinxtrain-master\src\programs\make_quests\main.c(729): warning C4018: '<' : signed/unsigned mismatch
+     1>d:\downloads\sphinxtrain-master\src\programs\make_quests\main.c(930): warning C4244: '/=' : conversion from 'float64' to 'float32', possible loss of data
+     1>d:\downloads\sphinxtrain-master\src\programs\make_quests\main.c(931): warning C4244: '=' : conversion from 'float64' to 'float32', possible loss of data
+     1>d:\downloads\sphinxtrain-master\src\programs\make_quests\main.c(943): warning C4244: '=' : conversion from 'float64' to 'float32', possible loss of data
+     1>d:\downloads\sphinxtrain-master\src\programs\make_quests\main.c(969): warning C4018: '<' : signed/unsigned mismatch
+     1>d:\downloads\sphinxtrain-master\src\programs\make_quests\main.c(1068): warning C4018: '<' : signed/unsigned mismatch
+     1>d:\downloads\sphinxtrain-master\src\programs\make_quests\main.c(1071): warning C4018: '<' : signed/unsigned mismatch
+     1>d:\downloads\sphinxtrain-master\src\programs\make_quests\main.c(1078): warning C4018: '<' : signed/unsigned mismatch
+     1>d:\downloads\sphinxtrain-master\src\programs\make_quests\main.c(1080): warning C4018: '<' : signed/unsigned mismatch
+     1>d:\downloads\sphinxtrain-master\src\programs\make_quests\main.c(1081): warning C4018: '<' : signed/unsigned mismatch
+         Generating Code...
+       Link:
+         C:\Program Files (x86)\Microsoft Visual Studio 11.0\VC\bin\link.exe /ERRORREPORT:PROMPT /OUT:".\..\..\..\bin\Debug\Win32/make_quests.exe" /INCREMENTAL /NOLOGO /LIBPATH:..\..\..\..\sphinxbase\bin\Debug\Win32 sphinxbase.lib kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /MANIFEST /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /manifest:embed /DEBUG /PDB:".\..\..\..\bin\Debug\Win32/make_quests.pdb" /SUBSYSTEM:CONSOLE /TLBID:1 /DYNAMICBASE /NXCOMPAT /IMPLIB:".\..\..\..\bin\Debug\Win32\make_quests.lib" /MACHINE:X86 /SAFESEH .\Debug\Win32/main.obj
+         .\Debug\Win32/parse_cmd_ln.obj
+         "D:\Downloads\sphinxtrain-master\lib\Debug\Win32\libclust.lib"
+         "D:\Downloads\sphinxtrain-master\lib\Debug\Win32\libcommon.lib"
+         "D:\Downloads\sphinxtrain-master\lib\Debug\Win32\libio.lib"
+         "D:\Downloads\sphinxtrain-master\lib\Debug\Win32\libmllr.lib"
+         "D:\Downloads\sphinxtrain-master\lib\Debug\Win32\libmodinv.lib"
+     1>main.obj : warning LNK4075: ignoring '/EDITANDCONTINUE' due to '/SAFESEH' specification
+         make_quests.vcxproj -> D:\Downloads\sphinxtrain-master\win32\programs\make_quests\.\..\..\..\bin\Debug\Win32\make_quests.exe
+     1>Done Building Project "D:\Downloads\sphinxtrain-master\win32\programs\make_quests\make_quests.vcxproj" (Build target(s)).
+
+Build succeeded.
+
+Time Elapsed 00:00:01.31

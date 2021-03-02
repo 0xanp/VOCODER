@@ -36,6 +36,9 @@ commandWords = [ "create new variable",
 # this set will contain variable names created by createNewVariable()                 
 setOfVariableNames = []
 
+# flag to determine to use google or sphinx
+useGoogleFlag = False
+
 # global variables used for selection of text in text editor
 global selBeg, selEnd
 # path needed to find location of application
@@ -46,8 +49,13 @@ def getVoiceInput():
     r = sr.Recognizer()
     with sr.Microphone() as source:
         audio = r.listen(source)
-        #audioToText = r.recognize_sphinx(audio, language = path + "/../VoiceTraining/Profiles/en-US")
-        audioToText = r.recognize_google(audio)
+        
+        # if useGoogleFlag has been assigned true, use google voice recognition
+        if useGoogleFlag:
+            audioToText = r.recognize_google(audio)
+        else:
+            audioToText = r.recognize_sphinx(audio, language = path + "/VoiceTraining/Profiles/en-US")
+            
     return audioToText
 
 def phraseMatch(audioToText,tex,tex2,tex3,tex4):
@@ -912,6 +920,7 @@ def printVariable(tex3, prompt):
 # use case 21, CF
 # *********************************************************************************
 def createDef(tex3,prompt):
+    print(str(testInt))
     correctPrint = False
     while not correctPrint:
         print("Say name of function.\n")
@@ -933,13 +942,22 @@ def createDef(tex3,prompt):
 # *********************************************************************************
 # returns strings to GUI windows: tex,tex2,tex3,tex4
 # *********************************************************************************
-def listen(tex,tex2,tex3,tex4):
+def listen(tex,tex2,tex3,tex4,useGoogle):
+    global useGoogleFlag
+
     r = sr.Recognizer()
     with sr.Microphone() as source:
         audio = r.listen(source)
         try:
-            #audioToText = r.recognize_sphinx(audio)
-            audioToText = r.recognize_google(audio)
+            # If useGoogle flag is true, use google voice recognition
+            if useGoogle:
+                audioToText = r.recognize_google(audio)
+                useGoogleFlag = True
+            # Else, use sphinx
+            else:
+                audioToText = r.recognize_sphinx(audio, language = path + "/VoiceTraining/Profiles/en-US")
+                useGoogleFlag = False
+                
             txtEditorTxt = phraseMatch(audioToText,tex,tex2,tex3,tex4)
         except sr.UnknownValueError:
             return ""
