@@ -920,7 +920,7 @@ def printVariable(tex3, prompt):
 # use case 21, CF
 # *********************************************************************************
 def createDef(tex3,prompt):
-    print(str(testInt))
+    #print(str(testInt))
     correctPrint = False
     while not correctPrint:
         print("Say name of function.\n")
