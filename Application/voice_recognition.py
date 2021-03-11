@@ -56,7 +56,7 @@ def getVoiceInput():
         else:
             audioToText = r.recognize_sphinx(audio, language = path + "/VoiceTraining/Profiles/en-US")
             
-    return audioToText
+    return audioToText.lower()
 
 def phraseMatch(audioToText,tex,tex2,tex3,tex4):
     win = tk.Toplevel()
@@ -266,7 +266,9 @@ def confirm(prompt):
     else: return False
 
 
-# Very basic version of create new variable command. The terminal will prompt the user for voice input. The program will be able to take any string of characters and uses snake case for variable name. The program will be able to convert word versions of +, -, *, /, and numbers into their symbol versions.
+# Very basic version of create new variable command. The terminal will prompt the user for voice input.
+# The program will be able to take any string of characters and uses snake case for variable name.
+# The program will be able to convert word versions of +, -, *, /, and numbers into their symbol versions.
 
 # Example
 # Voice input
