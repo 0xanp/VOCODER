@@ -77,6 +77,7 @@ def phraseMatch(audioToText,tex,tex2,tex3,tex4):
     if closestString == "create new variable":
         validCommand = True
         stringP = createNewVariable(tex3, prompt)
+        tex.edit_separator()
     elif closestString == "show set of variables":
         validCommand = True
         showSet(tex4)
@@ -84,31 +85,40 @@ def phraseMatch(audioToText,tex,tex2,tex3,tex4):
     elif closestString == "assign old variable":
         validCommand = True
         stringP = assignOldVariable(tex3, prompt)
+        tex.edit_separator()
     elif closestString == "return statement":
         validCommand = True
         stringP = returnStatement(tex3, prompt)
+        tex.edit_separator()
     elif closestString == "create for loop":
         validCommand = True
         stringP = createForLoop(tex3, prompt)
+        tex.edit_separator()
     elif closestString == "create while loop":
         validCommand = True
         stringP = createWhileLoop(tex3, prompt)
+        tex.edit_separator()
     elif closestString == "create if statement":
         validCommand = True
         stringP = createIfStatement(tex3, prompt)
+        tex.edit_separator()
     elif closestString == "create else if statement":
         validCommand = True
         stringP = createElseIfStatement(tex3, prompt)
+        tex.edit_separator()
     elif closestString == "create else statement done":
         validCommand = True
         stringP = createElseStatement(tex3, prompt)
+        tex.edit_separator()
     elif closestString == "create array":
         validCommand = True
         stringP = createArray(tex3, prompt)
+        tex.edit_separator()
     elif closestString == "move cursor":
         validCommand = True
         moveCursor(tex3, tex, prompt)
         stringP = "*"
+        tex.edit_separator()
     elif closestString == "undo command":
         validCommand = True
         tex.edit_undo()
@@ -121,34 +131,43 @@ def phraseMatch(audioToText,tex,tex2,tex3,tex4):
         validCommand = True
         selectWord(tex3, tex, prompt)
         stringP = "*"
+        tex.edit_separator()
     elif closestString == "select line":
         validCommand = True
         selectLine(tex3, tex, prompt)
         stringP = "*"
+        tex.edit_separator()
     elif closestString == "select block":
         validCommand = True
         selectBlock(tex3, tex, prompt)
         stringP = "*"
+        tex.edit_separator()
     elif closestString == "create function":
         validCommand = True
         stringP = createDef(tex3, prompt)
+        tex.edit_separator()
     elif closestString == "copy text":
         validCommand = True
         copyText(tex3, tex, prompt)
         stringP = "*"
+        tex.edit_separator()
     elif closestString == "paste text":
         validCommand = True
         stringP = pasteText(tex3, tex, prompt)
+        tex.edit_separator()
     elif closestString == "cut text":
         validCommand = True
         cutText(tex3, tex, prompt)
-        stringP = "*"    
+        stringP = "*"
+        tex.edit_separator()
     elif closestString == "print variable":
         validCommand = True
         stringP = printVariable(tex3, prompt)
+        tex.edit_separator()
     elif closestString == "print statement":
         validCommand = True
         stringP = printStatement(tex3, prompt)
+        tex.edit_separator()
     else:
         stringP = ""
         #send response to System Output window on UI
