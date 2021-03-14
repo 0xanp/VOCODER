@@ -300,6 +300,7 @@ def confirm(prompt):
 # use case 1, CNV
 # ***************************************************************************************
 def createNewVariable(tex3,prompt):
+    """This is the documentation for createNewVariable()"""
     # Get and format variable name, will use snake case
     correctName = False
     nameTaken = True

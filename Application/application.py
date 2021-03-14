@@ -210,7 +210,7 @@ class Application:
         
         
     def showAbout(self):
-        tk.messagebox.showinfo("VOCODER", "Binh An Pham\nM Rachel Vanpelt\nSteven Tran")
+        tk.messagebox.showinfo("VOCODER", "Binh An Pham\nM Rachel Van Pelt\nSteven Tran")
     
     def openFile(self):
         self.file = askopenfilename(defaultextension=".txt", 
