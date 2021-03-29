@@ -20,6 +20,7 @@ commandWords = [ "create new variable",
                  "create else statement done",
                  "create array",
                  "move cursor",
+                 "indent cursor",
                  "undo command",
                  "redo command",
                  "select word",
@@ -158,6 +159,11 @@ def phraseMatch(audioToText,tex,tex2,tex3,tex4):
     elif closestString == "cut text":
         validCommand = True
         cutText(tex3, tex, prompt)
+        stringP = "*"
+        tex.edit_separator()
+    elif closestString == "indent cursor":
+        validCommand = True
+        tex.insert(tk.INSERT, "    ")
         stringP = "*"
         tex.edit_separator()
     elif closestString == "print variable":
