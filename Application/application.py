@@ -17,6 +17,30 @@ from pydub import AudioSegment
 from pydub.playback import play
 from screeninfo import get_monitors
 
+
+class TextLineNumbers(tk.Canvas):
+    def __init__(self, *args, **kwargs):
+        tk.Canvas.__init__(self, *args, **kwargs, highlightthickness=0)
+        self.textwidget = None
+
+    def attach(self, text_widget):
+        self.textwidget = text_widget
+
+    def redraw(self, *args):
+        '''redraw line numbers'''
+        self.delete("all")
+
+        i = self.textwidget.index("@0,0")
+        while True :
+            dline= self.textwidget.dlineinfo(i)
+            if dline is None: break
+            y = dline[1]
+            linenum = str(i).split(".")[0]
+            self.create_text(2, y, anchor="nw", text=linenum, fill="#606366")
+            i = self.textwidget.index("%s+1line" % i)
+
+
+
 class Application:
     """This is the documentation for Application"""
     root = tk.Tk()
@@ -28,7 +52,7 @@ class Application:
     menu_voice = tk.Menu(menu_bar, tearoff=0)
     menu_help = tk.Menu(menu_bar, tearoff=0)
     master = tk.Frame(root)
-    txt_editor_field = tk.Text(master)
+    #txt_editor_field = tk.Text(master)
     file = None
     useGoogle = False    
     
@@ -152,9 +176,27 @@ class Application:
         self.cmd_man_txt = tk.Listbox(self.cmd_man)
 
         ## Text Editor
-        self.txt_editor = tk.LabelFrame(self.app_layout,text="Text Editor",width=int(self.app_layout.winfo_width()*0.7), height=400,borderwidth=2, relief="ridge")
+        self.txt_editor = tk.LabelFrame(self.app_layout,text='Editor', width=int(self.app_layout.winfo_width()*0.7), height=400,borderwidth=2, relief="ridge")
+        #self.txt_editor = ScrollText(self.app_layout)
         self.txt_editor.grid_propagate(False)
-        self.txt_editor_field = tk.Text(self.txt_editor, undo=True)
+        self.txt_editor_field = tk.Text(self.txt_editor, bg='#2b2b2b', foreground="#d1dce8", 
+                        insertbackground='white',
+                        selectbackground="blue")
+        
+        self.scrollbar = tk.Scrollbar(self.txt_editor, orient=tk.VERTICAL, command=self.txt_editor_field.yview)
+        self.txt_editor_field.configure(yscrollcommand=self.scrollbar.set)
+
+        self.numberLines = TextLineNumbers(self.txt_editor, width=35, bg='#313335')
+        self.numberLines.attach(self.txt_editor_field)
+
+        self.scrollbar.pack(side=tk.RIGHT, fill=tk.Y)
+        self.numberLines.pack(side=tk.LEFT, fill=tk.Y, padx=(5, 0))
+        self.txt_editor_field.pack(side=tk.RIGHT, fill=tk.BOTH, expand=True)
+
+        self.txt_editor_field.bind("<Key>", self.onPressDelay)
+        self.txt_editor_field.bind("<Button-1>", self.numberLines.redraw)
+        self.scrollbar.bind("<Button-1>", self.onScrollPress)
+        self.txt_editor_field.bind("<MouseWheel>", self.onPressDelay)
 
         ## Terminal
         self.terminal = tk.LabelFrame(self.app_layout,text="Terminal",width=1112, height=200,borderwidth=2, relief="ridge")
@@ -197,7 +239,7 @@ class Application:
         self.txt_editor.grid(column=1,row=0,rowspan=2,padx=5,pady=5,sticky='nsew')
         self.txt_editor.columnconfigure(0,weight=1)
         self.txt_editor.rowconfigure(0,weight=1)
-        self.txt_editor_field.grid(row=0,column=0,padx=5,pady=5,sticky='nsew')
+        #self.txt_editor_field.grid(row=0,column=0,padx=5,pady=5,sticky='nsew')
 
         ## Packing all the widgets in Terminal
         self.terminal.grid(column=1,row=2,padx=5,pady=5,sticky='nsew')
@@ -606,6 +648,30 @@ class Application:
         if messagebox.askokcancel("Quit", "Do you want to quit?"):
             os.popen('find . | grep -E "(__pycache__|\.pyc|\.pyo$)" | xargs rm -rf')
             self.root.destroy()
+
+    def onScrollPress(self, *args):
+        self.scrollbar.bind("<B1-Motion>", self.numberLines.redraw)
+
+    def onScrollRelease(self, *args):
+        self.scrollbar.unbind("<B1-Motion>", self.numberLines.redraw)
+
+    def onPressDelay(self, *args):
+        self.after(2, self.numberLines.redraw)
+
+    def get(self, *args, **kwargs):
+        return self.text.get(*args, **kwargs)
+
+    def insert(self, *args, **kwargs):
+        return self.text.insert(*args, **kwargs)
+
+    def delete(self, *args, **kwargs):
+        return self.text.delete(*args, **kwargs)
+
+    def index(self, *args, **kwargs):
+        return self.text.index(*args, **kwargs)
+
+    def redraw(self):
+        self.numberLines.redraw()
     
 def main():
     dimension = []

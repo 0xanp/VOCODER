@@ -36,139 +36,187 @@
 <span id="application-module"></span><h1>application module<a class="headerlink" href="#module-application" title="Permalink to this headline">¶</a></h1>
 <dl class="py class">
 <dt id="application.Application">
-<em class="property">class </em><code class="sig-prename descclassname">application.</code><code class="sig-name descname">Application</code><span class="sig-paren">(</span><em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="headerlink" href="#application.Application" title="Permalink to this definition">¶</a></dt>
+<em class="property"><span class="pre">class</span> </em><code class="sig-prename descclassname"><span class="pre">application.</span></code><code class="sig-name descname"><span class="pre">Application</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#application.Application" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
 <p>This is the documentation for Application</p>
 <dl class="py method">
+<dt id="application.Application.changeLanguageModel">
+<code class="sig-name descname"><span class="pre">changeLanguageModel</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">modelName</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'None'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#application.Application.changeLanguageModel" title="Permalink to this definition">¶</a></dt>
+<dd><p>Displays a list of available language models and allows the user to choose one of them to use to parse incoming voice input</p>
+</dd></dl>
+
+<dl class="py method">
 <dt id="application.Application.change_indicator">
-<code class="sig-name descname">change_indicator</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#application.Application.change_indicator" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname"><span class="pre">change_indicator</span></code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#application.Application.change_indicator" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py method">
+<dt id="application.Application.checkNameButton">
+<code class="sig-name descname"><span class="pre">checkNameButton</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">inputString</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#application.Application.checkNameButton" title="Permalink to this definition">¶</a></dt>
+<dd><p>Checks to see if there is a directory with the name of inputString in the path of VoiceTraining/AcousticModels/</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="application.Application.chooseLanguageModel">
+<code class="sig-name descname"><span class="pre">chooseLanguageModel</span></code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#application.Application.chooseLanguageModel" title="Permalink to this definition">¶</a></dt>
+<dd><p>Window frame to choose a language model from a list of radiobutton options</p>
+</dd></dl>
+
+<dl class="py method">
 <dt id="application.Application.copy">
-<code class="sig-name descname">copy</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#application.Application.copy" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname"><span class="pre">copy</span></code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#application.Application.copy" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py method">
 <dt id="application.Application.cut">
-<code class="sig-name descname">cut</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#application.Application.cut" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname"><span class="pre">cut</span></code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#application.Application.cut" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
+
+<dl class="py method">
+<dt id="application.Application.featureNotImplemented">
+<code class="sig-name descname"><span class="pre">featureNotImplemented</span></code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#application.Application.featureNotImplemented" title="Permalink to this definition">¶</a></dt>
+<dd><p>Function to use to show that a feature has not been implemented yet.</p>
+</dd></dl>
 
 <dl class="py attribute">
 <dt id="application.Application.file">
-<code class="sig-name descname">file</code><em class="property"> = None</em><a class="headerlink" href="#application.Application.file" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname"><span class="pre">file</span></code><em class="property"> <span class="pre">=</span> <span class="pre">None</span></em><a class="headerlink" href="#application.Application.file" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
 <dt id="application.Application.height">
-<code class="sig-name descname">height</code><em class="property"> = 900</em><a class="headerlink" href="#application.Application.height" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname"><span class="pre">height</span></code><em class="property"> <span class="pre">=</span> <span class="pre">900</span></em><a class="headerlink" href="#application.Application.height" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py method">
 <dt id="application.Application.image_resizer">
-<code class="sig-name descname">image_resizer</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">e</span></em><span class="sig-paren">)</span><a class="headerlink" href="#application.Application.image_resizer" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname"><span class="pre">image_resizer</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">e</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#application.Application.image_resizer" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py method">
 <dt id="application.Application.listen_for_result">
-<code class="sig-name descname">listen_for_result</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#application.Application.listen_for_result" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname"><span class="pre">listen_for_result</span></code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#application.Application.listen_for_result" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
 <dt id="application.Application.master">
-<code class="sig-name descname">master</code><em class="property"> = &lt;tkinter.Frame object .!frame&gt;</em><a class="headerlink" href="#application.Application.master" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname"><span class="pre">master</span></code><em class="property"> <span class="pre">=</span> <span class="pre">&lt;tkinter.Frame</span> <span class="pre">object</span> <span class="pre">.!frame&gt;</span></em><a class="headerlink" href="#application.Application.master" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
 <dt id="application.Application.menu_bar">
-<code class="sig-name descname">menu_bar</code><em class="property"> = &lt;tkinter.Menu object .!menu&gt;</em><a class="headerlink" href="#application.Application.menu_bar" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname"><span class="pre">menu_bar</span></code><em class="property"> <span class="pre">=</span> <span class="pre">&lt;tkinter.Menu</span> <span class="pre">object</span> <span class="pre">.!menu&gt;</span></em><a class="headerlink" href="#application.Application.menu_bar" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
 <dt id="application.Application.menu_edit">
-<code class="sig-name descname">menu_edit</code><em class="property"> = &lt;tkinter.Menu object .!menu.!menu2&gt;</em><a class="headerlink" href="#application.Application.menu_edit" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname"><span class="pre">menu_edit</span></code><em class="property"> <span class="pre">=</span> <span class="pre">&lt;tkinter.Menu</span> <span class="pre">object</span> <span class="pre">.!menu.!menu2&gt;</span></em><a class="headerlink" href="#application.Application.menu_edit" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
 <dt id="application.Application.menu_file">
-<code class="sig-name descname">menu_file</code><em class="property"> = &lt;tkinter.Menu object .!menu.!menu&gt;</em><a class="headerlink" href="#application.Application.menu_file" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname"><span class="pre">menu_file</span></code><em class="property"> <span class="pre">=</span> <span class="pre">&lt;tkinter.Menu</span> <span class="pre">object</span> <span class="pre">.!menu.!menu&gt;</span></em><a class="headerlink" href="#application.Application.menu_file" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
 <dt id="application.Application.menu_help">
-<code class="sig-name descname">menu_help</code><em class="property"> = &lt;tkinter.Menu object .!menu.!menu4&gt;</em><a class="headerlink" href="#application.Application.menu_help" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname"><span class="pre">menu_help</span></code><em class="property"> <span class="pre">=</span> <span class="pre">&lt;tkinter.Menu</span> <span class="pre">object</span> <span class="pre">.!menu.!menu4&gt;</span></em><a class="headerlink" href="#application.Application.menu_help" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
 <dt id="application.Application.menu_voice">
-<code class="sig-name descname">menu_voice</code><em class="property"> = &lt;tkinter.Menu object .!menu.!menu3&gt;</em><a class="headerlink" href="#application.Application.menu_voice" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname"><span class="pre">menu_voice</span></code><em class="property"> <span class="pre">=</span> <span class="pre">&lt;tkinter.Menu</span> <span class="pre">object</span> <span class="pre">.!menu.!menu3&gt;</span></em><a class="headerlink" href="#application.Application.menu_voice" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py method">
 <dt id="application.Application.newFile">
-<code class="sig-name descname">newFile</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#application.Application.newFile" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname"><span class="pre">newFile</span></code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#application.Application.newFile" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py method">
 <dt id="application.Application.on_closing">
-<code class="sig-name descname">on_closing</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#application.Application.on_closing" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname"><span class="pre">on_closing</span></code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#application.Application.on_closing" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py method">
 <dt id="application.Application.openFile">
-<code class="sig-name descname">openFile</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#application.Application.openFile" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname"><span class="pre">openFile</span></code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#application.Application.openFile" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py method">
 <dt id="application.Application.paste">
-<code class="sig-name descname">paste</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#application.Application.paste" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname"><span class="pre">paste</span></code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#application.Application.paste" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
+
+<dl class="py method">
+<dt id="application.Application.recordVoiceLines">
+<code class="sig-name descname"><span class="pre">recordVoiceLines</span></code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#application.Application.recordVoiceLines" title="Permalink to this definition">¶</a></dt>
+<dd><p>Window frame to record user voice lines reading from a .transcription file in specified directory.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="application.Application.recordingVoice">
+<code class="sig-name descname"><span class="pre">recordingVoice</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">directory</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">window</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#application.Application.recordingVoice" title="Permalink to this definition">¶</a></dt>
+<dd><p>Gets the transcription file from given directory and prompts the user to say the given lines while recording the user saying them.</p>
+</dd></dl>
 
 <dl class="py attribute">
 <dt id="application.Application.root">
-<code class="sig-name descname">root</code><em class="property"> = &lt;tkinter.Tk object .&gt;</em><a class="headerlink" href="#application.Application.root" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname"><span class="pre">root</span></code><em class="property"> <span class="pre">=</span> <span class="pre">&lt;tkinter.Tk</span> <span class="pre">object</span> <span class="pre">.&gt;</span></em><a class="headerlink" href="#application.Application.root" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py method">
 <dt id="application.Application.saveFile">
-<code class="sig-name descname">saveFile</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#application.Application.saveFile" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="py method">
-<dt id="application.Application.setUpVoice">
-<code class="sig-name descname">setUpVoice</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#application.Application.setUpVoice" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname"><span class="pre">saveFile</span></code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#application.Application.saveFile" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py method">
 <dt id="application.Application.showAbout">
-<code class="sig-name descname">showAbout</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#application.Application.showAbout" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname"><span class="pre">showAbout</span></code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#application.Application.showAbout" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py method">
 <dt id="application.Application.text_queue">
-<code class="sig-name descname">text_queue</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">thread_queue</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="headerlink" href="#application.Application.text_queue" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname"><span class="pre">text_queue</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">thread_queue</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#application.Application.text_queue" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
+
+<dl class="py method">
+<dt id="application.Application.trainLanguageModel">
+<code class="sig-name descname"><span class="pre">trainLanguageModel</span></code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#application.Application.trainLanguageModel" title="Permalink to this definition">¶</a></dt>
+<dd><p>Window frame to train a language model. Includes a text field to enter name of language model, radiobutton options to choose which directory has the voice lines to use to train, a button to check the language model name, and a button to train the model.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="application.Application.trainModelButton">
+<code class="sig-name descname"><span class="pre">trainModelButton</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">profileName</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">directoryName</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#application.Application.trainModelButton" title="Permalink to this definition">¶</a></dt>
+<dd><p>Takes in a profileName and directoryName, adapts the language model with the profileName using the voice lines from directoryName</p>
+</dd></dl>
 
 <dl class="py attribute">
 <dt id="application.Application.txt_editor_field">
-<code class="sig-name descname">txt_editor_field</code><em class="property"> = &lt;tkinter.Text object .!frame.!text&gt;</em><a class="headerlink" href="#application.Application.txt_editor_field" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname"><span class="pre">txt_editor_field</span></code><em class="property"> <span class="pre">=</span> <span class="pre">&lt;tkinter.Text</span> <span class="pre">object</span> <span class="pre">.!frame.!text&gt;</span></em><a class="headerlink" href="#application.Application.txt_editor_field" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py method">
 <dt id="application.Application.update_text">
-<code class="sig-name descname">update_text</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#application.Application.update_text" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname"><span class="pre">update_text</span></code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#application.Application.update_text" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="application.Application.useGoogle">
+<code class="sig-name descname"><span class="pre">useGoogle</span></code><em class="property"> <span class="pre">=</span> <span class="pre">False</span></em><a class="headerlink" href="#application.Application.useGoogle" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
 <dt id="application.Application.width">
-<code class="sig-name descname">width</code><em class="property"> = 1600</em><a class="headerlink" href="#application.Application.width" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname"><span class="pre">width</span></code><em class="property"> <span class="pre">=</span> <span class="pre">1600</span></em><a class="headerlink" href="#application.Application.width" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 </dd></dl>
 
 <dl class="py function">
 <dt id="application.main">
-<code class="sig-prename descclassname">application.</code><code class="sig-name descname">main</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#application.main" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname"><span class="pre">application.</span></code><code class="sig-name descname"><span class="pre">main</span></code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#application.main" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 </div>
@@ -237,7 +285,7 @@
       &copy;2021, BAP.
       
       |
-      Powered by <a href="http://sphinx-doc.org/">Sphinx 3.4.3</a>
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 3.5.1</a>
       &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
       
       |
