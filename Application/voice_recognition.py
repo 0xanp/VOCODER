@@ -20,6 +20,7 @@ commandWords = [ "create new variable",
                  "create else statement done",
                  "create array",
                  "move cursor",
+                 "indent cursor",
                  "undo command",
                  "redo command",
                  "select word",
@@ -31,6 +32,7 @@ commandWords = [ "create new variable",
                  "create function",
                  "print statement",
                  "print variable",
+                 "insert characters",
                  "show set of variables"]
 
 # this set will contain variable names created by createNewVariable()                 
@@ -160,6 +162,11 @@ def phraseMatch(audioToText,tex,tex2,tex3,tex4):
         cutText(tex3, tex, prompt)
         stringP = "*"
         tex.edit_separator()
+    elif closestString == "indent cursor":
+        validCommand = True
+        tex.insert(tk.INSERT, "    ")
+        stringP = "*"
+        tex.edit_separator()
     elif closestString == "print variable":
         validCommand = True
         stringP = printVariable(tex3, prompt)
@@ -167,6 +174,10 @@ def phraseMatch(audioToText,tex,tex2,tex3,tex4):
     elif closestString == "print statement":
         validCommand = True
         stringP = printStatement(tex3, prompt)
+        tex.edit_separator()
+    elif closestString == "insert characters":
+        validCommand = True
+        stringP = insertChars(tex3, prompt)
         tex.edit_separator()
     else:
         stringP = ""
@@ -300,6 +311,7 @@ def confirm(prompt):
 # use case 1, CNV
 # ***************************************************************************************
 def createNewVariable(tex3,prompt):
+    """This is the documentation for createNewVariable()"""
     # Get and format variable name, will use snake case
     correctName = False
     nameTaken = True
@@ -958,6 +970,26 @@ def createDef(tex3,prompt):
     printLine = vInput
     
     string = "def " + printLine + "():\n    "
+    return string
+
+# *********************************************************************************
+# command "insert characters" adds characters at position of cursor to text field
+# use case 23, ICHAR
+# *********************************************************************************
+def insertChars(tex3, prompt):
+    correctChars = False
+    while not correctChars:
+        print("Say the line of character(s).\n")
+        prompt.insert(tk.END, "Say the line of character(s).\n")
+        tex3.insert(tk.END, "waiting for character(s)...\n")
+        vInput = getVoiceInput()
+
+        print("line: " + vInput + "\nIs this correct? (Yes/No)")
+        prompt.insert(tk.END, "line: " + vInput + "\nIs this correct? (Yes/No)")
+        if confirm(prompt): correctChars = True
+
+    string = vInput
+    tex3.insert(tk.END, "character(s): " + string + " added to text field\n")
     return string
 
 # *********************************************************************************
