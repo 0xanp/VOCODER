@@ -972,6 +972,25 @@ def createDef(tex3,prompt):
     string = "def " + printLine + "():\n    "
     return string
 
+# *****************************************************************************
+# a function to replace words with symbols such as quotations, asterix, etc
+# creating the intended string for the text editor window
+# *****************************************************************************
+def getSymbols(tex3, prompt, stringIn):
+    sym_dict = {"plus"                 :"+",
+                "space"                :" ",
+                "equal"                :"=",
+                "pipe"                 :"|",
+                "open angle bracket"   :"<",
+                "closed angle bracket" :">",
+                "open bracket"         :"[",
+                "closed bracket"       :"]" }
+    # replace strings of operators with matching symbol(s)
+    for x, y in sym_dict.items():
+        stringIn = stringIn.replace(x, y)
+
+    return stringIn
+
 # *********************************************************************************
 # command "insert characters" adds characters at position of cursor to text field
 # use case 23, ICHAR
@@ -983,6 +1002,8 @@ def insertChars(tex3, prompt):
         prompt.insert(tk.END, "Say the line of character(s).\n")
         tex3.insert(tk.END, "waiting for character(s)...\n")
         vInput = getVoiceInput()
+
+        vInput = getSymbols(tex3, prompt, vInput)
 
         print("line: " + vInput + "\nIs this correct? (Yes/No)")
         prompt.insert(tk.END, "line: " + vInput + "\nIs this correct? (Yes/No)")
