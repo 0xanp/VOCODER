@@ -600,7 +600,7 @@ def createForLoop(tex3, prompt):
 # a function to simplify the repetition in case 5,6 and 7 of dealing with the
 # operator symbols and creating the necessary strings for the text window
 # *****************************************************************************
-def getSymbols(tex3, prompt, case):
+def getCondition(tex3, prompt, case):
     correctCondition = False
 
     while not correctCondition:
@@ -658,7 +658,7 @@ def getSymbols(tex3, prompt, case):
 # use case 5, CWL
 # *********************************************************************************
 def createWhileLoop(tex3, prompt):
-    string = "while " + getSymbols(tex3,prompt,"while loop") + ":\n    "
+    string = "while " + getCondition(tex3,prompt,"while loop") + ":\n    "
     return string
 
 # *********************************************************************************
@@ -666,7 +666,7 @@ def createWhileLoop(tex3, prompt):
 # use case 6, CIF
 # *********************************************************************************    
 def createIfStatement(tex3, prompt):
-    string = "if " + getSymbols(tex3,prompt,"if statement") + ":\n    "
+    string = "if " + getCondition(tex3,prompt,"if statement") + ":\n    "
     return string
 
 # *********************************************************************************
@@ -674,7 +674,7 @@ def createIfStatement(tex3, prompt):
 # use case 7, CEIF
 # *********************************************************************************
 def createElseIfStatement(tex3, prompt):
-    string = "elif " + getSymbols(tex3,prompt,"else-if statement") + ":\n    "
+    string = "elif " + getCondition(tex3,prompt,"else-if statement") + ":\n    "
     return string
 
 # *********************************************************************************
