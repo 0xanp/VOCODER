@@ -177,7 +177,6 @@ class Application:
 
         ## Text Editor
         self.txt_editor = tk.LabelFrame(self.app_layout,text='Editor', width=int(self.app_layout.winfo_width()*0.7), height=400,borderwidth=2, relief="ridge")
-        #self.txt_editor = ScrollText(self.app_layout)
         self.txt_editor.grid_propagate(False)
         self.txt_editor_field = tk.Text(self.txt_editor, bg='#2b2b2b', foreground="#d1dce8", 
                         insertbackground='white',
@@ -656,19 +655,19 @@ class Application:
         self.scrollbar.unbind("<B1-Motion>", self.numberLines.redraw)
 
     def onPressDelay(self, *args):
-        self.after(2, self.numberLines.redraw)
+        self.root.after(2, self.numberLines.redraw)
 
     def get(self, *args, **kwargs):
-        return self.text.get(*args, **kwargs)
+        return self.txt_editor_field.get(*args, **kwargs)
 
     def insert(self, *args, **kwargs):
-        return self.text.insert(*args, **kwargs)
+        return self.txt_editor_field.insert(*args, **kwargs)
 
     def delete(self, *args, **kwargs):
-        return self.text.delete(*args, **kwargs)
+        return self.txt_editor_field.delete(*args, **kwargs)
 
     def index(self, *args, **kwargs):
-        return self.text.index(*args, **kwargs)
+        return self.txt_editor_field.index(*args, **kwargs)
 
     def redraw(self):
         self.numberLines.redraw()
@@ -680,7 +679,6 @@ def main():
             dimension.append(m.width)
             dimension.append(m.height)
     app = Application(width=dimension[0], height=dimension[1])
-    #app = Application(width=1600, height=900)
     app.root.protocol("WM_DELETE_WINDOW", app.on_closing)
     app.root.mainloop()
 
