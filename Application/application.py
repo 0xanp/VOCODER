@@ -622,6 +622,7 @@ class Application:
             kwargs={'thread_queue':self.thread_queue})
         self.new_thread.start()
         self.root.after(1, self.listen_for_result)
+        
 
     def listen_for_result(self):
         try:
@@ -631,9 +632,11 @@ class Application:
                 self.imggray.configure(image=self.rendergray)
             elif text == "*":
                 self.txt_editor_field.insert(tk.INSERT, "")
+                self.root.after(2, self.numberLines.redraw)
                 self.imggray.configure(image=self.rendergray)
             else:
                 self.txt_editor_field.insert(tk.INSERT, text)
+                self.root.after(2, self.numberLines.redraw)
                 self.imggray.configure(image=self.rendergray)
         except queue.Empty:
             self.root.after(1, self.listen_for_result)
