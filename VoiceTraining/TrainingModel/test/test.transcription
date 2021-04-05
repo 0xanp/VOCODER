@@ -1,2 +1,3 @@
 <s> testing the recording script </s> (line1)
-<s> the script should remove this line </s> (line2)
+<s> this is line two of the file </s> (line2)
+<s> create new variable </s> (line3)

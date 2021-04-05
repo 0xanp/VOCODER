@@ -54,7 +54,8 @@ class Application:
     master = tk.Frame(root)
     #txt_editor_field = tk.Text(master)
     file = None
-    useGoogle = False    
+    useGoogle = False
+    lineNumber = 0    
     
     def __init__(self,**kwargs):
         # Set icon 
@@ -314,7 +315,7 @@ class Application:
     def paste(self): 
         self.txt_editor_field.event_generate("<<Paste>>") 
 
-    def checkNameButton(self, inputString = None):
+    def checkNameButton(self, inputString = None, window=None):
         """Checks to see if there is a directory with the name of inputString in the path of VoiceTraining/AcousticModels/"""
 
         profileName = inputString
@@ -327,11 +328,13 @@ class Application:
         # Check if inputString is a preexisting directory in VoiceTraining/AcousticModels/ and display the relevant messagebox    
         isdir = os.path.isdir("VoiceTraining/AcousticModels/" + profileName)
         if isdir == False:
-            proceed = tk.messagebox.askyesno("Voice Training", inputString + " was not found. Do you want to create a new one?")
+            proceed = tk.messagebox.showinfo("Voice Training", inputString + " was not found. " + inputString + " will be created as a new language model.")
         else:
-            proceed = tk.messagebox.askyesno("Voice Training", inputString + " was found as an already existing directory. Do you want to overwrite it?")
+            proceed = tk.messagebox.showinfo("Voice Training", inputString + " was found as an already existing directory. " + inputString + " will be overwritten.")
+        
+        window.lift()
 
-    def trainModelButton(self, profileName = None, directoryName = None):
+    def trainModelButton(self, profileName = None, directoryName = None, window=None):
         """Takes in a profileName and directoryName, adapts the language model with the profileName using the voice lines from directoryName"""
 
         # If profileName does not already exist, creates a new directory with that name
@@ -399,6 +402,8 @@ class Application:
         print("New adapted language model created!")
         tk.messagebox.showinfo(message="New adapted language model created!")
 
+        window.destroy()
+
     def trainLanguageModel(self):
         """Window frame to train a language model. Includes a text field to enter name of language model, radiobutton options to choose which directory has the voice lines to use to train, a button to check the language model name, and a button to train the model. """
 
@@ -415,7 +420,7 @@ class Application:
         nameTextField = tk.Entry(modelNameLabelFrame)
         nameTextField.grid(row=0, column=1, ipadx=80, ipady=5)
         # Button to check for model name availability
-        nameButton = tk.Button(modelNameLabelFrame, text="Check Availability", command=lambda: self.checkNameButton(inputString=nameTextField.get()))
+        nameButton = tk.Button(modelNameLabelFrame, text="Check Availability", command=lambda: self.checkNameButton(inputString=nameTextField.get(), window=win))
         nameButton.grid(row=0, column=2, padx=10, sticky="W")
         
         # LabelFrame for target directory and train button
@@ -431,8 +436,76 @@ class Application:
             tk.Radiobutton(targetDirLabelFrame, text=dirName, variable=dirNameChoice, value=dirName, indicatoron=0, width=20, padx=20).pack()
 
         # Button to start training the language model
-        trainButton = tk.Button(win, text="Train the language model!", command=lambda: self.trainModelButton(profileName=nameTextField.get(), directoryName=dirNameChoice.get()))
+        trainButton = tk.Button(win, text="Train the language model!", command=lambda: self.trainModelButton(profileName=nameTextField.get(), directoryName=dirNameChoice.get(), window=win))
         trainButton.grid(row=2,column=0, padx=225, pady=10, sticky="nsew")
+
+    def getPrevLine(self, listOfLines=None, textLabel=None, fileNameLabel=None, window=None):
+        index = self.lineNumber
+        #print("len(listOfLines) = " + str(len(listOfLines)) + ", index = " + str(index))
+        if (index == 0):
+            tk.messagebox.showinfo(message="The first line of the file is already being displayed.")
+            window.lift()
+            return()
+
+        index -= 1
+
+        fileName = listOfLines[index][0]
+        fileText = listOfLines[index][1]
+        
+        #string = listOfLines[index][0] + " : " + listOfLines[index][1]
+        textLabel.config(text=fileText)
+        textLabel.update()
+        fileNameLabel.config(text=fileName)
+        fileNameLabel.update()
+
+        self.lineNumber = index
+
+    def getNextLine(self, listOfLines=None, textLabel=None, fileNameLabel=None, window=None):
+        index = self.lineNumber
+        #print("len(listOfLines) = " + str(len(listOfLines)) + ", index = " + str(index))
+        if (index == (len(listOfLines) - 1)):
+            tk.messagebox.showinfo(message="The last line of the file is already being displayed.")
+            window.lift()
+            return()
+
+        index += 1
+
+        fileName = listOfLines[index][0]
+        fileText = listOfLines[index][1]
+
+        #string = listOfLines[index][0] + " : " + listOfLines[index][1]
+        textLabel.config(text=fileText)
+        textLabel.update()
+        fileNameLabel.config(text=fileName)
+        fileNameLabel.update()
+
+        self.lineNumber = index
+
+    def playWavFile(self, dirPath=None, fileName=None, window=None):
+        wavExists = os.path.exists(dirPath + fileName + ".wav")
+        if not wavExists:
+            tk.messagebox.showinfo(message="No recording found for this line. Record your voice by clicking on the record button.")
+            window.lift()
+            return
+
+        # playback the just recorded .wav file
+        sound = AudioSegment.from_file(dirPath + fileName + ".wav")
+        play(sound)
+
+    def recWavFile(self, dirPath=None, fileName=None, window=None):
+        duration = 8
+        freq = 16000
+
+        # record the user's input for seconds equal to duration
+        recording = sd.rec(int(duration * freq), samplerate = freq, channels = 1, dtype="int16")
+        sd.wait()
+        write(fileName + ".wav", freq, recording)
+
+        # move the .wav file to the training model directory
+        shutil.move(fileName + ".wav", dirPath + fileName + ".wav")
+
+        window.lift()
+        return
 
     def recordingVoice(self, directory=None, window=None):
         """Gets the transcription file from given directory and prompts the user to say the given lines while recording the user saying them."""
@@ -459,58 +532,42 @@ class Application:
         # open the file and save it into a list
         transFile = open(transPath, "r")
         fileLines = transFile.read().split("\n")
-        fileLines.pop()
         transFile.close()
 
         # set up needed variables
         duration = 8
         freq = 16000
-        string = "You have " + str(duration) + " seconds to say each line up to the \":\" symbol."
-        print(string)
 
-        # set up label in window frame
-        instructionLabel = tk.LabelFrame(window, text=string, width = 200, height = 100, borderwidth=2)
-        instructionLabel.grid(row=0, column=0, padx=5, pady=5)
-        textLabel = tk.Label(instructionLabel, text="testing", width=60)
-        textLabel.grid()
-
+        # set up 2d array to hold file names and text
+        self.lineNumber = 0
+        listOfLines = []
         for fileLine in fileLines:
             # get index positions and name to save voice file as
             line = fileLine
             index = line.index("<",4)
-            lastIndex = line.index(")", index + 6)
+            lastIndex = line.index(")", index)
             fileName = line[index + 6: lastIndex]
-            string = line[4:index] + ": " + fileName
+            string = line[4:index]
+            tempArray = [fileName, string]
+            listOfLines.append(tempArray)
 
-            # display the text line    
-            print(string)
-            textLabel.config(text=string)
-            textLabel.update()
+        # set up label in window frame
+        fileNameLabel = tk.LabelFrame(window, text=listOfLines[0][0], width = 200, height = 100, borderwidth=2)
+        fileNameLabel.grid(row=0, column=0, columnspan=4, padx=5, pady=5)
+        textLabel = tk.Label(fileNameLabel, text="testing", width=60)
+        textLabel.grid()
+        prevButton = tk.Button(window, text="Prev", command = lambda: self.getPrevLine(listOfLines=listOfLines, textLabel=textLabel, fileNameLabel=fileNameLabel, window=window))
+        recButton = tk.Button(window, text="Rec", command = lambda: self.recWavFile(dirPath=dirPath, fileName=listOfLines[self.lineNumber][0], window=window))
+        playButton = tk.Button(window, text="Play", command = lambda: self.playWavFile(dirPath=dirPath, fileName=listOfLines[self.lineNumber][0], window=window))
+        nextButton = tk.Button(window, text="Next", command = lambda: self.getNextLine(listOfLines=listOfLines, textLabel=textLabel, fileNameLabel=fileNameLabel, window=window))
+        prevButton.grid(row=1, column=0, ipadx=5, ipady=5, padx=10, pady=10, sticky="sw")
+        recButton.grid(row=1, column=1, ipadx=5, ipady=5, padx=10, pady=10, sticky="sw")
+        playButton.grid(row=1, column=2, ipadx=5, ipady=5, padx=10, pady=10, sticky="sw")
+        nextButton.grid(row=1, column=3, ipadx=5, ipady=5, padx=10, pady=10, sticky="sw")
 
-            goodRecording = False 
-            while not goodRecording:         
-                window.lift()
-
-                # record the user's input for seconds equal to duration
-                recording = sd.rec(int(duration * freq), samplerate = freq, channels = 1, dtype="int16")
-                sd.wait()
-                write(fileName + ".wav", freq, recording)
-
-                # update text to textLabel
-                textLabel.config(text=string + "\n\nPlaying back recording.")
-                textLabel.update()
-
-                # playback the just recorded .wav file
-                sound = AudioSegment.from_file(fileName + ".wav")
-                play(sound)
-
-                goodRecording = tk.messagebox.askyesno(message="Use this recording?")
-
-            # move the .wav file to the training model directory
-            shutil.move(fileName + ".wav", dirPath + "/" + fileName + ".wav")
-
-        # After recording voice lines, destroy the window.
-        window.destroy()
+        # display the first text line
+        textLabel.config(text=listOfLines[0][1])
+        textLabel.update()
 
     def recordVoiceLines(self):
         """Window frame to record user voice lines reading from a .transcription file in specified directory."""
@@ -543,6 +600,7 @@ class Application:
         if modelName == "Google":
             print("Going to use Google Voice")
             self.useGoogle = True
+            tk.messagebox.showinfo(message="Now using Google Voice for the voice recognition.")
 
         # If modelName = "None" for some reason, quit
         elif modelName == "None":
@@ -577,7 +635,7 @@ class Application:
             print("Finished copying over files")
 
             print("Finished changing language model")
-            tk.messagebox.showinfo(message="Finished changing the language model.")
+            tk.messagebox.showinfo(message="Now using " + modelName + " as the language model for CMU Sphinx.")
         
 
     def chooseLanguageModel(self):
