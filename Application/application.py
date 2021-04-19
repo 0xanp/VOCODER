@@ -181,7 +181,7 @@ class Application:
         self.txt_editor.grid_propagate(False)
         self.txt_editor_field = tk.Text(self.txt_editor, bg='#2b2b2b', foreground="#d1dce8", 
                         insertbackground='white',
-                        selectbackground="blue")
+                        selectbackground="blue", undo=True)
         
         self.scrollbar = tk.Scrollbar(self.txt_editor, orient=tk.VERTICAL, command=self.txt_editor_field.yview)
         self.txt_editor_field.configure(yscrollcommand=self.scrollbar.set)

@@ -48,6 +48,7 @@ path = os.getcwd()
 
 # function to get voice input and returns as a string
 def getVoiceInput():
+    """returns a string of the recorded voice input"""
     r = sr.Recognizer()
     with sr.Microphone() as source:
         audio = r.listen(source)
@@ -61,6 +62,7 @@ def getVoiceInput():
     return audioToText.lower()
 
 def phraseMatch(audioToText,tex,tex2,tex3,tex4):
+    """takes a matched command and calls the related function"""
     win = tk.Toplevel()
     win.wm_title("Prompts")
     prompt = tk.Text(win, width=50, height=15)
@@ -197,6 +199,7 @@ def test_compiler(text,root):
     comp.main(text,root)
 
 def getClosestString(inputString, listToMatch,tex3):
+    """returns a string that is the closest match to a programmed command"""
     i = 0
     highest = 0
     closestString = ""
@@ -245,6 +248,7 @@ compare_dict = { "less than or equal to"      : "<=",
 # obtained from https://stackoverflow.com/questions/493174/is-there-a-way-to-convert-number-words-to-integers
 # will convert number words to int literals
 def text2int(textnum, numwords={}):
+    """converts spoken numbers to the integer values"""
     if not numwords:
       units = [
         "zero", "one", "two", "three", "four", "five", "six", "seven", "eight",
@@ -277,6 +281,7 @@ def text2int(textnum, numwords={}):
 
 # Test function just to see if the set works    
 def showSet(tex4):
+    """developer command used to test creation of variables"""
     #print("Currently in showSet() function.\n" +
     tex4.insert(tk.END, "Set of variable names:")
     for i in setOfVariableNames:
@@ -285,6 +290,7 @@ def showSet(tex4):
         
 # receives input from user saying yes or no and returns true if yes, false if no
 def confirm(prompt):
+    """a prompt to confirm with user if voice was captured correctly"""
     vInput = getVoiceInput()
     yesRatio = fuzz.ratio(vInput, "yes")
     noRatio = fuzz.ratio(vInput, "no")
@@ -311,7 +317,7 @@ def confirm(prompt):
 # use case 1, CNV
 # ***************************************************************************************
 def createNewVariable(tex3,prompt):
-    """This is the documentation for createNewVariable()"""
+    """creates a string for the text editor window: variable = expression"""
     # Get and format variable name, will use snake case
     correctName = False
     nameTaken = True
@@ -408,6 +414,8 @@ def createNewVariable(tex3,prompt):
 # use case 2, AOV
 # *********************************************************************************
 def assignOldVariable(tex3, prompt):
+    """identifies an existing variable or creates a new variable if not found"""
+    """creates a string for the text editor window: variable = expression"""
     # check if there are any old variables
     if not setOfVariableNames:
         print("No variable names already initialized.\n")
@@ -495,6 +503,7 @@ def assignOldVariable(tex3, prompt):
 # use case 3, RS
 # *********************************************************************************  
 def returnStatement(tex3, prompt):
+    """creates a string for the text editor window: return expression"""
     # get voice input
     correctExpression = False
     while not correctExpression:    
@@ -562,6 +571,7 @@ def returnStatement(tex3, prompt):
 # use case 4, CFL
 # *********************************************************************************
 def createForLoop(tex3, prompt):
+    """creates a string for the text editor window: for variable in range (int)"""
     correctVariable = False
     while not correctVariable:
         # print("Say the name of looping variable.\n")
@@ -601,6 +611,7 @@ def createForLoop(tex3, prompt):
 # operator symbols and creating the necessary strings for the text window
 # *****************************************************************************
 def getCondition(tex3, prompt, case):
+    """returns a string for the use cases of 5,6, and 7 to deal with operator symbols"""
     correctCondition = False
 
     while not correctCondition:
@@ -658,6 +669,7 @@ def getCondition(tex3, prompt, case):
 # use case 5, CWL
 # *********************************************************************************
 def createWhileLoop(tex3, prompt):
+    """creates a string for the text editor window: while condition:"""
     string = "while " + getCondition(tex3,prompt,"while loop") + ":\n    "
     return string
 
@@ -666,6 +678,7 @@ def createWhileLoop(tex3, prompt):
 # use case 6, CIF
 # *********************************************************************************    
 def createIfStatement(tex3, prompt):
+    """creates a string for the text editor window: if condition:"""
     string = "if " + getCondition(tex3,prompt,"if statement") + ":\n    "
     return string
 
@@ -674,6 +687,7 @@ def createIfStatement(tex3, prompt):
 # use case 7, CEIF
 # *********************************************************************************
 def createElseIfStatement(tex3, prompt):
+    """creates a string for the text editor window: elif condition:"""
     string = "elif " + getCondition(tex3,prompt,"else-if statement") + ":\n    "
     return string
 
@@ -682,6 +696,7 @@ def createElseIfStatement(tex3, prompt):
 # use case 8, CEF
 # *********************************************************************************
 def createElseStatement(tex3, prompt):
+    """creates a string for the text editor window: else:"""
     string = "else:\n    "
     return string
 # *********************************************************************************
@@ -689,6 +704,7 @@ def createElseStatement(tex3, prompt):
 # use case 9, CA
 # *********************************************************************************
 def createArray(tex3, prompt):
+    """creates a string for the text editor window: array = [variables]"""
     # Get and format variable name, will use snake case
     correctName = False
     nameTaken = True
@@ -742,6 +758,7 @@ def createArray(tex3, prompt):
 # use case 10, MC
 # *********************************************************************************
 def moveCursor(tex3, tex, prompt):
+    """moves cursor in text editor window to user provided location"""
     correctLine = False
     while not correctLine:
         prompt.insert(tk.END,"State line number.\n")
@@ -768,6 +785,7 @@ def moveCursor(tex3, tex, prompt):
 # use case 14, SW
 # *********************************************************************************
 def selectWord(tex3, tex, prompt):
+    """selects area in text editor window from user provided locations"""
     global selBeg, selEnd
     tex.tag_remove(tk.SEL, "1.0", tk.END)
     correctBLWord = False
@@ -817,6 +835,7 @@ def selectWord(tex3, tex, prompt):
 # use case 15, SL
 # *********************************************************************************
 def selectLine(tex3, tex, prompt):
+    """selects line in text editor window from user provided location"""
     global selBeg, selEnd
     tex.tag_remove(tk.SEL, "1.0", tk.END)
     correctLine = False
@@ -839,6 +858,7 @@ def selectLine(tex3, tex, prompt):
 # use case 16, SB
 # *********************************************************************************
 def selectBlock(tex3, tex, prompt):
+    """selects multiple lines in text editor window from user provided locations"""
     global selBeg, selEnd
     tex.tag_remove(tk.SEL, "1.0", tk.END)
     correctBLine = False
@@ -870,6 +890,7 @@ def selectBlock(tex3, tex, prompt):
 # use case 17, CT
 # *********************************************************************************
 def copyText(tex3, tex, prompt):
+    """copies a selected area in text editor window"""
     global selBeg, selEnd
     tex.clipboard_clear()
     prompt.insert(tk.END,selBeg + "to " + selEnd + "\n")
@@ -882,6 +903,7 @@ def copyText(tex3, tex, prompt):
 # use case 18, PT
 # *********************************************************************************
 def pasteText(tex3, tex, prompt):
+    """pastes text in text editor window from users copy command"""
     # global selEnd
     copiedText = tex.clipboard_get()
     prompt.insert(tk.END,"copied text = " + copiedText + "\n")
@@ -893,6 +915,7 @@ def pasteText(tex3, tex, prompt):
 # use case 11, CUT
 # *********************************************************************************
 def cutText(tex3, tex, prompt):
+    """cuts text from text editor window after users select command"""
     global selBeg, selEnd
     tex.clipboard_clear()
     # prompt.insert(tk.END,selBeg + "to " + selEnd + "\n")
@@ -906,6 +929,7 @@ def cutText(tex3, tex, prompt):
 # use case 19, PS
 # *********************************************************************************
 def printStatement(tex3, prompt):
+    """creates a string for the text editor window: print(given text)"""
     correctPrint = False
     while not correctPrint:
         print("Say the line for printing.\n")
@@ -929,6 +953,7 @@ def printStatement(tex3, prompt):
 # use case 20, PV
 # *********************************************************************************
 def printVariable(tex3, prompt):
+    """creates a string for the text editor window: print(given variable)"""
     correctPrint = False
     while not correctPrint:
         print("Say the variable for printing.\n")
@@ -953,6 +978,7 @@ def printVariable(tex3, prompt):
 # use case 21, CF
 # *********************************************************************************
 def createDef(tex3,prompt):
+    """creates a string for the text editor window: def name()"""
     #print(str(testInt))
     correctPrint = False
     while not correctPrint:
@@ -977,6 +1003,7 @@ def createDef(tex3,prompt):
 # creating the intended string for the text editor window
 # *****************************************************************************
 def getSymbols(tex3, prompt, stringIn):
+    """converts spoken words to intended symbols"""
     sym_dict = {"plus"                 :"+",
                 "space"                :" ",
                 "equal"                :"=",
@@ -996,6 +1023,7 @@ def getSymbols(tex3, prompt, stringIn):
 # use case 23, ICHAR
 # *********************************************************************************
 def insertChars(tex3, prompt):
+    """creates a string for the text editor window: spoken text"""
     correctChars = False
     while not correctChars:
         print("Say the line of character(s).\n")
@@ -1017,6 +1045,8 @@ def insertChars(tex3, prompt):
 # returns strings to GUI windows: tex,tex2,tex3,tex4
 # *********************************************************************************
 def listen(tex,tex2,tex3,tex4,useGoogle):
+    """returns a user's finished string to the text editor window in addition to applicable"""
+    """ text for the other windows of the application"""
     global useGoogleFlag
 
     r = sr.Recognizer()
