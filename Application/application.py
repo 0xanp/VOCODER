@@ -152,10 +152,10 @@ class Application:
         ## Voice recorder Frame
         self.voice_recog = tk.LabelFrame(self.app_layout, text = "Voice Recorder",width=int(self.app_layout.winfo_width()*0.3), height=200, borderwidth=2, relief="ridge",bg='#2b2b2b',foreground="#d1dce8")
         self.voice_recog.grid_propagate(False)
-        self.indicator = tk.Frame(self.voice_recog, width = 2, height=2, borderwidth=0, relief="ridge",bg='#2b2b2b')
+        self.indicator = tk.Frame(self.voice_recog, width = 2, height=2, bg='#2b2b2b')
         self.loadgray = Image.open("assets/grayCircle.jpg")
         self.rendergray = ImageTk.PhotoImage(self.loadgray)
-        self.imggray = tk.Label(self.indicator,image=self.rendergray)
+        self.imggray = tk.Label(self.indicator,image=self.rendergray, pady=0, padx=0, borderwidth=0, highlightthickness=0)
         self.imggray.image = self.rendergray
         self.imggray.pack()
         self.start_button = tk.Button(self.voice_recog,text="start",command=lambda: self.update_text(),bg='#2b2b2b',foreground="#d1dce8")
