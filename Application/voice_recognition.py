@@ -63,9 +63,9 @@ def getVoiceInput():
 
 def phraseMatch(audioToText,tex,tex2,tex3,tex4):
     """takes a matched command and calls the related function"""
-    win = tk.Toplevel()
+    win = tk.Toplevel(bg='#2b2b2b')
     win.wm_title("Prompts")
-    prompt = tk.Text(win, width=50, height=15)
+    prompt = tk.Text(win, width=50, height=15,bg='#2b2b2b',foreground="#d1dce8")
     prompt.grid(row=0,column=0,padx=5,pady=5,sticky='nsew')
     print("input: " + audioToText + "\n")
     prompt.insert(tk.END, "input: " + audioToText + "\n")

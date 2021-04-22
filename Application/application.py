@@ -164,12 +164,12 @@ class Application:
         #####
         self.cmd_receiver = tk.LabelFrame(self.voice_recog, text="command(s) received",width=500,height=180,bg='#2b2b2b',foreground="#d1dce8")
         self.cmd_receiver.grid_propagate(False)
-        self.cmd_receiver_txt = tk.Listbox(self.cmd_receiver,bg='#2b2b2b')
+        self.cmd_receiver_txt = tk.Listbox(self.cmd_receiver,bg='#2b2b2b',foreground="#d1dce8")
         
         ## System Output
         self.sys_out = tk.LabelFrame(self.app_layout,text="System Output",width=600, height=200, borderwidth=2, relief="ridge",bg='#2b2b2b',foreground="#d1dce8")
         self.sys_out.grid_propagate(False)
-        self.sys_out_txt = tk.Listbox(self.sys_out,bg='#2b2b2b')
+        self.sys_out_txt = tk.Listbox(self.sys_out,bg='#2b2b2b',foreground="#d1dce8")
 
         ## Command Manager 
         self.cmd_man = tk.LabelFrame(self.app_layout,text="Command Manager",width=600, height=200,borderwidth=2, relief="ridge",bg='#2b2b2b',foreground="#d1dce8")
