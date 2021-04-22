@@ -110,7 +110,7 @@ class Application:
 
         ## Header
         self.header = tk.Frame(self.master, borderwidth=2, relief="ridge",bg='#2b2b2b')
-        self.render = ImageTk.PhotoImage(file="assets\\vocoder_icon_dark.png")
+        self.render = ImageTk.PhotoImage(file="assets\\vocoder_icon_titledark.png")
         self.img = tk.Label(self.header,image=self.render)
         self.img.pack()
         self.header.grid(row=0,padx=5,pady=5,sticky='nsew')
@@ -665,7 +665,7 @@ class Application:
 
     def image_resizer(self, e):
         global img1, resized_img1, re_render
-        img1 = Image.open("assets/vocoder_icon_dark.png")
+        img1 = Image.open("assets/vocoder_icon_titledark.png")
         resized_img1 = img1.resize((e.width, e.height), Image.ANTIALIAS)
         re_render = ImageTk.PhotoImage(resized_img1)
         self.img.configure(image=re_render)
