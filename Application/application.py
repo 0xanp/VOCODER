@@ -174,7 +174,7 @@ class Application:
         ## Command Manager 
         self.cmd_man = tk.LabelFrame(self.app_layout,text="Command Manager",width=600, height=200,borderwidth=2, relief="ridge",bg='#2b2b2b',foreground="#d1dce8")
         self.cmd_man.grid_propagate(False)
-        self.cmd_man_txt = tk.Listbox(self.cmd_man,bg='#2b2b2b')
+        self.cmd_man_txt = tk.Listbox(self.cmd_man,bg='#2b2b2b',foreground="#d1dce8")
 
         ## Text Editor
         self.txt_editor = tk.LabelFrame(self.app_layout,text='Editor', width=int(self.app_layout.winfo_width()*0.7), height=400,borderwidth=2, relief="ridge",bg='#2b2b2b',foreground="#d1dce8")
