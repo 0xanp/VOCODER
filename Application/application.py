@@ -51,7 +51,7 @@ class Application:
     menu_edit = tk.Menu(menu_bar, tearoff=0)
     menu_voice = tk.Menu(menu_bar, tearoff=0)
     menu_help = tk.Menu(menu_bar, tearoff=0)
-    master = tk.Frame(root)
+    master = tk.Frame(root,bg='#2b2b2b')
     #txt_editor_field = tk.Text(master)
     file = None
     useGoogle = False
@@ -109,8 +109,8 @@ class Application:
         self.master.columnconfigure(0, weight=1)
 
         ## Header
-        self.header = tk.Frame(self.master, borderwidth=2, relief="ridge")
-        self.render = ImageTk.PhotoImage(file="assets/vocoder_icon_title.png")
+        self.header = tk.Frame(self.master, borderwidth=2, relief="ridge",bg='#2b2b2b')
+        self.render = ImageTk.PhotoImage(file="assets\\vocoder_icon_dark.png")
         self.img = tk.Label(self.header,image=self.render)
         self.img.pack()
         self.header.grid(row=0,padx=5,pady=5,sticky='nsew')
@@ -146,44 +146,44 @@ class Application:
         self.root.config(menu=self.menu_bar)
         
         ## App_Layout
-        self.app_layout = tk.Frame(self.master,width = self.thisWidth, height=int(self.thisHeight*0.8), borderwidth=2, relief="ridge")
+        self.app_layout = tk.Frame(self.master,width = self.thisWidth, height=int(self.thisHeight*0.8), borderwidth=2, relief="ridge",bg='#2b2b2b')
         self.app_layout.grid_propagate(False)
         
         ## Voice recorder Frame
-        self.voice_recog = tk.LabelFrame(self.app_layout, text = "Voice Recorder",width=int(self.app_layout.winfo_width()*0.3), height=200, borderwidth=2, relief="ridge")
+        self.voice_recog = tk.LabelFrame(self.app_layout, text = "Voice Recorder",width=int(self.app_layout.winfo_width()*0.3), height=200, borderwidth=2, relief="ridge",bg='#2b2b2b',foreground="#d1dce8")
         self.voice_recog.grid_propagate(False)
-        self.indicator = tk.Frame(self.voice_recog, width = 2, height=2, borderwidth=0, relief="ridge")
+        self.indicator = tk.Frame(self.voice_recog, width = 2, height=2, borderwidth=0, relief="ridge",bg='#2b2b2b')
         self.loadgray = Image.open("assets/grayCircle.jpg")
         self.rendergray = ImageTk.PhotoImage(self.loadgray)
         self.imggray = tk.Label(self.indicator,image=self.rendergray)
         self.imggray.image = self.rendergray
         self.imggray.pack()
-        self.start_button = tk.Button(self.voice_recog,text="start",command=lambda: self.update_text())
-        self.end_button = tk.Button(self.voice_recog,text="end",command=lambda: self.change_indicator())
+        self.start_button = tk.Button(self.voice_recog,text="start",command=lambda: self.update_text(),bg='#2b2b2b',foreground="#d1dce8")
+        self.end_button = tk.Button(self.voice_recog,text="end",command=lambda: self.change_indicator(),bg='#2b2b2b',foreground="#d1dce8")
 
         #####
-        self.cmd_receiver = tk.LabelFrame(self.voice_recog, text="command(s) received",width=500,height=180)
+        self.cmd_receiver = tk.LabelFrame(self.voice_recog, text="command(s) received",width=500,height=180,bg='#2b2b2b',foreground="#d1dce8")
         self.cmd_receiver.grid_propagate(False)
-        self.cmd_receiver_txt = tk.Listbox(self.cmd_receiver)
+        self.cmd_receiver_txt = tk.Listbox(self.cmd_receiver,bg='#2b2b2b')
         
         ## System Output
-        self.sys_out = tk.LabelFrame(self.app_layout,text="System Output",width=600, height=200, borderwidth=2, relief="ridge")
+        self.sys_out = tk.LabelFrame(self.app_layout,text="System Output",width=600, height=200, borderwidth=2, relief="ridge",bg='#2b2b2b',foreground="#d1dce8")
         self.sys_out.grid_propagate(False)
-        self.sys_out_txt = tk.Listbox(self.sys_out)
+        self.sys_out_txt = tk.Listbox(self.sys_out,bg='#2b2b2b')
 
         ## Command Manager 
-        self.cmd_man = tk.LabelFrame(self.app_layout,text="Command Manager",width=600, height=200,borderwidth=2, relief="ridge")
+        self.cmd_man = tk.LabelFrame(self.app_layout,text="Command Manager",width=600, height=200,borderwidth=2, relief="ridge",bg='#2b2b2b',foreground="#d1dce8")
         self.cmd_man.grid_propagate(False)
-        self.cmd_man_txt = tk.Listbox(self.cmd_man)
+        self.cmd_man_txt = tk.Listbox(self.cmd_man,bg='#2b2b2b')
 
         ## Text Editor
-        self.txt_editor = tk.LabelFrame(self.app_layout,text='Editor', width=int(self.app_layout.winfo_width()*0.7), height=400,borderwidth=2, relief="ridge")
+        self.txt_editor = tk.LabelFrame(self.app_layout,text='Editor', width=int(self.app_layout.winfo_width()*0.7), height=400,borderwidth=2, relief="ridge",bg='#2b2b2b',foreground="#d1dce8")
         self.txt_editor.grid_propagate(False)
         self.txt_editor_field = tk.Text(self.txt_editor, bg='#2b2b2b', foreground="#d1dce8", 
                         insertbackground='white',
                         selectbackground="blue", undo=True)
         
-        self.scrollbar = tk.Scrollbar(self.txt_editor, orient=tk.VERTICAL, command=self.txt_editor_field.yview)
+        self.scrollbar = tk.Scrollbar(self.txt_editor, orient=tk.VERTICAL, command=self.txt_editor_field.yview,bg='#2b2b2b')
         self.txt_editor_field.configure(yscrollcommand=self.scrollbar.set)
 
         self.numberLines = TextLineNumbers(self.txt_editor, width=35, bg='#313335')
@@ -199,12 +199,12 @@ class Application:
         self.txt_editor_field.bind("<MouseWheel>", self.onPressDelay)
 
         ## Terminal
-        self.terminal = tk.LabelFrame(self.app_layout,text="Terminal",width=1112, height=200,borderwidth=2, relief="ridge")
+        self.terminal = tk.LabelFrame(self.app_layout,text="Terminal",width=1112, height=200,borderwidth=2, relief="ridge",bg='#2b2b2b',foreground="#d1dce8")
         self.terminal.grid_propagate(False)
-        self.terminal_txt = tk.Listbox(self.terminal)
+        self.terminal_txt = tk.Listbox(self.terminal,bg='#2b2b2b',foreground="#d1dce8")
 
         ## Help Field
-        self.help_field = tk.Text(self.app_layout, height=2, width=30)
+        self.help_field = tk.Text(self.app_layout, height=2, width=30,bg='#2b2b2b',foreground="#d1dce8")
         self.help_field.insert(tk.END, "1=Create Array \t2=Create Else Stmnt Done\t3=Create Else-If Stmnt \t4=Create If Stmnt \t5=Create While Loop "+\
                                         "\t6=Create For Loop \t7=Return Stmnt \t8=Assign Old Var \t9=Create New Var \t10=Copy Txt \t11=Select Block "+\
                                         "\n12=Select Line \t13=Select Word \t14=Cut Txt \t15=Move Cursor \t16=Paste Txt \t17=Redo Command \t18=Undo Command "+\
@@ -665,7 +665,7 @@ class Application:
 
     def image_resizer(self, e):
         global img1, resized_img1, re_render
-        img1 = Image.open("assets/vocoder_icon_title.png")
+        img1 = Image.open("assets/vocoder_icon_dark.png")
         resized_img1 = img1.resize((e.width, e.height), Image.ANTIALIAS)
         re_render = ImageTk.PhotoImage(resized_img1)
         self.img.configure(image=re_render)
