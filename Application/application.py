@@ -315,6 +315,9 @@ class Application:
     def paste(self): 
         self.txt_editor_field.event_generate("<<Paste>>") 
 
+    # Connected with the nameButton button in trainLanguageModel()
+    #
+    # Function to inform the user if a directory with given name already exists in VoiceTraining/AcousticModels/
     def checkNameButton(self, inputString = None, window=None):
         """Checks to see if there is a directory with the name of inputString in the path of VoiceTraining/AcousticModels/"""
 
@@ -334,6 +337,9 @@ class Application:
         
         window.lift()
 
+    # Connected with the trainButton button in trainLanguageModel()
+    #
+    # Function to create/overwrite a directory using a given name and directory inside VoiceTraining/AcousticModels/
     def trainModelButton(self, profileName = None, directoryName = None, window=None):
         """Takes in a profileName and directoryName, adapts the language model with the profileName using the voice lines from directoryName"""
 
@@ -404,6 +410,14 @@ class Application:
 
         window.destroy()
 
+    # 2nd Option under Voice Training menu
+    # Creates a new window with a field to enter a name, button connected to checkNameButton(), another button connected to trainModelButton(), 
+    # and a list of radio buttons representing directory names in VoiceTraining/TrainingModel
+    #
+    # Allows the user to enter a name into the text field and choose one of the radio buttons
+    # After entering a name, if user clicks the check name button, will inform the user if a directory with that name already exists in VoiceTraining/AcousticModels
+    # After entering a name and choosing a radio button, if user clicks on the train model button, will create/overwrite a language model with that name using the 
+    # chosen training model from the list of radio buttons
     def trainLanguageModel(self):
         """Window frame to train a language model. Includes a text field to enter name of language model, radiobutton options to choose which directory has the voice lines to use to train, a button to check the language model name, and a button to train the model. """
 
@@ -439,6 +453,9 @@ class Application:
         trainButton = tk.Button(win, text="Train the language model!", command=lambda: self.trainModelButton(profileName=nameTextField.get(), directoryName=dirNameChoice.get(), window=win))
         trainButton.grid(row=2,column=0, padx=225, pady=10, sticky="nsew")
 
+    # Connected to prevButton button in recordingVoice()
+    #
+    # Gets the previous line and displays it to the window, if there is no previous line, informs the user of that
     def getPrevLine(self, listOfLines=None, textLabel=None, fileNameLabel=None, window=None):
         index = self.lineNumber
         #print("len(listOfLines) = " + str(len(listOfLines)) + ", index = " + str(index))
@@ -460,6 +477,9 @@ class Application:
 
         self.lineNumber = index
 
+    # Connected to nextButton button in recordingVoice()
+    #
+    # Gets the next line and displays it to the window, if there is no next line, informs the user of that
     def getNextLine(self, listOfLines=None, textLabel=None, fileNameLabel=None, window=None):
         index = self.lineNumber
         #print("len(listOfLines) = " + str(len(listOfLines)) + ", index = " + str(index))
@@ -481,6 +501,9 @@ class Application:
 
         self.lineNumber = index
 
+    # Connected to playButton button in recordingVoice()
+    #
+    # Gets the wav file of the currently displayed line of text and plays it for the user to hear, if one doesn't exist, inform the user.
     def playWavFile(self, dirPath=None, fileName=None, window=None):
         wavExists = os.path.exists(dirPath + fileName + ".wav")
         if not wavExists:
@@ -492,6 +515,9 @@ class Application:
         sound = AudioSegment.from_file(dirPath + fileName + ".wav")
         play(sound)
 
+    # Connected to recButton button in recordingVoice()
+    #
+    # Records the user for the next 8 seconds and saves it with the name related to the currently displayed line of text.
     def recWavFile(self, dirPath=None, fileName=None, window=None):
         duration = 8
         freq = 16000
@@ -507,6 +533,11 @@ class Application:
         window.lift()
         return
 
+    # Connected to radio buttons in recordingVoiceLines()
+    #
+    # Takes in the user's choice from radio buttons as an argument and pulls the relevant text file to display in window.
+    # Displays one line of text at a time and adds 4 buttons that the user is able to click on:
+    #     prevButton, recButton, playButton, nextButton
     def recordingVoice(self, directory=None, window=None):
         """Gets the transcription file from given directory and prompts the user to say the given lines while recording the user saying them."""
         
@@ -569,6 +600,10 @@ class Application:
         textLabel.config(text=listOfLines[0][1])
         textLabel.update()
 
+    # 1st Option under Voice Training menu
+    # Creates a new window with a list of options for the user to choose which training model to choose from to record voice lines
+    #
+    # Allows the user to click on one of the options, and then sends program counter to recordingVoice()
     def recordVoiceLines(self):
         """Window frame to record user voice lines reading from a .transcription file in specified directory."""
         
@@ -587,11 +622,17 @@ class Application:
         for dirName in listOfDirs:
             tk.Radiobutton(recordVoiceLabelFrame, text=dirName, variable=dirNameChoice, value=dirName, command=lambda: self.recordingVoice(directory=dirNameChoice.get(), window=win), indicatoron=0, width=20, padx=20).pack()
 
+    # Temporary function to use for a button with an unimplemented feature.
     def featureNotImplemented(self):
         """Function to use to show that a feature has not been implemented yet."""
         tk.messagebox.showinfo(message="This feature has not been implemented yet.")
 
-    def changeLanguageModel(self, modelName="None"):
+    # Connected to radio buttons in chooseLanguageModel()
+    #
+    # Takes in the user's choice from radio buttons as an argument and changes the used language model to that.
+    # If Google was chosen, set the useGoogle boolean flag to true
+    # If something else was chosen, copies the chosen language model and pastes it into VoiceTraining/Profiles/en-US/acoustic-model
+    def changeLanguageModel(self, modelName="None", win=None):
         """Displays a list of available language models and allows the user to choose one of them to use to parse incoming voice input"""
 
         print("Inside change language model function")
@@ -601,7 +642,7 @@ class Application:
             print("Going to use Google Voice")
             self.useGoogle = True
             tk.messagebox.showinfo(message="Now using Google Voice for the voice recognition.")
-
+            
         # If modelName = "None" for some reason, quit
         elif modelName == "None":
             tk.messagebox.showerror(message="Unexpected error.\nmodelName = None")
@@ -636,8 +677,14 @@ class Application:
 
             print("Finished changing language model")
             tk.messagebox.showinfo(message="Now using " + modelName + " as the language model for CMU Sphinx.")
-        
 
+        # Close out window after finished changing language model
+        win.destroy()
+        
+    # 3rd Option under Voice Training menu
+    #
+    # Creates a new window with a list of radio buttons for the user to choose from. After choosing one, the program counter is sent to changeLanguageModel()
+    # List of names is retrieved from directory names in VoiceTraining/AcousticModels
     def chooseLanguageModel(self):
         """Window frame to choose a language model from a list of radiobutton options"""
         #tk.messagebox.showinfo(message="In choose language model function")
@@ -653,11 +700,11 @@ class Application:
         modelNameChoice = tk.StringVar()
 
         # pack Google into the list of radiobuttons
-        tk.Radiobutton(instructionLabelFrame, text="Google", variable=modelNameChoice, value="Google", command=lambda: self.changeLanguageModel(modelName=modelNameChoice.get()), indicatoron=0, width=20, padx=20).pack()
+        tk.Radiobutton(instructionLabelFrame, text="Google", variable=modelNameChoice, value="Google", command=lambda: self.changeLanguageModel(modelName=modelNameChoice.get(), win=win), indicatoron=0, width=20, padx=20).pack()
 
         # pack the list of available language models
         for modelName in listOfModels:
-            tk.Radiobutton(instructionLabelFrame, text=modelName, variable=modelNameChoice, value=modelName, command=lambda: self.changeLanguageModel(modelName=modelNameChoice.get()), indicatoron=0, width=20, padx=20).pack()
+            tk.Radiobutton(instructionLabelFrame, text=modelName, variable=modelNameChoice, value=modelName, command=lambda: self.changeLanguageModel(modelName=modelNameChoice.get(),win=win), indicatoron=0, width=20, padx=20).pack()
 
     def text_queue(self, thread_queue=None):
         result = vr.listen(self.txt_editor_field,self.cmd_receiver_txt,self.cmd_man_txt,self.sys_out_txt,self.useGoogle)
