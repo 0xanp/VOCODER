@@ -48,11 +48,12 @@
 <dl class="py method">
 <dt id="application.Application.change_indicator">
 <code class="sig-name descname"><span class="pre">change_indicator</span></code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#application.Application.change_indicator" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Handling end/compile buttons</p>
+</dd></dl>
 
 <dl class="py method">
 <dt id="application.Application.checkNameButton">
-<code class="sig-name descname"><span class="pre">checkNameButton</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">inputString</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#application.Application.checkNameButton" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname"><span class="pre">checkNameButton</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">inputString</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">window</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#application.Application.checkNameButton" title="Permalink to this definition">¶</a></dt>
 <dd><p>Checks to see if there is a directory with the name of inputString in the path of VoiceTraining/AcousticModels/</p>
 </dd></dl>
 
@@ -65,12 +66,20 @@
 <dl class="py method">
 <dt id="application.Application.copy">
 <code class="sig-name descname"><span class="pre">copy</span></code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#application.Application.copy" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Handling copy event for the text editor</p>
+</dd></dl>
 
 <dl class="py method">
 <dt id="application.Application.cut">
 <code class="sig-name descname"><span class="pre">cut</span></code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#application.Application.cut" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Handling cut event for the text editor</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="application.Application.delete">
+<code class="sig-name descname"><span class="pre">delete</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#application.Application.delete" title="Permalink to this definition">¶</a></dt>
+<dd><p>Handling delete event for the text editor</p>
+</dd></dl>
 
 <dl class="py method">
 <dt id="application.Application.featureNotImplemented">
@@ -83,6 +92,22 @@
 <code class="sig-name descname"><span class="pre">file</span></code><em class="property"> <span class="pre">=</span> <span class="pre">None</span></em><a class="headerlink" href="#application.Application.file" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
+<dl class="py method">
+<dt id="application.Application.get">
+<code class="sig-name descname"><span class="pre">get</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#application.Application.get" title="Permalink to this definition">¶</a></dt>
+<dd><p>Handling get event for the text editor</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="application.Application.getNextLine">
+<code class="sig-name descname"><span class="pre">getNextLine</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">listOfLines</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">textLabel</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fileNameLabel</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">window</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#application.Application.getNextLine" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="application.Application.getPrevLine">
+<code class="sig-name descname"><span class="pre">getPrevLine</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">listOfLines</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">textLabel</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fileNameLabel</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">window</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#application.Application.getPrevLine" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
 <dl class="py attribute">
 <dt id="application.Application.height">
 <code class="sig-name descname"><span class="pre">height</span></code><em class="property"> <span class="pre">=</span> <span class="pre">900</span></em><a class="headerlink" href="#application.Application.height" title="Permalink to this definition">¶</a></dt>
@@ -91,12 +116,31 @@
 <dl class="py method">
 <dt id="application.Application.image_resizer">
 <code class="sig-name descname"><span class="pre">image_resizer</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">e</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#application.Application.image_resizer" title="Permalink to this definition">¶</a></dt>
+<dd><p>Dynamically resize the header banner</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="application.Application.index">
+<code class="sig-name descname"><span class="pre">index</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#application.Application.index" title="Permalink to this definition">¶</a></dt>
+<dd><p>Handling index event for the text editor</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="application.Application.insert">
+<code class="sig-name descname"><span class="pre">insert</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#application.Application.insert" title="Permalink to this definition">¶</a></dt>
+<dd><p>Handling insert event for the text editor</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt id="application.Application.lineNumber">
+<code class="sig-name descname"><span class="pre">lineNumber</span></code><em class="property"> <span class="pre">=</span> <span class="pre">0</span></em><a class="headerlink" href="#application.Application.lineNumber" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py method">
 <dt id="application.Application.listen_for_result">
 <code class="sig-name descname"><span class="pre">listen_for_result</span></code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#application.Application.listen_for_result" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Check for content in the queue and update the widget appropriately</p>
+</dd></dl>
 
 <dl class="py attribute">
 <dt id="application.Application.master">
@@ -131,21 +175,53 @@
 <dl class="py method">
 <dt id="application.Application.newFile">
 <code class="sig-name descname"><span class="pre">newFile</span></code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#application.Application.newFile" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Handling new file option for the menu</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="application.Application.onPressDelay">
+<code class="sig-name descname"><span class="pre">onPressDelay</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#application.Application.onPressDelay" title="Permalink to this definition">¶</a></dt>
+<dd><p>“Handling Any Key Press event for the text editor</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="application.Application.onScrollPress">
+<code class="sig-name descname"><span class="pre">onScrollPress</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#application.Application.onScrollPress" title="Permalink to this definition">¶</a></dt>
+<dd><p>Handling Scroll Press event for the text editor</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="application.Application.onScrollRelease">
+<code class="sig-name descname"><span class="pre">onScrollRelease</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#application.Application.onScrollRelease" title="Permalink to this definition">¶</a></dt>
+<dd><p>Handling Scroll Release event for the text editor</p>
+</dd></dl>
 
 <dl class="py method">
 <dt id="application.Application.on_closing">
 <code class="sig-name descname"><span class="pre">on_closing</span></code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#application.Application.on_closing" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Handling Close the app event, delete all the cache built up</p>
+</dd></dl>
 
 <dl class="py method">
 <dt id="application.Application.openFile">
 <code class="sig-name descname"><span class="pre">openFile</span></code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#application.Application.openFile" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Handling open file option for the menu</p>
+</dd></dl>
 
 <dl class="py method">
 <dt id="application.Application.paste">
 <code class="sig-name descname"><span class="pre">paste</span></code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#application.Application.paste" title="Permalink to this definition">¶</a></dt>
+<dd><p>Handling paste event for the text editor</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="application.Application.playWavFile">
+<code class="sig-name descname"><span class="pre">playWavFile</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dirPath</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fileName</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">window</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#application.Application.playWavFile" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="application.Application.recWavFile">
+<code class="sig-name descname"><span class="pre">recWavFile</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dirPath</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fileName</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">window</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#application.Application.recWavFile" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py method">
@@ -160,6 +236,12 @@
 <dd><p>Gets the transcription file from given directory and prompts the user to say the given lines while recording the user saying them.</p>
 </dd></dl>
 
+<dl class="py method">
+<dt id="application.Application.redraw">
+<code class="sig-name descname"><span class="pre">redraw</span></code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#application.Application.redraw" title="Permalink to this definition">¶</a></dt>
+<dd><p>Handling the redraw of the number line</p>
+</dd></dl>
+
 <dl class="py attribute">
 <dt id="application.Application.root">
 <code class="sig-name descname"><span class="pre">root</span></code><em class="property"> <span class="pre">=</span> <span class="pre">&lt;tkinter.Tk</span> <span class="pre">object</span> <span class="pre">.&gt;</span></em><a class="headerlink" href="#application.Application.root" title="Permalink to this definition">¶</a></dt>
@@ -168,17 +250,20 @@
 <dl class="py method">
 <dt id="application.Application.saveFile">
 <code class="sig-name descname"><span class="pre">saveFile</span></code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#application.Application.saveFile" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Handling save file option for the menu</p>
+</dd></dl>
 
 <dl class="py method">
 <dt id="application.Application.showAbout">
 <code class="sig-name descname"><span class="pre">showAbout</span></code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#application.Application.showAbout" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Handling about option for the menu</p>
+</dd></dl>
 
 <dl class="py method">
 <dt id="application.Application.text_queue">
 <code class="sig-name descname"><span class="pre">text_queue</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">thread_queue</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#application.Application.text_queue" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Put result from voice recognition model into a queue</p>
+</dd></dl>
 
 <dl class="py method">
 <dt id="application.Application.trainLanguageModel">
@@ -188,19 +273,15 @@
 
 <dl class="py method">
 <dt id="application.Application.trainModelButton">
-<code class="sig-name descname"><span class="pre">trainModelButton</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">profileName</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">directoryName</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#application.Application.trainModelButton" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname"><span class="pre">trainModelButton</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">profileName</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">directoryName</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">window</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#application.Application.trainModelButton" title="Permalink to this definition">¶</a></dt>
 <dd><p>Takes in a profileName and directoryName, adapts the language model with the profileName using the voice lines from directoryName</p>
 </dd></dl>
-
-<dl class="py attribute">
-<dt id="application.Application.txt_editor_field">
-<code class="sig-name descname"><span class="pre">txt_editor_field</span></code><em class="property"> <span class="pre">=</span> <span class="pre">&lt;tkinter.Text</span> <span class="pre">object</span> <span class="pre">.!frame.!text&gt;</span></em><a class="headerlink" href="#application.Application.txt_editor_field" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
 
 <dl class="py method">
 <dt id="application.Application.update_text">
 <code class="sig-name descname"><span class="pre">update_text</span></code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#application.Application.update_text" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Runner code for the queue-thread systems, calling listen_for_results after every new thread is spawned</p>
+</dd></dl>
 
 <dl class="py attribute">
 <dt id="application.Application.useGoogle">
@@ -214,10 +295,30 @@
 
 </dd></dl>
 
+<dl class="py class">
+<dt id="application.TextLineNumbers">
+<em class="property"><span class="pre">class</span> </em><code class="sig-prename descclassname"><span class="pre">application.</span></code><code class="sig-name descname"><span class="pre">TextLineNumbers</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#application.TextLineNumbers" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">tkinter.Canvas</span></code></p>
+<p>Custom object to handle the drawing of the number line</p>
+<dl class="py method">
+<dt id="application.TextLineNumbers.attach">
+<code class="sig-name descname"><span class="pre">attach</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">text_widget</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#application.TextLineNumbers.attach" title="Permalink to this definition">¶</a></dt>
+<dd><p>Attach new drawn object back to the text editor</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="application.TextLineNumbers.redraw">
+<code class="sig-name descname"><span class="pre">redraw</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#application.TextLineNumbers.redraw" title="Permalink to this definition">¶</a></dt>
+<dd><p>Redraw line numbers</p>
+</dd></dl>
+
+</dd></dl>
+
 <dl class="py function">
 <dt id="application.main">
 <code class="sig-prename descclassname"><span class="pre">application.</span></code><code class="sig-name descname"><span class="pre">main</span></code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#application.main" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Main function for the application.py</p>
+</dd></dl>
 
 </div>
 

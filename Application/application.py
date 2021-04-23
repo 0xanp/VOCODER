@@ -19,15 +19,17 @@ from screeninfo import get_monitors
 
 
 class TextLineNumbers(tk.Canvas):
+    """Custom object to handle the drawing of the number line"""
     def __init__(self, *args, **kwargs):
         tk.Canvas.__init__(self, *args, **kwargs, highlightthickness=0)
         self.textwidget = None
 
     def attach(self, text_widget):
+        """Attach new drawn object back to the text editor"""
         self.textwidget = text_widget
 
     def redraw(self, *args):
-        '''redraw line numbers'''
+        """Redraw line numbers"""
         self.delete("all")
 
         i = self.textwidget.index("@0,0")
@@ -43,7 +45,13 @@ class TextLineNumbers(tk.Canvas):
 
 class Application:
     """This is the documentation for Application"""
-    root = tk.Tk()
+    root = Tk()
+    """
+    root.attributes("-fullscreen", True)
+    root.bind("<F11>", lambda event: root.attributes("-fullscreen",
+                                    not root.attributes("-fullscreen")))
+    root.bind("<Escape>", lambda event: root.attributes("-fullscreen", False))
+    """
     width = 1600
     height = 900
     menu_bar = tk.Menu(root)
@@ -52,7 +60,6 @@ class Application:
     menu_voice = tk.Menu(menu_bar, tearoff=0)
     menu_help = tk.Menu(menu_bar, tearoff=0)
     master = tk.Frame(root,bg='#2b2b2b')
-    #txt_editor_field = tk.Text(master)
     file = None
     useGoogle = False
     lineNumber = 0    
@@ -63,9 +70,6 @@ class Application:
             self.root.wm_iconbitmap("Notepad.ico")  
         except: 
             pass
-  
-        # Set window size (the default is 300x300) 
-  
         try: 
             self.thisWidth = kwargs['width'] 
         except KeyError: 
@@ -90,11 +94,6 @@ class Application:
         top = (screenHeight / 2) - (self.height /2)  
           
         # For top and bottom 
-        '''
-        self.root.geometry('%dx%d+%d+%d' % (self.width, 
-                                              self.height, 
-                                              left, top))  
-        '''
         self.root.geometry(f"{self.thisWidth}x{self.thisHeight}")
         self.root.grid_rowconfigure(0, weight=1) 
         self.root.grid_columnconfigure(0, weight=1) 
@@ -115,9 +114,7 @@ class Application:
         self.img.pack()
         self.header.grid(row=0,padx=5,pady=5,sticky='nsew')
         self.header.bind("<Configure>", self.image_resizer)
-        ## Menu Bar
-        
-        ## Add functionalities to Menu options
+
 
         # File option
         self.menu_file.add_command(label="New", command=self.newFile)
@@ -147,10 +144,12 @@ class Application:
         
         ## App_Layout
         self.app_layout = tk.Frame(self.master,width = self.thisWidth, height=int(self.thisHeight*0.8), borderwidth=2, relief="ridge",bg='#2b2b2b')
+        self.app_layout.rowconfigure(0,weight=1)
+        self.app_layout.columnconfigure(0,weight=1)
         self.app_layout.grid_propagate(False)
         
         ## Voice recorder Frame
-        self.voice_recog = tk.LabelFrame(self.app_layout, text = "Voice Recorder",width=int(self.app_layout.winfo_width()*0.3), height=200, borderwidth=2, relief="ridge",bg='#2b2b2b',foreground="#d1dce8")
+        self.voice_recog = tk.LabelFrame(self.app_layout, text = "Voice Recorder", borderwidth=2, relief="ridge",bg='#2b2b2b',foreground="#d1dce8")
         self.voice_recog.grid_propagate(False)
         self.indicator = tk.Frame(self.voice_recog, width = 2, height=2, bg='#2b2b2b')
         self.loadgray = Image.open("assets/grayCircle.jpg")
@@ -160,14 +159,12 @@ class Application:
         self.imggray.pack()
         self.start_button = tk.Button(self.voice_recog,text="start",command=lambda: self.update_text(),bg='#2b2b2b',foreground="#d1dce8")
         self.end_button = tk.Button(self.voice_recog,text="end",command=lambda: self.change_indicator(),bg='#2b2b2b',foreground="#d1dce8")
-
-        #####
-        self.cmd_receiver = tk.LabelFrame(self.voice_recog, text="command(s) received",width=500,height=180,bg='#2b2b2b',foreground="#d1dce8")
+        self.cmd_receiver = tk.LabelFrame(self.voice_recog, text="command(s) received",width=700,height=355,bg='#2b2b2b',foreground="#d1dce8")
         self.cmd_receiver.grid_propagate(False)
         self.cmd_receiver_txt = tk.Listbox(self.cmd_receiver,bg='#2b2b2b',foreground="#d1dce8")
         
         ## System Output
-        self.sys_out = tk.LabelFrame(self.app_layout,text="System Output",width=600, height=200, borderwidth=2, relief="ridge",bg='#2b2b2b',foreground="#d1dce8")
+        self.sys_out = tk.LabelFrame(self.app_layout,text="System Output",width=600, height=200,relief="ridge",bg='#2b2b2b',foreground="#d1dce8")
         self.sys_out.grid_propagate(False)
         self.sys_out_txt = tk.Listbox(self.sys_out,bg='#2b2b2b',foreground="#d1dce8")
 
@@ -207,7 +204,7 @@ class Application:
         self.help_field = tk.Text(self.app_layout, height=2, width=30,bg='#2b2b2b',foreground="#d1dce8")
         self.help_field.insert(tk.END, "1=Create Array \t2=Create Else Stmnt Done\t3=Create Else-If Stmnt \t4=Create If Stmnt \t5=Create While Loop "+\
                                         "\t6=Create For Loop \t7=Return Stmnt \t8=Assign Old Var \t9=Create New Var \t10=Copy Txt \t11=Select Block "+\
-                                        "\n12=Select Line \t13=Select Word \t14=Cut Txt \t15=Move Cursor \t16=Paste Txt \t17=Redo Command \t18=Undo Command "+\
+                                        "\t12=Select Line \t13=Select Word \n14=Cut Txt \t15=Move Cursor \t16=Paste Txt \t17=Redo Command \t18=Undo Command "+\
                                         "\t19=Print Stmnt \t20=Print Var \t21=Create Func \t22=Indent Cursor \t23=Insert Chars")
         self.help_field.grid_propagate(False)
         self.help_field.config(state=DISABLED)
@@ -216,8 +213,8 @@ class Application:
 
         ## Packing all the widgets in Voice Recorder
         self.start_button.grid(column=0,row=0)
-        self.end_button.grid(column=0,row=2)
-        self.indicator.grid(column=0,row=1,padx=3,pady=1,sticky='nsew')
+        self.end_button.grid(column=0,row=1)
+        self.indicator.grid(column=0,row=2)
         self.cmd_receiver.grid(column=1,row=0,rowspan=3,sticky='nsew')
         self.cmd_receiver.columnconfigure(0,weight=1)
         self.cmd_receiver.rowconfigure(0,weight=1)
@@ -252,9 +249,11 @@ class Application:
         
         
     def showAbout(self):
+        """Handling about option for the menu""" 
         tk.messagebox.showinfo("VOCODER", "Binh An Pham\nM Rachel Van Pelt\nSteven Tran")
     
     def openFile(self):
+        """Handling open file option for the menu""" 
         self.file = askopenfilename(defaultextension=".txt", 
                                       filetypes=[("All Files","*.*"), 
                                         ("Text Documents","*.txt")]) 
@@ -277,12 +276,13 @@ class Application:
             file.close() 
 
     def newFile(self): 
+        """Handling new file option for the menu""" 
         self.root.title("Untitled - VOCODER") 
         self.file = None
         self.txt_editor_field.delete(1.0,tk.END) 
 
-    def saveFile(self): 
-  
+    def saveFile(self):
+        """Handling save file option for the menu""" 
         if self.file == None: 
             # Save as new file 
             self.file = asksaveasfilename(initialfile='Untitled.txt', 
@@ -307,12 +307,15 @@ class Application:
             file.close() 
   
     def cut(self): 
+        """Handling cut event for the text editor"""
         self.txt_editor_field.event_generate("<<Cut>>") 
   
     def copy(self): 
+        """Handling copy event for the text editor"""
         self.txt_editor_field.event_generate("<<Copy>>") 
   
     def paste(self): 
+        """Handling paste event for the text editor"""
         self.txt_editor_field.event_generate("<<Paste>>") 
 
     def checkNameButton(self, inputString = None, window=None):
@@ -660,10 +663,12 @@ class Application:
             tk.Radiobutton(instructionLabelFrame, text=modelName, variable=modelNameChoice, value=modelName, command=lambda: self.changeLanguageModel(modelName=modelNameChoice.get()), indicatoron=0, width=20, padx=20).pack()
 
     def text_queue(self, thread_queue=None):
+        """Put result from voice recognition model into a queue"""
         result = vr.listen(self.txt_editor_field,self.cmd_receiver_txt,self.cmd_man_txt,self.sys_out_txt,self.useGoogle)
         thread_queue.put(result)
 
     def image_resizer(self, e):
+        """Dynamically resize the header banner"""
         global img1, resized_img1, re_render
         img1 = Image.open("assets/vocoder_icon_titledark.png")
         resized_img1 = img1.resize((e.width, e.height), Image.ANTIALIAS)
@@ -671,6 +676,7 @@ class Application:
         self.img.configure(image=re_render)
 
     def update_text(self):
+        """Runner code for the queue-thread systems, calling listen_for_results after every new thread is spawned"""
         self.loadred = Image.open("assets/redCircle.jpg")
         self.renderred = ImageTk.PhotoImage(self.loadred)
         self.imggray.configure(image=self.renderred)
@@ -683,6 +689,7 @@ class Application:
         
 
     def listen_for_result(self):
+        """Check for content in the queue and update the widget appropriately"""
         try:
             text = self.thread_queue.get(0)
             if text == "":
@@ -699,41 +706,51 @@ class Application:
         except queue.Empty:
             self.root.after(1, self.listen_for_result)
 
-    ## Handling end/compile buttons
     def change_indicator(self):
+        """Handling end/compile buttons"""
         vr.test_compiler(self.txt_editor_field.get(1.0,tk.END), self.terminal)
         self.imggray.configure(image=self.rendergray) 
     
     def on_closing(self):
+        """Handling Close the app event, delete all the cache built up"""
         if messagebox.askokcancel("Quit", "Do you want to quit?"):
             os.popen('find . | grep -E "(__pycache__|\.pyc|\.pyo$)" | xargs rm -rf')
             self.root.destroy()
 
     def onScrollPress(self, *args):
+        """Handling Scroll Press event for the text editor"""
         self.scrollbar.bind("<B1-Motion>", self.numberLines.redraw)
 
     def onScrollRelease(self, *args):
+        """Handling Scroll Release event for the text editor"""
         self.scrollbar.unbind("<B1-Motion>", self.numberLines.redraw)
 
     def onPressDelay(self, *args):
+        """"Handling Any Key Press event for the text editor"""
         self.root.after(2, self.numberLines.redraw)
 
     def get(self, *args, **kwargs):
+        """Handling get event for the text editor"""
         return self.txt_editor_field.get(*args, **kwargs)
 
     def insert(self, *args, **kwargs):
+        """Handling insert event for the text editor"""
         return self.txt_editor_field.insert(*args, **kwargs)
 
     def delete(self, *args, **kwargs):
+        """Handling delete event for the text editor"""
         return self.txt_editor_field.delete(*args, **kwargs)
 
     def index(self, *args, **kwargs):
+        """Handling index event for the text editor"""
         return self.txt_editor_field.index(*args, **kwargs)
 
     def redraw(self):
+        """Handling the redraw of the number line"""
         self.numberLines.redraw()
     
 def main():
+    """Main function for the application.py"""
     dimension = []
     for m in get_monitors():
         if m.x == 0 and m.y == 0:
