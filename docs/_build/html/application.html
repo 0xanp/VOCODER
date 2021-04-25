@@ -41,7 +41,7 @@
 <p>This is the documentation for Application</p>
 <dl class="py method">
 <dt id="application.Application.changeLanguageModel">
-<code class="sig-name descname"><span class="pre">changeLanguageModel</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">modelName</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'None'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#application.Application.changeLanguageModel" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname"><span class="pre">changeLanguageModel</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">modelName</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'None'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">win</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#application.Application.changeLanguageModel" title="Permalink to this definition">¶</a></dt>
 <dd><p>Displays a list of available language models and allows the user to choose one of them to use to parse incoming voice input</p>
 </dd></dl>
 
@@ -245,7 +245,13 @@
 <dl class="py attribute">
 <dt id="application.Application.root">
 <code class="sig-name descname"><span class="pre">root</span></code><em class="property"> <span class="pre">=</span> <span class="pre">&lt;tkinter.Tk</span> <span class="pre">object</span> <span class="pre">.&gt;</span></em><a class="headerlink" href="#application.Application.root" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>root.attributes(“-fullscreen”, True)
+root.bind(“&lt;F11&gt;”, lambda event: root.attributes(“-fullscreen”,</p>
+<blockquote>
+<div><p>not root.attributes(“-fullscreen”)))</p>
+</div></blockquote>
+<p>root.bind(“&lt;Escape&gt;”, lambda event: root.attributes(“-fullscreen”, False))</p>
+</dd></dl>
 
 <dl class="py method">
 <dt id="application.Application.saveFile">
