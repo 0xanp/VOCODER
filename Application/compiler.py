@@ -37,8 +37,6 @@ class DisplaySubprocessOutputDemo:
         # show subprocess' stdout in GUI
         self.listbox = tk.Listbox(self.root,bg='#2b2b2b',foreground="#d1dce8")
         self.listbox.grid(row=0,column=0,padx=5,pady=5,sticky='nsew')
-        #self.label = tk.Label(root, text = "")
-        #self.label.pack(ipadx=4, padx=4, ipady=4, pady=4, fill='both')
         self.update(q) # start update loop
 
     def reader_thread(self, q):

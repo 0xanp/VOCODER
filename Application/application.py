@@ -17,6 +17,10 @@ from pydub import AudioSegment
 from pydub.playback import play
 from screeninfo import get_monitors
 
+def resource_path(relative_path):
+    """ Get absolute path to resource, works for dev and for PyInstaller """
+    base_path = getattr(sys, '_MEIPASS', os.path.dirname(os.path.abspath(__file__)))
+    return os.path.join(base_path, relative_path)
 
 class TextLineNumbers(tk.Canvas):
     """Custom object to handle the drawing of the number line"""
@@ -46,12 +50,6 @@ class TextLineNumbers(tk.Canvas):
 class Application:
     """This is the documentation for Application"""
     root = Tk()
-    """
-    root.attributes("-fullscreen", True)
-    root.bind("<F11>", lambda event: root.attributes("-fullscreen",
-                                    not root.attributes("-fullscreen")))
-    root.bind("<Escape>", lambda event: root.attributes("-fullscreen", False))
-    """
     width = 1600
     height = 900
     menu_bar = tk.Menu(root)
@@ -109,7 +107,7 @@ class Application:
 
         ## Header
         self.header = tk.Frame(self.master, borderwidth=2, relief="ridge",bg='#2b2b2b')
-        self.render = ImageTk.PhotoImage(file="assets\\vocoder_icon_titledark.png")
+        self.render = ImageTk.PhotoImage(file=resource_path("assets/vocoder_icon_titledark.png"))
         self.img = tk.Label(self.header,image=self.render)
         self.img.pack()
         self.header.grid(row=0,padx=5,pady=5,sticky='nsew')
@@ -152,7 +150,7 @@ class Application:
         self.voice_recog = tk.LabelFrame(self.app_layout, text = "Voice Recorder", borderwidth=2, relief="ridge",bg='#2b2b2b',foreground="#d1dce8")
         self.voice_recog.grid_propagate(False)
         self.indicator = tk.Frame(self.voice_recog, width = 2, height=2, bg='#2b2b2b')
-        self.loadgray = Image.open("assets/grayCircle.jpg")
+        self.loadgray = Image.open(resource_path("assets/grayCircle.jpg"))
         self.rendergray = ImageTk.PhotoImage(self.loadgray)
         self.imggray = tk.Label(self.indicator,image=self.rendergray, pady=0, padx=0, borderwidth=0, highlightthickness=0)
         self.imggray.image = self.rendergray
@@ -717,14 +715,14 @@ class Application:
     def image_resizer(self, e):
         """Dynamically resize the header banner"""
         global img1, resized_img1, re_render
-        img1 = Image.open("assets/vocoder_icon_titledark.png")
+        img1 = Image.open(resource_path("assets/vocoder_icon_titledark.png"))
         resized_img1 = img1.resize((e.width, e.height), Image.ANTIALIAS)
         re_render = ImageTk.PhotoImage(resized_img1)
         self.img.configure(image=re_render)
 
     def update_text(self):
         """Runner code for the queue-thread systems, calling listen_for_results after every new thread is spawned"""
-        self.loadred = Image.open("assets/redCircle.jpg")
+        self.loadred = Image.open(resource_path("assets/redCircle.jpg"))
         self.renderred = ImageTk.PhotoImage(self.loadred)
         self.imggray.configure(image=self.renderred)
         self.thread_queue = queue.Queue()
