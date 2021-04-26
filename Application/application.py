@@ -722,7 +722,7 @@ class Application:
 
     def update_text(self):
         """Runner code for the queue-thread systems, calling listen_for_results after every new thread is spawned"""
-        self.loadred = Image.open(resource_path("assets/redCircle.jpg"))
+        self.loadred = Image.open(resource_path("redCircle.jpg"))
         self.renderred = ImageTk.PhotoImage(self.loadred)
         self.imggray.configure(image=self.renderred)
         self.thread_queue = queue.Queue()
