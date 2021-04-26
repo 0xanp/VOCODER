@@ -5,6 +5,7 @@ from fuzzywuzzy import fuzz
 from vosk import SetLogLevel
 SetLogLevel(-1)
 import os
+import sys
 import json
 import pyaudio
 import compiler as comp
@@ -44,7 +45,12 @@ useGoogleFlag = False
 # global variables used for selection of text in text editor
 global selBeg, selEnd
 # path needed to find location of application
-path = os.getcwd()
+#path = os.getcwd()
+def resource_path(relative_path):
+    """ Get absolute path to resource, works for dev and for PyInstaller """
+    base_path = getattr(sys, '_MEIPASS', os.path.dirname(os.path.abspath(__file__)))
+    return os.path.join(base_path, relative_path)
+
 
 # function to get voice input and returns as a string
 def getVoiceInput():
@@ -57,7 +63,9 @@ def getVoiceInput():
         if useGoogleFlag:
             audioToText = r.recognize_google(audio)
         else:
-            audioToText = r.recognize_sphinx(audio, language = path + "/VoiceTraining/Profiles/en-US")
+            path = resource_path("VoiceTraining/Profiles/en-US")
+            print("inside getVoiceInput(): path = " + path)
+            audioToText = r.recognize_sphinx(audio, language = path)
             
     return audioToText.lower()
 
@@ -1059,7 +1067,9 @@ def listen(tex,tex2,tex3,tex4,useGoogle):
                 useGoogleFlag = True
             # Else, use sphinx
             else:
-                audioToText = r.recognize_sphinx(audio, language = path + "/VoiceTraining/Profiles/en-US")
+                path = resource_path("VoiceTraining/Profiles/en-US")
+                print("inside listen(): path = " + path)
+                audioToText = r.recognize_sphinx(audio, language = path)
                 useGoogleFlag = False
                 
             txtEditorTxt = phraseMatch(audioToText,tex,tex2,tex3,tex4)

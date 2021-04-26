@@ -1,0 +1,31 @@
+agg_seg
+bldtree
+bw
+cdcn_norm
+cdcn_train
+cp_parm
+delint
+inc_comp
+init_gau - Partially tested. -ceplen ? -feat? (not if initial mean is loaded in)
+init_mixw
+kdtree
+kmeans_init
+lda_train - Partially tested. -ceplen, -feat, -cmn, etc.
+make_quests
+map_adapt
+mixw_interp
+mk_flat
+mk_mdef_gen - Partially tested. The output phone and triphone count is yet to be tested. 
+mk_mllr_class
+mk_model_def
+mk_s2sendump
+mk_ts2cb
+mllr_solve
+mllr_transform
+norm   - Partially tested, (works only with single globalmean)
+param_cnt
+printp - Partially tested, only test the hmm parameters and gaussian count. 
+prunetree - Fully tested. 
+QUICK_COUNT
+tiestate
+maketopology.pl - Fully tested

@@ -1,0 +1,94 @@
+﻿Build started 2/9/2021 11:44:15 AM.
+     1>Project "D:\Downloads\sphinxtrain-master\win32\libs\libcommon\libcommon.vcxproj" on node 3 (Build target(s)).
+     1>ClCompile:
+         C:\Program Files (x86)\Microsoft Visual Studio 11.0\VC\bin\CL.exe /c /I..\..\..\include /I..\..\..\..\sphinxbase\include\win32 /I..\..\..\..\sphinxbase\include /ZI /nologo /W3 /WX- /Od /Oy- /D _DEBUG /D _LIB /D _CRT_SECURE_NO_WARNINGS /D SPHINX_DLL /D _VC80_UPGRADE=0x0600 /D _MBCS /Gm /EHsc /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Fo".\Debug\Win32/" /Fd".\Debug\Win32/vc110.pdb" /Gd /TC /analyze- /errorReport:prompt ..\..\..\src\libs\libcommon\acmod_set.c ..\..\..\src\libs\libcommon\best_q.c ..\..\..\src\libs\libcommon\ck_seg.c ..\..\..\src\libs\libcommon\cvt2triphone.c ..\..\..\src\libs\libcommon\dtree.c ..\..\..\src\libs\libcommon\heap.c ..\..\..\src\libs\libcommon\itree.c ..\..\..\src\libs\libcommon\lexicon.c ..\..\..\src\libs\libcommon\mk_phone_list.c ..\..\..\src\libs\libcommon\mk_phone_seq.c ..\..\..\src\libs\libcommon\mk_sseq.c ..\..\..\src\libs\libcommon\mk_trans_seq.c ..\..\..\src\libs\libcommon\mk_ts2ci.c ..\..\..\src\libs\libcommon\quest.c ..\..\..\src\libs\libcommon\remap.c ..\..\..\src\libs\libcommon\state_seq.c ..\..\..\src\libs\libcommon\ts2cb.c ..\..\..\src\libs\libcommon\vector.c ..\..\..\src\libs\libcommon\was_added.c
+         was_added.c
+         vector.c
+     1>d:\downloads\sphinxtrain-master\src\libs\libcommon\vector.c(98): warning C4244: '/=' : conversion from 'float64' to 'float', possible loss of data
+     1>d:\downloads\sphinxtrain-master\src\libs\libcommon\vector.c(119): warning C4244: '*=' : conversion from 'float64' to 'float32', possible loss of data
+         ts2cb.c
+         state_seq.c
+         remap.c
+     1>d:\downloads\sphinxtrain-master\src\libs\libcommon\remap.c(67): warning C4244: '=' : conversion from 'double' to 'uint32', possible loss of data
+         quest.c
+     1>d:\downloads\sphinxtrain-master\src\libs\libcommon\quest.c(492): warning C4018: '<' : signed/unsigned mismatch
+     1>d:\downloads\sphinxtrain-master\src\libs\libcommon\quest.c(493): warning C4018: '<' : signed/unsigned mismatch
+     1>d:\downloads\sphinxtrain-master\src\libs\libcommon\quest.c(517): warning C4018: '<' : signed/unsigned mismatch
+     1>d:\downloads\sphinxtrain-master\src\libs\libcommon\quest.c(521): warning C4018: '<' : signed/unsigned mismatch
+     1>d:\downloads\sphinxtrain-master\src\libs\libcommon\quest.c(638): warning C4018: '<' : signed/unsigned mismatch
+     1>d:\downloads\sphinxtrain-master\src\libs\libcommon\quest.c(640): warning C4018: '<' : signed/unsigned mismatch
+     1>d:\downloads\sphinxtrain-master\src\libs\libcommon\quest.c(641): warning C4018: '>' : signed/unsigned mismatch
+         mk_ts2ci.c
+         mk_trans_seq.c
+         mk_sseq.c
+         mk_phone_seq.c
+         mk_phone_list.c
+         lexicon.c
+     1>d:\downloads\sphinxtrain-master\src\libs\libcommon\lexicon.c(185): warning C4996: 'strdup': The POSIX name for this item is deprecated. Instead, use the ISO C++ conformant name: _strdup. See online help for details.
+                 c:\program files (x86)\microsoft visual studio 11.0\vc\include\string.h(241) : see declaration of 'strdup'
+         itree.c
+         heap.c
+         dtree.c
+     1>d:\downloads\sphinxtrain-master\src\libs\libcommon\dtree.c(728): warning C4018: '<' : signed/unsigned mismatch
+     1>d:\downloads\sphinxtrain-master\src\libs\libcommon\dtree.c(758): warning C4018: '<' : signed/unsigned mismatch
+     1>d:\downloads\sphinxtrain-master\src\libs\libcommon\dtree.c(893): warning C4244: '=' : conversion from 'float64' to 'float32', possible loss of data
+     1>d:\downloads\sphinxtrain-master\src\libs\libcommon\dtree.c(920): warning C4244: '=' : conversion from 'float64' to 'float32', possible loss of data
+     1>d:\downloads\sphinxtrain-master\src\libs\libcommon\dtree.c(970): warning C4244: '*=' : conversion from 'float64' to 'float32', possible loss of data
+     1>d:\downloads\sphinxtrain-master\src\libs\libcommon\dtree.c(1700): warning C4244: 'function' : conversion from 'float64' to 'float32', possible loss of data
+         cvt2triphone.c
+         ck_seg.c
+         best_q.c
+     1>d:\downloads\sphinxtrain-master\src\libs\libcommon\best_q.c(199): warning C4244: '*=' : conversion from 'float64' to 'float32', possible loss of data
+     1>d:\downloads\sphinxtrain-master\src\libs\libcommon\best_q.c(214): warning C4244: '*=' : conversion from 'float64' to 'float32', possible loss of data
+     1>d:\downloads\sphinxtrain-master\src\libs\libcommon\best_q.c(224): warning C4244: '*=' : conversion from 'float64' to 'float32', possible loss of data
+     1>d:\downloads\sphinxtrain-master\src\libs\libcommon\best_q.c(226): warning C4244: '=' : conversion from 'float64' to 'float32', possible loss of data
+     1>d:\downloads\sphinxtrain-master\src\libs\libcommon\best_q.c(232): warning C4244: '*=' : conversion from 'float64' to 'float32', possible loss of data
+     1>d:\downloads\sphinxtrain-master\src\libs\libcommon\best_q.c(234): warning C4244: '=' : conversion from 'float64' to 'float32', possible loss of data
+     1>d:\downloads\sphinxtrain-master\src\libs\libcommon\best_q.c(244): warning C4244: 'function' : conversion from 'float64' to 'float32', possible loss of data
+     1>d:\downloads\sphinxtrain-master\src\libs\libcommon\best_q.c(245): warning C4244: 'function' : conversion from 'float64' to 'float32', possible loss of data
+     1>d:\downloads\sphinxtrain-master\src\libs\libcommon\best_q.c(341): warning C4018: '<' : signed/unsigned mismatch
+     1>d:\downloads\sphinxtrain-master\src\libs\libcommon\best_q.c(438): warning C4244: '*=' : conversion from 'float64' to 'float32', possible loss of data
+     1>d:\downloads\sphinxtrain-master\src\libs\libcommon\best_q.c(446): warning C4244: '*=' : conversion from 'float64' to 'float32', possible loss of data
+     1>d:\downloads\sphinxtrain-master\src\libs\libcommon\best_q.c(448): warning C4244: '=' : conversion from 'float64' to 'float32', possible loss of data
+     1>d:\downloads\sphinxtrain-master\src\libs\libcommon\best_q.c(532): warning C4244: '*=' : conversion from 'float64' to 'float32', possible loss of data
+     1>d:\downloads\sphinxtrain-master\src\libs\libcommon\best_q.c(539): warning C4244: '*=' : conversion from 'float64' to 'float32', possible loss of data
+     1>d:\downloads\sphinxtrain-master\src\libs\libcommon\best_q.c(540): warning C4244: '*=' : conversion from 'float64' to 'float32', possible loss of data
+     1>d:\downloads\sphinxtrain-master\src\libs\libcommon\best_q.c(559): warning C4244: '*=' : conversion from 'float64' to 'float32', possible loss of data
+     1>d:\downloads\sphinxtrain-master\src\libs\libcommon\best_q.c(566): warning C4244: '*=' : conversion from 'float64' to 'float32', possible loss of data
+     1>d:\downloads\sphinxtrain-master\src\libs\libcommon\best_q.c(567): warning C4244: '*=' : conversion from 'float64' to 'float32', possible loss of data
+     1>d:\downloads\sphinxtrain-master\src\libs\libcommon\best_q.c(580): warning C4244: 'function' : conversion from 'float64' to 'float32', possible loss of data
+     1>d:\downloads\sphinxtrain-master\src\libs\libcommon\best_q.c(581): warning C4244: 'function' : conversion from 'float64' to 'float32', possible loss of data
+         acmod_set.c
+     1>d:\downloads\sphinxtrain-master\src\libs\libcommon\acmod_set.c(211): warning C4996: 'strdup': The POSIX name for this item is deprecated. Instead, use the ISO C++ conformant name: _strdup. See online help for details.
+                 c:\program files (x86)\microsoft visual studio 11.0\vc\include\string.h(241) : see declaration of 'strdup'
+     1>d:\downloads\sphinxtrain-master\src\libs\libcommon\acmod_set.c(272): warning C4996: 'strdup': The POSIX name for this item is deprecated. Instead, use the ISO C++ conformant name: _strdup. See online help for details.
+                 c:\program files (x86)\microsoft visual studio 11.0\vc\include\string.h(241) : see declaration of 'strdup'
+     1>d:\downloads\sphinxtrain-master\src\libs\libcommon\acmod_set.c(884): warning C4996: 'strdup': The POSIX name for this item is deprecated. Instead, use the ISO C++ conformant name: _strdup. See online help for details.
+                 c:\program files (x86)\microsoft visual studio 11.0\vc\include\string.h(241) : see declaration of 'strdup'
+         Generating Code...
+       Lib:
+         C:\Program Files (x86)\Microsoft Visual Studio 11.0\VC\bin\Lib.exe /OUT:".\..\..\..\lib\Debug\Win32\libcommon.lib" sphinxbase.lib /LIBPATH:..\..\..\..\sphinxbase\bin\Debug\Win32 /NOLOGO .\Debug\Win32/acmod_set.obj
+         .\Debug\Win32/best_q.obj
+         .\Debug\Win32/ck_seg.obj
+         .\Debug\Win32/cvt2triphone.obj
+         .\Debug\Win32/dtree.obj
+         .\Debug\Win32/heap.obj
+         .\Debug\Win32/itree.obj
+         .\Debug\Win32/lexicon.obj
+         .\Debug\Win32/mk_phone_list.obj
+         .\Debug\Win32/mk_phone_seq.obj
+         .\Debug\Win32/mk_sseq.obj
+         .\Debug\Win32/mk_trans_seq.obj
+         .\Debug\Win32/mk_ts2ci.obj
+         .\Debug\Win32/quest.obj
+         .\Debug\Win32/remap.obj
+         .\Debug\Win32/state_seq.obj
+         .\Debug\Win32/ts2cb.obj
+         .\Debug\Win32/vector.obj
+         .\Debug\Win32/was_added.obj
+         libcommon.vcxproj -> D:\Downloads\sphinxtrain-master\win32\libs\libcommon\.\..\..\..\lib\Debug\Win32\libcommon.lib
+     1>Done Building Project "D:\Downloads\sphinxtrain-master\win32\libs\libcommon\libcommon.vcxproj" (Build target(s)).
+
+Build succeeded.
+
+Time Elapsed 00:00:01.14
