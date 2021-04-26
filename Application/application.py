@@ -59,7 +59,7 @@ class Application:
     menu_help = tk.Menu(menu_bar, tearoff=0)
     master = tk.Frame(root,bg='#2b2b2b')
     file = None
-    useGoogle = False
+    useGoogle = True
     lineNumber = 0    
     
     def __init__(self,**kwargs):
@@ -350,6 +350,14 @@ class Application:
         if isdir == False:
             os.mkdir(basePath + profileName)
         
+        sphinxbasePath = "Application/VoiceTraining/sphinxbase/bin/Debug/Win32"
+        fullPath = resource_path(sphinxbasePath)
+        os.environ["PATH"] += os.pathsep + fullPath
+
+        sphinxtrainPath = "Application/VoiceTraining/sphinxtrain-master/bin/Debug/Win32"
+        fullPath = resource_path(sphinxtrainPath)
+        os.environ["PATH"] += os.pathsep + fullPath
+
         # Gets the needed file name from directoryName
         dirPath = "Application/VoiceTraining/TrainingModel/" + directoryName
         for file in glob.glob(r"Application/VoiceTraining/TrainingModel/" + directoryName + "/*.fileids"):
