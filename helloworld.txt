@@ -1,8 +1,8 @@
 
-print("a: ", a)
+print("alpha: ", alpha)
 
-print("b is greater than a")
-print("a and b are equal")
-print("a is greater than b")
+print("beta is greater than alpha")
+print("alpha and beta are equal")
+print("alpha is greater than beta")
 
 
