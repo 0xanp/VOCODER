@@ -249,7 +249,6 @@ class Application:
         self.txt_editor.grid(column=1,row=0,rowspan=2,padx=5,pady=5,sticky='nsew')
         self.txt_editor.columnconfigure(0,weight=1)
         self.txt_editor.rowconfigure(0,weight=1)
-        #self.txt_editor_field.grid(row=0,column=0,padx=5,pady=5,sticky='nsew')
 
         ## Packing all the widgets in Terminal
         self.terminal.grid(column=1,row=2,padx=5,pady=5,sticky='nsew')
@@ -275,7 +274,6 @@ class Application:
             # no file to open 
             self.file = None
         else: 
-              
             # Try to open the file 
             # set the window title 
             self.root.title(os.path.basename(self.file) + " - VOCODER") 
@@ -801,13 +799,13 @@ class Application:
 
     def change_indicator(self):
         """Handling end/compile buttons"""
-        #comp.main(self.txt_editor_field.get(1.0,tk.END), self.terminal)
         self.compiler()
         self.imggray.configure(image=self.rendergray) 
     
     def compiler(self):
         if self.file == None:
             self.saveFile()
+            return
         script = self.txt_editor_field.get(1.0,tk.END)
         self.process = Popen(["python","-u", "-c", script], stdout=PIPE)
         q = Queue(maxsize=1024)

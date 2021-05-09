@@ -1,0 +1,23 @@
+﻿Build started 2/9/2021 11:44:18 AM.
+     1>Project "D:\Downloads\sphinxtrain-master\win32\programs\mk_flat\mk_flat.vcxproj" on node 8 (Build target(s)).
+     1>ClCompile:
+         C:\Program Files (x86)\Microsoft Visual Studio 11.0\VC\bin\CL.exe /c /I..\..\..\include /I..\..\..\..\sphinxbase\include\win32 /I..\..\..\..\sphinxbase\include /ZI /nologo /W3 /WX- /Od /Oy- /D _DEBUG /D _CONSOLE /D _CRT_SECURE_NO_WARNINGS /D SPHINX_DLL /D _VC80_UPGRADE=0x0600 /D _MBCS /Gm /EHsc /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Fo".\Debug\Win32/" /Fd".\Debug\Win32/vc110.pdb" /Gd /TC /analyze- /errorReport:prompt ..\..\..\src\programs\mk_flat\main.c ..\..\..\src\programs\mk_flat\parse_cmd_ln.c
+         parse_cmd_ln.c
+         main.c
+     1>d:\downloads\sphinxtrain-master\src\programs\mk_flat\main.c(137): warning C4244: '=' : conversion from 'double' to 'float32', possible loss of data
+         Generating Code...
+       Link:
+         C:\Program Files (x86)\Microsoft Visual Studio 11.0\VC\bin\link.exe /ERRORREPORT:PROMPT /OUT:".\..\..\..\bin\Debug\Win32/mk_flat.exe" /INCREMENTAL /NOLOGO /LIBPATH:..\..\..\..\sphinxbase\bin\Debug\Win32 sphinxbase.lib kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /MANIFEST /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /manifest:embed /DEBUG /PDB:".\..\..\..\bin\Debug\Win32/mk_flat.pdb" /SUBSYSTEM:CONSOLE /TLBID:1 /DYNAMICBASE /NXCOMPAT /IMPLIB:".\..\..\..\bin\Debug\Win32\mk_flat.lib" /MACHINE:X86 /SAFESEH .\Debug\Win32/main.obj
+         .\Debug\Win32/parse_cmd_ln.obj
+         "D:\Downloads\sphinxtrain-master\lib\Debug\Win32\libclust.lib"
+         "D:\Downloads\sphinxtrain-master\lib\Debug\Win32\libcommon.lib"
+         "D:\Downloads\sphinxtrain-master\lib\Debug\Win32\libio.lib"
+         "D:\Downloads\sphinxtrain-master\lib\Debug\Win32\libmllr.lib"
+         "D:\Downloads\sphinxtrain-master\lib\Debug\Win32\libmodinv.lib"
+     1>main.obj : warning LNK4075: ignoring '/EDITANDCONTINUE' due to '/SAFESEH' specification
+         mk_flat.vcxproj -> D:\Downloads\sphinxtrain-master\win32\programs\mk_flat\.\..\..\..\bin\Debug\Win32\mk_flat.exe
+     1>Done Building Project "D:\Downloads\sphinxtrain-master\win32\programs\mk_flat\mk_flat.vcxproj" (Build target(s)).
+
+Build succeeded.
+
+Time Elapsed 00:00:01.58

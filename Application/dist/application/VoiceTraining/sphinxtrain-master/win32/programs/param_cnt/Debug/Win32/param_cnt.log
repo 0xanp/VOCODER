@@ -1,0 +1,32 @@
+﻿Build started 2/9/2021 11:44:20 AM.
+     1>Project "D:\Downloads\sphinxtrain-master\win32\programs\param_cnt\param_cnt.vcxproj" on node 4 (Build target(s)).
+     1>ClCompile:
+         C:\Program Files (x86)\Microsoft Visual Studio 11.0\VC\bin\CL.exe /c /I..\..\..\..\sphinxbase\include\win32 /I..\..\..\..\sphinxbase\include /I..\..\..\include /ZI /nologo /W3 /WX- /Od /Oy- /D _DEBUG /D _CONSOLE /D _CRT_SECURE_NO_WARNINGS /D SPHINX_DLL /D _VC80_UPGRADE=0x0600 /D _MBCS /Gm /EHsc /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Fo".\Debug\Win32/" /Fd".\Debug\Win32/vc110.pdb" /Gd /TC /analyze- /errorReport:prompt ..\..\..\src\programs\param_cnt\cb_cnt.c ..\..\..\src\programs\param_cnt\enum_corpus.c ..\..\..\src\programs\param_cnt\main.c ..\..\..\src\programs\param_cnt\param_cnt.c ..\..\..\src\programs\param_cnt\parse_cmd_ln.c ..\..\..\src\programs\param_cnt\phone_cnt.c ..\..\..\src\programs\param_cnt\ts_cnt.c
+         ts_cnt.c
+         phone_cnt.c
+         parse_cmd_ln.c
+         param_cnt.c
+         main.c
+         enum_corpus.c
+         cb_cnt.c
+         Generating Code...
+       Link:
+         C:\Program Files (x86)\Microsoft Visual Studio 11.0\VC\bin\link.exe /ERRORREPORT:PROMPT /OUT:".\..\..\..\bin\Debug\Win32/param_cnt.exe" /INCREMENTAL /NOLOGO /LIBPATH:..\..\..\..\sphinxbase\bin\Debug\Win32 sphinxbase.lib kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /MANIFEST /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /manifest:embed /DEBUG /PDB:".\..\..\..\bin\Debug\Win32/param_cnt.pdb" /SUBSYSTEM:CONSOLE /TLBID:1 /DYNAMICBASE /NXCOMPAT /IMPLIB:".\..\..\..\bin\Debug\Win32\param_cnt.lib" /MACHINE:X86 /SAFESEH .\Debug\Win32/cb_cnt.obj
+         .\Debug\Win32/enum_corpus.obj
+         .\Debug\Win32/main.obj
+         .\Debug\Win32/param_cnt.obj
+         .\Debug\Win32/parse_cmd_ln.obj
+         .\Debug\Win32/phone_cnt.obj
+         .\Debug\Win32/ts_cnt.obj
+         "D:\Downloads\sphinxtrain-master\lib\Debug\Win32\libclust.lib"
+         "D:\Downloads\sphinxtrain-master\lib\Debug\Win32\libcommon.lib"
+         "D:\Downloads\sphinxtrain-master\lib\Debug\Win32\libio.lib"
+         "D:\Downloads\sphinxtrain-master\lib\Debug\Win32\libmllr.lib"
+         "D:\Downloads\sphinxtrain-master\lib\Debug\Win32\libmodinv.lib"
+     1>cb_cnt.obj : warning LNK4075: ignoring '/EDITANDCONTINUE' due to '/SAFESEH' specification
+         param_cnt.vcxproj -> D:\Downloads\sphinxtrain-master\win32\programs\param_cnt\.\..\..\..\bin\Debug\Win32\param_cnt.exe
+     1>Done Building Project "D:\Downloads\sphinxtrain-master\win32\programs\param_cnt\param_cnt.vcxproj" (Build target(s)).
+
+Build succeeded.
+
+Time Elapsed 00:00:01.29
