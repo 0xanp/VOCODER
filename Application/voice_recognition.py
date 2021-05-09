@@ -2,13 +2,11 @@ import tkinter as tk
 import speech_recognition as sr
 import re as re
 from fuzzywuzzy import fuzz
-from vosk import SetLogLevel
-SetLogLevel(-1)
 import os
 import sys
 import json
 import pyaudio
-import compiler as comp
+
 
 # list of commands, has some extra strings for testing
 commandWords = [ "create new variable", 
@@ -202,9 +200,6 @@ def phraseMatch(audioToText,tex,tex2,tex3,tex4):
         win.after(1000, lambda: win.destroy())
     validCommand = False
     return stringP
-
-def test_compiler(text,root):
-    comp.main(text,root)
 
 def getClosestString(inputString, listToMatch,tex3):
     """returns a string that is the closest match to a programmed command"""

@@ -16,11 +16,26 @@ from scipy.io.wavfile import write
 from pydub import AudioSegment
 from pydub.playback import play
 from screeninfo import get_monitors
+#import compiler as comp
+import subprocess
+from subprocess import Popen, PIPE, run
+from queue import Queue, Empty
+from threading import Thread
+from textwrap import dedent
+
 
 def resource_path(relative_path):
     """ Get absolute path to resource, works for dev and for PyInstaller """
     base_path = getattr(sys, '_MEIPASS', os.path.dirname(os.path.abspath(__file__)))
     return os.path.join(base_path, relative_path)
+
+def iter_except(function, exception):
+    """Works like builtin 2-argument `iter()`, but stops on `exception`."""
+    try:
+        while True:
+            yield function()
+    except exception:
+        return
 
 class TextLineNumbers(tk.Canvas):
     """Custom object to handle the drawing of the number line"""
@@ -77,7 +92,7 @@ class Application:
             self.thisHeight = kwargs['height'] 
         except KeyError: 
             pass
-
+        self.process = 0
         # Set the window text 
         self.root.title("Untitled - VOCODER") 
 
@@ -156,7 +171,7 @@ class Application:
         self.imggray.image = self.rendergray
         self.imggray.pack()
         self.start_button = tk.Button(self.voice_recog,text="start",command=lambda: self.update_text(),bg='#2b2b2b',foreground="#d1dce8")
-        self.end_button = tk.Button(self.voice_recog,text="end",command=lambda: self.change_indicator(),bg='#2b2b2b',foreground="#d1dce8")
+        self.end_button = tk.Button(self.voice_recog,text="compile",command=lambda: self.change_indicator(),bg='#2b2b2b',foreground="#d1dce8")
         self.cmd_receiver = tk.LabelFrame(self.voice_recog, text="command(s) received",width=700,height=355,bg='#2b2b2b',foreground="#d1dce8")
         self.cmd_receiver.grid_propagate(False)
         self.cmd_receiver_txt = tk.Listbox(self.cmd_receiver,bg='#2b2b2b',foreground="#d1dce8")
@@ -257,7 +272,6 @@ class Application:
                                         ("Text Documents","*.txt")]) 
   
         if self.file == "": 
-              
             # no file to open 
             self.file = None
         else: 
@@ -266,7 +280,7 @@ class Application:
             # set the window title 
             self.root.title(os.path.basename(self.file) + " - VOCODER") 
             self.txt_editor_field.delete(1.0,tk.END) 
-  
+
             file = open(self.file,"r") 
   
             self.txt_editor_field.insert(1.0,file.read()) 
@@ -330,7 +344,7 @@ class Application:
             return
 
         # Check if inputString is a preexisting directory in VoiceTraining/AcousticModels/ and display the relevant messagebox    
-        isdir = os.path.isdir("Application/VoiceTraining/AcousticModels/" + profileName)
+        isdir = os.path.isdir(resource_path("VoiceTraining/AcousticModels/") + profileName)
         if isdir == False:
             proceed = tk.messagebox.showinfo("Voice Training", inputString + " was not found. " + inputString + " will be created as a new language model.")
         else:
@@ -345,27 +359,26 @@ class Application:
         """Takes in a profileName and directoryName, adapts the language model with the profileName using the voice lines from directoryName"""
 
         # If profileName does not already exist, creates a new directory with that name
-        basePath = "Application/VoiceTraining/AcousticModels/"
+        basePath = resource_path("VoiceTraining/AcousticModels/")
         isdir = os.path.isdir(basePath + profileName)
         if isdir == False:
             os.mkdir(basePath + profileName)
         
-        sphinxbasePath = "Application/VoiceTraining/sphinxbase/bin/Debug/Win32"
+        sphinxbasePath = resource_path("VoiceTraining/sphinxbase/bin/Debug/Win32")
         fullPath = resource_path(sphinxbasePath)
         os.environ["PATH"] += os.pathsep + fullPath
 
-        sphinxtrainPath = "Application/VoiceTraining/sphinxtrain-master/bin/Debug/Win32"
+        sphinxtrainPath = resource_path("VoiceTraining/sphinxtrain-master/bin/Debug/Win32")
         fullPath = resource_path(sphinxtrainPath)
         os.environ["PATH"] += os.pathsep + fullPath
 
         # Gets the needed file name from directoryName
-        dirPath = "Application/VoiceTraining/TrainingModel/" + directoryName
-        for file in glob.glob(r"Application/VoiceTraining/TrainingModel/" + directoryName + "/*.fileids"):
+        dirPath = resource_path("VoiceTraining/TrainingModel/") + directoryName
+        for file in glob.glob(resource_path("VoiceTraining/TrainingModel/") + directoryName + "/*.fileids"):
             fileName = file.split("\\")
             fileName = fileName[1]
             fileName = fileName.split(".")
             fileName = fileName[0]
-            print(fileName)
 
         idsName = fileName + ".fileids"
         transName = fileName + ".transcription"
@@ -405,7 +418,7 @@ class Application:
         print("entering copy")
 
         # Copy files from default language model to new language model
-        for file in glob.glob(r"Application/VoiceTraining/AcousticModels/en-us/*"):
+        for file in glob.glob(resource_path("VoiceTraining/AcousticModels/en-us/*")):
             shutil.copy(file, basePath + profileName)
 
         print("finished copy")
@@ -463,7 +476,7 @@ class Application:
         targetDirLabelFrame = tk.LabelFrame(win, text="Choose the directory containing the recorded voice lines that you want to use to train the language model.", width=600, height=10, borderwidth=2, relief="ridge")
         targetDirLabelFrame.grid(row=1, column=0, columnspan=2, padx=10, pady=10, ipadx=10, ipady=10)
         # Radiobutton for list of directories to choose from
-        trainPath = "Application/VoiceTraining/TrainingModel"
+        trainPath = resource_path("VoiceTraining/TrainingModel")
         listOfDirs = os.listdir(trainPath)
         dirNameChoice = tk.StringVar()
         dirNameChoice.set("None")
@@ -568,20 +581,19 @@ class Application:
             widget.destroy()
         
         # get the name of the fileids/transcription file
-        for file in glob.glob(r"Application/VoiceTraining/TrainingModel/" + directory + "/*.fileids"):
+        for file in glob.glob(r"VoiceTraining/TrainingModel/" + directory + "/*.fileids"):
             fileName = file.split("\\")
             fileName = fileName[1]
             fileName = fileName.split(".")
             fileName = fileName[0]
             print(fileName)
 
-        dirPath = "Application/VoiceTraining/TrainingModel/" + directory + "/"
+        dirPath = resource_path("VoiceTraining/TrainingModel/") + directory + "/"
         transPath = dirPath + fileName + ".transcription"
 
         #isFile = os.path.isfile(transPath)
         #if not isFile:
         #    tk.messagebox.showerror(message="Transcription file not found in directory.")
-
         # open the file and save it into a list
         transFile = open(transPath, "r")
         fileLines = transFile.read().split("\n")
@@ -637,7 +649,7 @@ class Application:
         recordVoiceLabelFrame.grid(column=0, columnspan=10, padx=10, pady=10, ipadx=10, ipady=10)
         
         # Get list of available directories to train from
-        listOfDirs = os.listdir("Application/VoiceTraining/TrainingModel")
+        listOfDirs = os.listdir(resource_path("VoiceTraining/TrainingModel"))
         dirNameChoice = tk.StringVar()
 
         # Pack all the training model directories into a radiobutton
@@ -680,8 +692,8 @@ class Application:
             # with files in
             # VoiceTraining/AcousticModels/ + modelName
             
-            pathUse    = "Application/VoiceTraining/Profiles/en-US/acoustic-model/"
-            pathChosen = "Application/VoiceTraining/AcousticModels/" + modelName + "/"
+            pathUse    = resource_path("VoiceTraining/Profiles/en-US/acoustic-model/")
+            pathChosen = resource_path("VoiceTraining/AcousticModels/") + modelName + "/"
 
             # First delete all the files in pathUse
             print("Removing these files from " + pathUse)
@@ -718,7 +730,8 @@ class Application:
         instructionLabelFrame.grid(column=0, columnspan=10, padx=10, pady=30, ipadx=10, ipady=10)
         
         # get list of available language models
-        listOfModels = os.listdir("Application/VoiceTraining/AcousticModels")
+        listOfModels = os.listdir(resource_path("VoiceTraining/AcousticModels/"))
+        print(listOfModels)
         modelNameChoice = tk.StringVar()
 
         # pack Google into the list of radiobuttons
@@ -774,12 +787,46 @@ class Application:
 
     def change_indicator(self):
         """Handling end/compile buttons"""
-        vr.test_compiler(self.txt_editor_field.get(1.0,tk.END), self.terminal)
+        #comp.main(self.txt_editor_field.get(1.0,tk.END), self.terminal)
+        self.compiler()
         self.imggray.configure(image=self.rendergray) 
     
+    def compiler(self):
+        if self.file == None:
+            self.saveFile()
+        script = self.txt_editor_field.get(1.0,tk.END)
+        self.process = Popen(["python","-u", "-c", script], stdout=PIPE)
+        q = Queue(maxsize=1024)
+        t = Thread(target=self.reader_thread, args=[q])
+        t.daemon = True # close pipe if GUI process exits
+        t.start()
+        self.update(q)
+
+    def reader_thread(self, q):
+        """Read subprocess output and put it into the queue."""
+        try:
+            with self.process.stdout as pipe:
+                for line in iter(pipe.readline, b''):
+                    q.put(line)
+        finally:
+            q.put(None)
+
+    def update(self, q):
+        """Update GUI with items from the queue."""
+        for line in iter_except(q.get_nowait, Empty): # display all content
+            if line is None:
+                #self.process.kill()
+                return
+            else:
+                self.terminal_txt.insert(tk.END,line) # update GUI
+                break # display no more than one line per 40 milliseconds 
+        self.terminal.after(40, self.update, q) # schedule next update
+
+
     def on_closing(self):
         """Handling Close the app event, delete all the cache built up"""
         if messagebox.askokcancel("Quit", "Do you want to quit?"):
+            self.saveFile()
             os.popen('find . | grep -E "(__pycache__|\.pyc|\.pyo$)" | xargs rm -rf')
             self.root.destroy()
 
