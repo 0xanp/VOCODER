@@ -1,0 +1,8 @@
+
+print("alpha: ", alpha)
+
+print("beta is greater than alpha")
+print("alpha and beta are equal")
+print("alpha is greater than beta")
+
+

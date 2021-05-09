@@ -3,14 +3,14 @@ from tkinter import messagebox
 from tkinter.filedialog import *
 from PIL import Image, ImageTk
 import voice_recognition as vr
-import multiprocessing as mp
+#import multiprocessing as mp
 import threading
 import queue
 import os
 import sys
 import glob
 import shutil
-import time
+#import time
 import sounddevice as sd
 from scipy.io.wavfile import write
 from pydub import AudioSegment
@@ -343,6 +343,7 @@ class Application:
             tk.messagebox.showinfo("No name was inputted.")
             return
 
+        path = resource_path("VoiceTraining/AcousticModels/" + profileName)
         # Check if inputString is a preexisting directory in VoiceTraining/AcousticModels/ and display the relevant messagebox    
         isdir = os.path.isdir(resource_path("VoiceTraining/AcousticModels/") + profileName)
         if isdir == False:
@@ -376,7 +377,8 @@ class Application:
         dirPath = resource_path("VoiceTraining/TrainingModel/") + directoryName
         for file in glob.glob(resource_path("VoiceTraining/TrainingModel/") + directoryName + "/*.fileids"):
             fileName = file.split("\\")
-            fileName = fileName[1]
+            num = len(fileName)
+            fileName = fileName[num - 1]
             fileName = fileName.split(".")
             fileName = fileName[0]
 
@@ -388,9 +390,9 @@ class Application:
         os.system("sphinx_fe " + 
                     "-argfile " + basePath + "en-us/feat.params " +
                     "-samprate 16000 " +
-                    "-c " + dirPath + "/" + idsName + " "
-                    "-di " + dirPath + "/ " +
-                    "-do " + dirPath + "/ " +
+                    "-c " + path + "/" + directoryName + "/" + idsName + " "
+                    "-di " + path + "/" + directoryName + "/ " +
+                    "-do " + path + "/" + directoryName + "/ " +
                     "-ei wav " + 
                     "-eo mfc " + 
                     "-mswav yes")
@@ -399,20 +401,21 @@ class Application:
         print("entering bw")
 
         # Create gauden_counts, mixw_counts, and tmat_counts from the .mfc files
-        os.chdir(dirPath)
+        tempPath = resource_path("VoiceTraining/")
+        os.chdir(path + "/" + directoryName)
         os.system("bw " +
-                    "-hmmdir ../../AcousticModels/en-us " +
-                    "-moddeffn ../../AcousticModels/en-us/mdef.txt " +
+                    "-hmmdir " + tempPath + "AcousticModels/en-us " +
+                    "-moddeffn " + tempPath + "AcousticModels/en-us/mdef.txt " +
                     "-ts2cbfn .ptm. " +
                     "-feat 1s_c_d_dd " +
                     "-svspec 0-12/13-25/26-38 " +
                     "-cmn current " +
                     "-agc none " +
-                    "-dictfn ../../cmudict-en-us.dict " +
+                    "-dictfn " + tempPath + "cmudict-en-us.dict " +
                     "-ctlfn " + idsName + " " +
                     "-lsnfn " + transName + " " +
                     "-accumdir .")
-        os.chdir("../../../..")
+        os.chdir(tempPath)
 
         print("finished bw")
         print("entering copy")
@@ -432,7 +435,7 @@ class Application:
                     "-varfn " + basePath + "en-us/variances " +
                     "-mixwfn " + basePath + "en-us/mixture_weights " +
                     "-tmatfn " + basePath + "en-us/transition_matrices " +
-                    "-accumdir " + dirPath + " " +
+                    "-accumdir " + path + directoryName +" " +
                     "-mapmeanfn " + basePath + profileName + "/means " +
                     "-mapvarfn " + basePath + profileName + "/variances " +
                     "-mapmixwfn " + basePath + profileName + "/mixture_weights " +
@@ -576,6 +579,8 @@ class Application:
     def recordingVoice(self, directory=None, window=None):
         """Gets the transcription file from given directory and prompts the user to say the given lines while recording the user saying them."""
         
+        print("insiderecordingVoice():")
+        print("directory: " + directory)
         # clear the previous tk frame to make room for new widgets
         for widget in window.winfo_children():
             widget.destroy()
@@ -583,7 +588,8 @@ class Application:
         # get the name of the fileids/transcription file
         for file in glob.glob(r"VoiceTraining/TrainingModel/" + directory + "/*.fileids"):
             fileName = file.split("\\")
-            fileName = fileName[1]
+            num = len(fileName)
+            fileName = fileName[num - 1]
             fileName = fileName.split(".")
             fileName = fileName[0]
             print(fileName)
