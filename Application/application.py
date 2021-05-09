@@ -345,7 +345,7 @@ class Application:
 
         path = resource_path("VoiceTraining/AcousticModels/" + profileName)
         # Check if inputString is a preexisting directory in VoiceTraining/AcousticModels/ and display the relevant messagebox    
-        isdir = os.path.isdir(resource_path("VoiceTraining/AcousticModels/") + profileName)
+        isdir = os.path.isdir(path)
         if isdir == False:
             proceed = tk.messagebox.showinfo("Voice Training", inputString + " was not found. " + inputString + " will be created as a new language model.")
         else:
@@ -365,7 +365,7 @@ class Application:
         if isdir == False:
             os.mkdir(basePath + profileName)
         
-        sphinxbasePath = resource_path("VoiceTraining/sphinxbase/bin/Debug/Win32")
+        sphinxbasePath = "VoiceTraining/sphinxbase/bin/Debug/Win32"
         fullPath = resource_path(sphinxbasePath)
         os.environ["PATH"] += os.pathsep + fullPath
 
@@ -374,8 +374,9 @@ class Application:
         os.environ["PATH"] += os.pathsep + fullPath
 
         # Gets the needed file name from directoryName
-        dirPath = resource_path("VoiceTraining/TrainingModel/") + directoryName
-        for file in glob.glob(resource_path("VoiceTraining/TrainingModel/") + directoryName + "/*.fileids"):
+        dirPath = "VoiceTraining/TrainingModel/"
+        path = resource_path(dirPath)
+        for file in glob.glob(path + directoryName + "/*.fileids"):
             fileName = file.split("\\")
             num = len(fileName)
             fileName = fileName[num - 1]
@@ -421,7 +422,7 @@ class Application:
         print("entering copy")
 
         # Copy files from default language model to new language model
-        for file in glob.glob(resource_path("VoiceTraining/AcousticModels/en-us/*")):
+        for file in glob.glob(tempPath + "AcousticModels/en-us/*"):
             shutil.copy(file, basePath + profileName)
 
         print("finished copy")
@@ -586,15 +587,17 @@ class Application:
             widget.destroy()
         
         # get the name of the fileids/transcription file
-        for file in glob.glob(r"VoiceTraining/TrainingModel/" + directory + "/*.fileids"):
+        tempPath = resource_path("VoiceTraining/TrainingModel/")
+        for file in glob.glob(tempPath + directory + "/*.fileids"):
+            print("file: " + file)
             fileName = file.split("\\")
             num = len(fileName)
             fileName = fileName[num - 1]
             fileName = fileName.split(".")
             fileName = fileName[0]
-            print(fileName)
-
-        dirPath = resource_path("VoiceTraining/TrainingModel/") + directory + "/"
+            print("fileName: " + fileName)
+        
+        dirPath = tempPath + directory + "/"
         transPath = dirPath + fileName + ".transcription"
 
         #isFile = os.path.isfile(transPath)
@@ -655,7 +658,12 @@ class Application:
         recordVoiceLabelFrame.grid(column=0, columnspan=10, padx=10, pady=10, ipadx=10, ipady=10)
         
         # Get list of available directories to train from
-        listOfDirs = os.listdir(resource_path("VoiceTraining/TrainingModel"))
+        tempPath = resource_path("VoiceTraining/TrainingModel/")
+        listOfDirs = os.listdir(tempPath)
+        print("listOfDirs: [", end="")
+        for item in listOfDirs:
+            print(item + " ", end="")
+        print("]")
         dirNameChoice = tk.StringVar()
 
         # Pack all the training model directories into a radiobutton
@@ -736,8 +744,8 @@ class Application:
         instructionLabelFrame.grid(column=0, columnspan=10, padx=10, pady=30, ipadx=10, ipady=10)
         
         # get list of available language models
-        listOfModels = os.listdir(resource_path("VoiceTraining/AcousticModels/"))
-        print(listOfModels)
+        tempPath = resource_path("VoiceTraining/AcousticModels/")
+        listOfModels = os.listdir(tempPath)
         modelNameChoice = tk.StringVar()
 
         # pack Google into the list of radiobuttons
